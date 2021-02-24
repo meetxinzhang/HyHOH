@@ -1,0 +1,15 @@
+.idea
+.DS_Store
+__pycache__
+.vscode/settings.json
+*.hdf5
+*.pdb
+*.ali
+*.xvg
+.fasta
+.log
+.sc
+.tpr
+.xtc
+.vmd
+charmm36-jul2020.ff

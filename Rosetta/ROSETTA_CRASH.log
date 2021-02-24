@@ -1,0 +1,840 @@
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f1d93d6709a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f1d93d9f753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f1d93d5a59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f1d93e9debb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f1d93e9e79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f1d8f4d17c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f1d8f4d5d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55b6c7bee6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f1d937d80b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55b6c7beee4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f59a488309a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f59a48bb753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f59a487659e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f59a49b9ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f59a49ba79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f599ffed7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f599fff1d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55cffa6166a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f59a42f40b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55cffa616e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f30b479609a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f30b47ce753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f30b478959e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f30b48ccebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f30b48cd79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f30aff007c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f30aff04d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x558cccb0a6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f30b42070b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x558cccb0ae4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f894ba2509a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f894ba5d753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f894ba1859e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f894bb5bebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f894bb5c79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f894718f7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f8947193d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x5600ec2f86a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f894b4960b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x5600ec2f8e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f6a4720109a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f6a47239753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f6a471f459e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f6a47337ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f6a4733879d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f6a4296b7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f6a4296fd8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x556ff705a6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f6a46c720b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x556ff705ae4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f07714d709a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f077150f753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f07714ca59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f077160debb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f077160e79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f076cc417c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f076cc45d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x5647184636a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f0770f480b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x564718463e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f903b95209a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f903b98a753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f903b94559e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f903ba88ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f903ba8979d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f90370bc7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f90370c0d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55adba42d6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f903b3c30b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55adba42de4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7fe17167a09a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7fe1716b2753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7fe17166d59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7fe1717b0ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7fe1717b179d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7fe16cde47c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7fe16cde8d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x563ac407e6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7fe1710eb0b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x563ac407ee4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7faa6c30509a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7faa6c33d753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7faa6c2f859e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7faa6c43bebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7faa6c43c79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7faa67a6f7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7faa67a73d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55a4343586a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7faa6bd760b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55a434358e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f262178809a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f26217c0753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f262177b59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f26218beebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f26218bf79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f261cef27c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f261cef6d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55fed9e966a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f26211f90b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55fed9e96e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f7430ede09a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f7430f16753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f7430ed159e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f7431014ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f743101579d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f742c6487c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f742c64cd8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55b35561b6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f743094f0b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55b35561be4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f2ff43a109a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f2ff43d9753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f2ff439459e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f2ff44d7ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f2ff44d879d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f2fefb0b7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f2fefb0fd8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x5568e52a96a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f2ff3e120b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x5568e52a9e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f8fb746c09a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f8fb74a4753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f8fb745f59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f8fb75a2ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f8fb75a379d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f8fb2bd67c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f8fb2bdad8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55f06c3c86a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f8fb6edd0b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55f06c3c8e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f5b28af709a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f5b28b2f753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f5b28aea59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f5b28c2debb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f5b28c2e79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f5b242617c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f5b24265d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x5617f2f316a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f5b285680b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x5617f2f31e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f5edd04809a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f5edd080753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f5edd03b59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f5edd17eebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f5edd17f79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f5ed87b27c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f5ed87b6d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55dc884726a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f5edcab90b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55dc88472e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7fa7032dd09a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7fa703315753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7fa7032d059e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7fa703413ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7fa70341479d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7fa6fea477c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7fa6fea4bd8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x560a657cc6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7fa702d4e0b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x560a657cce4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f8caf6a109a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f8caf6d9753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f8caf69459e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f8caf7d7ebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f8caf7d879d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f8caae0b7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f8caae0fd8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x5641963416a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f8caf1120b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x564196341e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f02fb9b509a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f02fb9ed753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f02fb9a859e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f02fbaebebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f02fbaec79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f02f711f7c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f02f7123d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55e0f051b6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f02fb4260b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55e0f051be4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7f053a27709a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7f053a2af753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7f053a26a59e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7f053a3adebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7f053a3ae79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7f05359e17c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7f05359e5d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x556658a1d6a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f0539ce80b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x556658a1de4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 2020.37+release.3ba1aaa
+[COMMIT_DATE]: 2020-09-09T04:44:52.665146
+[APPLICATION]: UNKNOWN APPLICATION
+[MODE]: Release
+[EXTRAS]: default
+[OS]: GNU/Linux
+[COMPILER]: GCC version "9.3.0"
+[STDLIB]: libstdc++ version 20200808
+[START_OPTIONS]
+NO OPTIONS SPECIFIED
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(backtrace_string[abi:cxx11](int)+0x5a) [0x7fbd62ac609a]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::excn::Exception::Exception(char const*, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x103) [0x7fbd62afe753]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(+0x1a659e) [0x7fbd62ab959e]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, bool)+0x21b) [0x7fbd62bfcebb]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libutility.so(utility::options::OptionCollection::load(int, char* const*, bool)+0x17d) [0x7fbd62bfd79d]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init_options(int, char**)+0x24) [0x7fbd5e2307c4]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/build/src/release/linux/5.4/64/x86/gcc/9/default/libcore.6.so(core::init::init(int, char**)+0x2b) [0x7fbd5e234d8b]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x56a6) [0x55d76a4506a6]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7fbd625370b3]
+/home/zhangxin/env/rosetta_src_2020.37.61417_bundle/main/source/bin/rosetta_scripts.default.linuxgccrelease(+0x5e4e) [0x55d76a450e4e]
+
+[END_BACKTRACE]
+
+[FILE]: src/utility/options/OptionCollection.cc
+[LINE]: 573
+[START_MESSAGE]
+Option file open failed for: 'flags'
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+

@@ -1,0 +1,28 @@
+<ROSETTASCRIPTS>
+    <TASKOPERATIONS>
+    </TASKOPERATIONS>
+    <SCOREFXNS>
+        <ScoreFunction name="stage1" weights="score3" symmetric="0">
+            <Reweight scoretype="atom_pair_constraint" weight="0.1"/>
+        </ScoreFunction>
+        <ScoreFunction name="stage2" weights="score4_smooth_cart" symmetric="0">
+            <Reweight scoretype="atom_pair_constraint" weight="0.1"/>
+        </ScoreFunction>
+        <ScoreFunction name="fullatom" weights="beta_cart" symmetric="0">
+            <Reweight scoretype="atom_pair_constraint" weight="0.1"/>
+        </ScoreFunction>
+    </SCOREFXNS>
+    <FILTERS>
+    </FILTERS>
+    <MOVERS>
+        <Hybridize name="hybridize" stage1_scorefxn="stage1" stage2_scorefxn="stage2" fa_scorefxn="fullatom" batch="1" stage1_increase_cycles="1.0" stage2_increase_cycles="1.0">
+            <Template pdb="/home/zhangxin/Aworkplace/rosetta/S309_H_SOPP3/rosetta_cm/6ws6__thread.pdb" cst_file="AUTO" weight="1.0" />
+            <Template pdb="/home/zhangxin/Aworkplace/rosetta/S309_H_SOPP3/rosetta_cm/6gpu__thread.pdb" cst_file="AUTO" weight="1.0" />
+        </Hybridize>
+    </MOVERS>
+    <APPLY_TO_POSE>
+    </APPLY_TO_POSE>
+    <PROTOCOLS>
+        <Add mover="hybridize"/>
+    </PROTOCOLS>
+</ROSETTASCRIPTS>
