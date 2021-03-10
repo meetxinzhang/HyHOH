@@ -27,7 +27,7 @@ from Bio.PDB.PDBParser import PDBParser
 import numpy as np
 import platform
 
-local_add = '/home/zhangxin/Downloads/dataset/proxy/all_structures/raw/'
+atom_files = '../atom_files/'
 
 aa_codes = {
     'ALA': 'A', 'CYS': 'C', 'ASP': 'D', 'GLU': 'E',  # Amino acid
@@ -85,10 +85,11 @@ def parser_reader(file_path):
     model_id = str(first_model.get_id())
     for chain in first_model:
         chain_id = str(chain.get_id())
+        primary_string = '>'
         for residue in chain:
             if is_aa(residue) and residue.resname in aa_codes.keys():
                 primary.append(aa_codes[residue.resname])
-
+                primary_string += aa_codes[residue.resname]
                 try:
                     n = residue['N'].get_coord()
                     ca = residue['CA'].get_coord()
@@ -103,13 +104,14 @@ def parser_reader(file_path):
                 # for atom in residue:
                 #     print('>chain:' + chain_id + ' residue:' + residue.resname + ' Atom:'
                 #           + atom.get_name() + str(atom.get_coord()))
+        print('chain: ' + chain_id + '\n' + primary_string)
 
     # see_shape(',,,,,,,,,primary,,,,,', primary)
     # see_shape(',,,,,,,,,tertiary,,,,,', tertiary)
 
     length = len(primary)
-    print(primary)
+    # print(primary)
     return np.asarray(primary), np.asarray(tertiary), length
 
 
-parser_reader("CN111875700A-1A6_rank1_imgt_scheme.pdb")
+parser_reader(atom_files + "7a98.pdb")
