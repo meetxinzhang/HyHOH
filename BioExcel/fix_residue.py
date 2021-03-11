@@ -16,7 +16,7 @@ from biobb_model.model.fix_backbone import FixBackbone
 atom_dir = '../atom_files/'
 o_path = 'output/'
 
-pdbCode = '1a22.ent'
+pdbCode = '6mlk.ent'
 origin_pdb = pdbCode + '.pdb'
 fixed_pdb = pdbCode + '_fixed.pdb'
 

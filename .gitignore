@@ -13,5 +13,8 @@ __pycache__
 *.xtc
 *.vmd
 *.zip
+*.err
+*.out
 charmm36-jul2020.ff
 /PDB/pdb-tools-master.zip
+/atom_files/*.pdb
