@@ -47,7 +47,7 @@ aa_codes = {
 
 def lines_reader():
     seq = ''
-    for line in open("CN111875700A-1A6_rank1_imgt_scheme.pdb"):
+    for line in open("../atom_files/CN111875700A-1A6_rank1_imgt_scheme.pdb"):
         if line[0:6] == "SEQRES":
             columns = line.split()
             for residue_name in columns[4:]:
@@ -90,16 +90,16 @@ def parser_reader(file_path):
             if is_aa(residue) and residue.resname in aa_codes.keys():
                 primary.append(aa_codes[residue.resname])
                 primary_string += aa_codes[residue.resname]
-                try:
-                    n = residue['N'].get_coord()
-                    ca = residue['CA'].get_coord()
-                    c = residue['C'].get_coord()
-                except KeyError:
-                    print('KeyError for ', '>chain:' + chain_id, residue.resname, residue.get_id())
-                    print('KeyError for :'+residue.resname)
-                    pass
-                aa_coord = np.hstack([n, ca, c])
-                tertiary.append(aa_coord)
+                # try:
+                #     n = residue['N'].get_coord()
+                #     ca = residue['CA'].get_coord()
+                #     c = residue['C'].get_coord()
+                # except KeyError:
+                #     print('KeyError for ', '>chain:' + chain_id, residue.resname, residue.get_id())
+                #     print('KeyError for :'+residue.resname)
+                #     pass
+                # aa_coord = np.hstack([n, ca, c])
+                # tertiary.append(aa_coord)
 
                 # for atom in residue:
                 #     print('>chain:' + chain_id + ' residue:' + residue.resname + ' Atom:'
@@ -114,4 +114,4 @@ def parser_reader(file_path):
     return np.asarray(primary), np.asarray(tertiary), length
 
 
-parser_reader(atom_files + "7a98.pdb")
+parser_reader(atom_files + "7lfy.pdb")

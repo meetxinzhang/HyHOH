@@ -414,7 +414,7 @@ class Alignment:
         if aln_out_fmt == "grishin":
             self.write_grishin(aln_out)
         else:
-            print("Do not understand output alignment format: %s" % aln_out_fmt)
+            print("Do not understand outputs alignment format: %s" % aln_out_fmt)
             sys.exit(-1)
         return
 

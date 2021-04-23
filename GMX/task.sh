@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -N reference-k-md
+#PBS -N xins md task
 #PBS -q gpu-2-1
 #PBS -l nodes=1:ppn=32
 #PBS -W x=GRES:gpu@2
-#PBS -l walltime=24:00:00
+#PBS -l walltime=48:00:00
 #PBS -V
 #PBS -S /bin/bash
 
@@ -36,8 +36,8 @@ cat $PBS_NODEFILE > /tmp/nodefile.$$
 #echo -e 0 \n | gmx trjconv -s pull.tpr -f traj_comp.xtc -o output/conf.gro -sep
 
 # perl distances.pl
-# ./script.sh
-./umbrella.sh
+./script.sh
+# ./umbrella.sh
 
 ########clean
 echo "process end at : "

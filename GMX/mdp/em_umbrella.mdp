@@ -5,8 +5,9 @@
 ;----------------------------------------------------
 ; RUN CONTROL & MINIMIZATION
 ;----------------------------------------------------
+define                 = -DPOSRES
 integrator             = cg
-nsteps                 = 9999         ; maximum number of steps to integrate or minimize, -1 is no maximum
+nsteps                 = 2000         ; maximum number of steps to integrate or minimize, -1 is no maximum
 emtol                  = 800        ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
 emstep                 = 0.002      ; (0.01) [nm] initial step-size
 nstcgsteep             = 1000       ; （1000）[步]在进行共轭梯度能量最小化的同时执行最陡下降步骤的频率。
@@ -65,3 +66,27 @@ DispCorr                = EnerPres            ; no for charmm36 对能量和压�
 Tcoupl              = no
 Pcoupl              = no
 gen-vel             = no
+
+;----------------------------------------------------
+; Pull code 
+;----------------------------------------------------
+pull                    = yes
+pull-ngroups            = 2
+pull-ncoords            = 1
+pull-group1-name        = receptor  
+pull-group2-name        = ligand
+pull-group1-pbcatom     = 6053  
+pull-group2-pbcatom     = 12277
+; pull-pbc-ref-prev-step-com = yes
+
+pull-coord1-type        = umbrella      ; harmonic biasing force
+pull-coord1-geometry    = distance      ; simple distance increase
+; pull-coord1-vec         = 1.0 0.0 0.0
+pull-coord1-groups      = 2 1
+pull-coord1-dim         = Y N N
+pull-coord1-rate        = 0.0          ; 0.01 nm per ps = 5 nm per ns
+pull-coord1-k           = 1000         ; kJ mol^-1 nm^-2
+pull-coord1-start       = yes
+; pull-coord1-init        = 2.8
+
+; pull-print-components   = yes

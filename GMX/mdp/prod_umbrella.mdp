@@ -1,5 +1,5 @@
 ;====================================================
-; Production simulation
+; Production simulation of umbrella 
 ;====================================================
 
 ;----------------------------------------------------
@@ -8,8 +8,8 @@
 title        = Umbrella pulling simulation 
 define       = -DPOSRES      ; 
 integrator   = md            ; stochastic leap-frog integrator
-nsteps       = 5000000       ; 2 * 5000 ps = 10000 ps = 10ns
-dt           = 0.002         ; ps
+nsteps       = 100000        ; 2 * 100  = 200 ps
+dt           = 0.002         ; 2 fs
 comm-mode    = Linear        ; remove center of mass translation
 nstcomm      = 100            ; frequency for center of mass motion removal
 
@@ -19,11 +19,11 @@ nstcomm      = 100            ; frequency for center of mass motion removal
 nstxout                = 0          ; don't save coordinates to .trr
 nstvout                = 0          ; don't save velocities to .trr
 nstfout                = 0          ; don't save forces to .trr
-nstxout-compressed     = 500       ; xtc compressed trajectory output every 500 steps (1 ps)
-compressed-x-precision = 500       ; precision with which to write to the compressed trajectory file
-nstlog                 = 500       ; update log file every 1 ps
-nstenergy              = 500       ; save energies every 1 ps
-; nstcalcenergy          = 100        ; calculate energies every 100 steps
+nstxout-compressed     = 1000       ; xtc compressed trajectory output every 1000 steps (2 ps)
+compressed-x-precision = 1000       ; precision with which to write to the compressed trajectory file
+nstlog                 = 1000       ; update log file every 2 ps
+nstenergy              = 1000       ; save energies every 2 ps
+nstcalcenergy          = 100        ; calculate energies every 100 steps
 
 ;----------------------------------------------------
 ; BONDS
@@ -94,17 +94,17 @@ pull-ngroups            = 2
 pull-ncoords            = 1
 pull-group1-name        = receptor  
 pull-group2-name        = ligand
-pull-group1-pbcatom     = 7925           ;6053  
-pull-group2-pbcatom     = 12328           ;12277
+pull-group1-pbcatom     = 6053  
+pull-group2-pbcatom     = 12277
 ; pull-pbc-ref-prev-step-com = yes
 
 pull-coord1-type        = umbrella      ; harmonic biasing force
 pull-coord1-geometry    = distance      ; simple distance increase
 ; pull-coord1-vec         = 1.0 0.0 0.0
 pull-coord1-groups      = 2 1
-pull-coord1-dim         = N N Y
-pull-coord1-rate        = 0.001         ; 0.001 nm per ps = 1 nm per ns
-pull-coord1-k           = 800         ; kJ mol^-1 nm^-2
+pull-coord1-dim         = Y N N
+pull-coord1-rate        = 0.0          ; 0.01 nm per ps = 5 nm per ns
+pull-coord1-k           = 1000         ; kJ mol^-1 nm^-2
 pull-coord1-start       = yes
 ; pull-coord1-init        = 2.8
 

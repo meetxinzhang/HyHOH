@@ -14,16 +14,21 @@ from biobb_structure_checking import structure_checking
 from biobb_model.model.fix_backbone import FixBackbone
 
 atom_dir = '../atom_files/'
-o_path = 'output/'
+outputs_dir = '../outputs/'
 
-pdbCode = '6mlk.ent'
+pdbCode = '7lfy'
 origin_pdb = pdbCode + '.pdb'
-fixed_pdb = pdbCode + '_fixed.pdb'
 
 # Create and launch bb
-FixSideChain(input_pdb_path=atom_dir + origin_pdb,
-             output_pdb_path=o_path + fixed_pdb).launch()
+# print('fixing backbone -----------------')
+# prop = {'restart': False}
+# FixBackbone(input_pdb_path=atom_dir + origin_pdb,
+#             input_fasta_canonical_sequence_path=atom_dir + 'rcsb_pdb_7LFY.fasta',
+#             output_pdb_path=outputs_dir + pdbCode + '_backbone_fixed.pdb',
+#             properties=prop).launch()
 
-# FixBackbone(input_pdb_path=i_path + origin_pdb,
-#             input_fasta_canonical_sequence_path=i_path + '6wps.fasta',
-#             output_pdb_path=o_path + fixed_pdb).launch()
+print('fixing side chain -----------------')
+# FixSideChain(input_pdb_path=outputs_dir + pdbCode + '_backbone_fixed.pdb',
+#              output_pdb_path=outputs_dir + pdbCode + '_side_fixed.pdb').launch()
+FixSideChain(input_pdb_path=atom_dir + origin_pdb,
+             output_pdb_path=outputs_dir + pdbCode + '_side_fixed.pdb').launch()
