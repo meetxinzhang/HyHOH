@@ -18,8 +18,11 @@ from modeller import *
 env = environ()
 env.io.atom_files_directory = ['../outputs']
 outputs_dir = '../outputs/'
-in_name = 'E484K'
-out_name = 'K417N'
+
+in_name = '7c8d_fixed_L452R'
+out_name = in_name + '_' + 'E484Q'
+index = 748
+target = 'GLN'
 
 # Read the topology library with non-hydrogen atoms only:
 env.libs.topology.read(file='$(LIB)/top_heav.lib')
@@ -30,22 +33,22 @@ env.libs.parameters.read(file='$(LIB)/par.lib')
 
 # Read the original PDB file and copy its sequence to the alignment array:
 aln = alignment(env)
-mdl = model(env, file=in_name)
+mdl = model(env, file=in_name+'.pdb')
 print("Mapping from residue indices to PDB residue and chain names:")
 for r in mdl.residues:
     print("%6d   %3s:%s   %s" % (r.index, r.num, r.chain.name, r.pdb_name))
 
 # -------------- step 2: performs mutants -----------------------------
-aln.append_model(mdl, atom_files=in_name, align_codes=in_name)
+aln.append_model(mdl, atom_files=in_name+'.pdb', align_codes=in_name)
 
 # Select the residues to be mutated: in this case all ASP residues:
 # sel = selection(mdl).only_residue_types('ASP')
 
 # The second example is commented out; it selects residues '1' and '10'.
-print('--------', mdl.residues[681])
-sel = selection(mdl.residues[681])
+print('--------', mdl.residues[index])
+sel = selection(mdl.residues[index])
 # Mutate the selected residues into HIS residues (neutral HIS):
-sel.mutate(residue_type='ASN')
+sel.mutate(residue_type=target)
 
 # Add the mutated sequence to the alignment arrays (it is now the second
 # sequence in the alignment):

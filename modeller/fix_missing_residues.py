@@ -32,7 +32,7 @@ a.md_level = refine.slow
 
 # a = loopmodel(env, alnfile='6lfy_alignment.ali',
 #               knowns='7lfy', sequence='7lfy_fix')
-# a.loop.starting_model = 1
+# a.loop.starting_odel = 1
 # a.loop.ending_model = 2
 # a.loop.md_level = refine.fast
 

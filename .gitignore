@@ -18,13 +18,14 @@ __pycache__
 charmm36-jul2020.ff
 /PDB/pdb-tools-master.zip
 /atom_files/*.pdb
+/outputs
 
-/Modeller/miss residue modeling/7lfy_fix.D00000001
-/Modeller/miss residue modeling/7lfy_fix.D00000002
-/Modeller/miss residue modeling/7lfy_fix.D00000003
-/Modeller/miss residue modeling/7lfy_fix.ini
-/Modeller/miss residue modeling/7lfy_fix.rsr
-/Modeller/miss residue modeling/7lfy_fix.sch
-/Modeller/miss residue modeling/7lfy_fix.V99990001
-/Modeller/miss residue modeling/7lfy_fix.V99990002
-/Modeller/miss residue modeling/7lfy_fix.V99990003
+/workplace/modeller/7lfy_fix.D00000001
+/workplace/modeller/7lfy_fix.D00000002
+/workplace/modeller/7lfy_fix.D00000003
+/workplace/modeller/7lfy_fix.ini
+/workplace/modeller/7lfy_fix.rsr
+/workplace/modeller/7lfy_fix.sch
+/workplace/modeller/7lfy_fix.V99990001
+/workplace/modeller/7lfy_fix.V99990002
+/workplace/modeller/7lfy_fix.V99990003

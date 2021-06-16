@@ -1,0 +1,23 @@
+Sample input file for GB calculation
+#This input file is meant to show only that gmx_MMPBSA works. Althought, we tried to used the input files as recommended in the 
+#Amber manual, some parameters have been changed to perform more expensive calculations. Feel free to change the parameters 
+#according to what is better for your system.
+&general 
+startframe=1000, endframe=9999999, interval=100, verbose=1, 
+protein_forcefield="leaprc.protein.ff14SB", 
+
+#entropy variable control whether to perform a quasi-harmonic entropy (QH)
+# approximation or the Interaction Entropy approximation
+# (https://pubs.acs.org/doi/abs/10.1021/jacs.6b02682) 
+entropy=2, entropy_seg=25, temperature=298
+/
+
+#&gb 
+#igb=5, saltcon=0.150, 
+#/ 
+
+&pb 
+#istrng=0.15, fillratio=4.0 
+inp=2, radiopt=0
+indi=2.0, exdi=80.0
+/
