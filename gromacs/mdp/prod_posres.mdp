@@ -5,9 +5,9 @@
 ;----------------------------------------------------
 ; RUN CONTROL
 ;----------------------------------------------------
-; define       = -DPOSRES100      ; 10
+define       = -DPOSRES100      ; 10
 integrator   = md            ; stochastic leap-frog integrator
-nsteps       = 5000000        ; 2 * 5000 ps = 10000 ps = 10ns
+nsteps       = 1000000        ; 2 * 1000 ps = 2000 ps = 2ns
 dt           = 0.002         ; 2 fs
 comm-mode    = Linear        ; remove center of mass translation
 nstcomm      = 100            ; frequency for center of mass motion removal

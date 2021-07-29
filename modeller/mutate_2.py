@@ -75,8 +75,8 @@ make_restraints(mdl1, ali)
 mdl1.env.edat.nonbonded_sel_atoms = 1
 sched = autosched.loop.make_for_model(mdl1)
 # MutationOptimization
-s = selection(mdl1.atoms['CA:' + respos1 + ':' + chain].select_sphere(5),
-              mdl1.atoms['CA:' + respos2 + ':' + chain].select_sphere(5))  # change
+s = selection(mdl1.protein_atoms['CA:' + respos1 + ':' + chain].select_sphere(5),
+              mdl1.protein_atoms['CA:' + respos2 + ':' + chain].select_sphere(5))  # change
 mdl1.restraints.unpick_all()
 mdl1.restraints.pick(s)
 s.energy()

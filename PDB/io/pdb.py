@@ -6,7 +6,6 @@
 @time: 6/7/21 10:47 AM
 @desc:
 """
-from PDB.use_bio_pkg import parser_reader
 
 
 class Pdb(object):

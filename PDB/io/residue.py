@@ -6,7 +6,6 @@
 @time: 6/7/21 3:42 PM
 @desc:
 """
-from atom import Atom
 
 
 class Residue(object):
@@ -49,8 +48,8 @@ class Residue(object):
                 pass
         return False
 
-
     def _add_atom(self, atom):
+        pass
 
 
 

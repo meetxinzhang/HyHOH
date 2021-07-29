@@ -6,7 +6,7 @@
 @time: 4/7/21 3:40 PM
 @desc:
 """
-# This will read a PDB file, change its sequence a little, build new
+# This will io a PDB file, change its sequence a little, build new
 # coordinates for any of the additional atoms using only the internal
 # geometry, and write the mutant PDB file.  It can be seen as primitive
 # but rapid comparative modeling for substitution mutants. For more
@@ -14,7 +14,7 @@
 
 from modeller import *
 
-# -------------- step 1: read pdb ------------------------------
+# -------------- step 1: io pdb ------------------------------
 env = environ()
 env.io.atom_files_directory = ['../outputs']
 outputs_dir = '../outputs/'
@@ -27,7 +27,7 @@ target = 'GLN'
 # Read the topology library with non-hydrogen atoms only:
 env.libs.topology.read(file='$(LIB)/top_heav.lib')
 # To produce a mutant with all hydrogens, uncomment this line:
-# env.libs.topology.read(file='$(LIB)/top_allh.lib')
+# env.libs.topology.io(file='$(LIB)/top_allh.lib')
 # Read the CHARMM parameter library:
 env.libs.parameters.read(file='$(LIB)/par.lib')
 

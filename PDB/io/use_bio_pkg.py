@@ -4,11 +4,12 @@
 @contact: zhangxin@szbl.ac.cn
 @file: use_bio_pkg.py
 @time: 12/8/20 11:36 AM
-@desc: read protein from .pdb
+@desc: io protein from .pdb
 
 """
-from collections import defaultdict as ddict
-from atom import Atom
+from Bio.PDB import PDBParser, is_aa
+import platform
+import numpy as np
 
 atom_files = '../outputs/'
 

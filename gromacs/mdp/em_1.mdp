@@ -1,13 +1,14 @@
 ;====================================================
-; Energy minimization by steep
+; Energy minimization for added water with position restraining at protein
 ;====================================================
 
 ;----------------------------------------------------
 ; RUN CONTROL & MINIMIZATION
 ;----------------------------------------------------
+define                 = -DPOSRES
 integrator             = steep
 nsteps                 = 10000         ; maximum number of steps to integrate or minimize, -1 is no maximum
-emtol                  = 300       ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
+emtol                  = 500       ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
 emstep                 = 0.01       ; (0.01) [nm] initial step-size
 nstcomm                = 100        ; （100）[steps]重心运动消除的频率
 

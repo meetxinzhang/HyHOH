@@ -1,28 +1,16 @@
 ;====================================================
-; Energy minimization
+; Energy minimization by cg
 ;====================================================
 
 ;----------------------------------------------------
 ; RUN CONTROL & MINIMIZATION
 ;----------------------------------------------------
-integrator             = steep
-nsteps                 = 9999         ; maximum number of steps to integrate or minimize, -1 is no maximum
-emtol                  = 900       ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
-emstep                 = 0.01       ; (0.01) [nm] initial step-size
+integrator             = cg
+nsteps                 = 11000         ; maximum number of steps to integrate or minimize, -1 is no maximum
+emtol                  = 200        ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
+emstep                 = 0.002      ; (0.01) [nm] initial step-size
+nstcgsteep             = 1000       ; （1000）[步]在进行共轭梯度能量最小化的同时执行最陡下降步骤的频率。
 nstcomm                = 100        ; （100）[steps]重心运动消除的频率
-
-;----------------------------------------------------
-; OUTPUT CONTROL
-;----------------------------------------------------
-nstxout                = 0          ; don't save coordinates to .trr
-nstvout                = 0          ; don't save velocities to .trr
-nstfout                = 0          ; don't save forces to .trr
-
-nstxout-compressed     = 500        ; xtc compressed trajectory output every 500 steps
-compressed-x-precision = 1000       ; （1000）[真实]精度，用于写入压缩的轨迹文件
-nstlog                 = 500        ; update log file every 500 steps
-nstenergy              = 500        ; save energies every 500 steps
-nstcalcenergy          = 100
 
 ;----------------------------------------------------
 ; NEIGHBOR SEARCHING
@@ -30,7 +18,7 @@ nstcalcenergy          = 100
 cutoff-scheme          = Verlet
 ns-type                = grid
 nstlist                = 40        ; Frequency to update the neighbor list. With parallel simulations and/or non-bonded force calculation on the GPU, a value of 20 or 40 often gives the best performance.
-rlist                  = 1.0
+rlist                  = 1.0       ; rlist is ignored while Verlat
 pbc                    = xyz       ; Periodic Boundary Conditions
 
 ;----------------------------------------------------
@@ -44,18 +32,14 @@ constraints            = none
 coulombtype            = PME
 rcoulomb               = 1.0
 pme-order              = 4 
-fourierspacing         = 0.16
-ewald-rtol             = 1e-5
+fourierspacing         = 0.12
+; ewald-rtol             = 1e-5
 
 ;----------------------------------------------------
 ; VDW
 ;----------------------------------------------------
 vdwtype                 = cutoff
 rvdw                    = 1.0
-; rvdw-switch             = 1.0           ; charmm36
-; vdw-modifier            = force-switch  ;force-switch for charmm36 ;Potential-Shift 将范德华电势移动一个常数，以使其在截止时为零。这使势能成为力的一部分
-ewald-rtol-lj           = 1e-3
-lj-pme-comb-rule        = Geometric     ; 几何）用于在LJ-PME的倒数部分中组合VdW参数的组合规则。几何规则比洛伦兹-贝特洛（Lorentz-Berthelot）更快，通常是推荐的选择
 DispCorr                = EnerPres            ; no for charmm36 对能量和压力进行远距离色散校正
 
 ;----------------------------------------------------

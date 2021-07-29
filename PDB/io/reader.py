@@ -34,7 +34,7 @@ ATOM     33  N  BARG A  -3      11.296  86.721  94.521  0.50 35.60           N
 ATOM     34  CA AARG A  -3      12.353  85.696  94.456  0.50 36.67           C
 """
 from collections import defaultdict as ddict
-from PDB.atom import Atom
+from PDB.io.atom import Atom
 
 aa_codes = {
     'ALA': 'A', 'CYS': 'C', 'ASP': 'D', 'GLU': 'E',  # Amino acid
@@ -64,17 +64,21 @@ def header_reader(filepath):
                 mdl_id = columns[-1].replace(';', '')
 
 
-def structure_reader():
-    file = open('/media/zhangxin/Raid0/dataset/PP/single_complex/2/2den.pdb', 'r')
+def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2/2den.pdb',
+                     options=None):
+    """
+    :param filepath
+    :param options: atom names
+    """
+    file = open(filepath, 'r')
 
-    chains = ddict(list)
-    residues = ddict(list)
     atoms = []
+    waters = []
 
-    # read atoms and water
-    for line in file.readline():
-        if line.startswith('ATOM'):
-
+    # io atoms and water
+    for line in file.readlines():
+        if line[0:7].strip() == 'ATOM':
+            # Note that list index started with 0 and [s, e] not include e
             serial = line[6:11].strip()
             name = line[12:16].strip()
             res_name = line[17:20].strip()
@@ -86,14 +90,17 @@ def structure_reader():
             y = line[38:46].strip()
             z = line[46:54].strip()
 
-            atom = Atom(serial=serial, name=name, res_name=res_name, chain_id=chain_id, res_seq=res_seq,
-                        x=x, y=y, z=z, element=element)
-            atoms.append(atom)
-        elif line[17:20].strip() == 'HOH':
-            atoms.append()
+            if name[0] in options:
+                atom = Atom(serial=serial, name=name, res_name=res_name, chain_id=chain_id, res_seq=res_seq,
+                            x=x, y=y, z=z, element=element)
+
+                if res_name == 'HOH' or res_name == 'SOL':
+                    waters.append(atom)
+                else:
+                    atoms.append(atom)
+
+    return atoms, waters
 
 
-
-
-
-structure_reader()
+if __name__ == '__main__':
+    structure_reader('/media/xin/WinData/ACS/github/BioUtil/PDB/process/_0_100.pdb', ['N', 'C', 'O'])

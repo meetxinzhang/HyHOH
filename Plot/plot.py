@@ -12,6 +12,7 @@ import numpy as np
 import gromacs.formats
 import matplotlib.pyplot as plt
 import matplotlib
+
 matplotlib.rcParams['font.size'] = 10
 # matplotlib.rcParams['font.family'] = 'Times New Roman'
 

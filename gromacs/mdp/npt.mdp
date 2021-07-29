@@ -7,10 +7,10 @@
 ;----------------------------------------------------
 define       = -DPOSRES
 integrator   = md            ; stochastic leap-frog integrator
-nsteps       = 500000          ; 2 * 500  = 1000 ps
+nsteps       = 50000         ; 2 * 50  = 100 ps
 dt           = 0.002         ; 2 fs  积分的时间步长（仅对基于时间的积分器有意义）
 comm-mode    = Linear        ; remove center of mass translation
-nstcomm      = 100            ; frequency for center of mass motion removal
+nstcomm      = 100           ; frequency for center of mass motion removal
 
 ;----------------------------------------------------
 ; OUTPUT CONTROL
@@ -32,7 +32,7 @@ constraints            = h-bonds    ; hydrogens only are constrained
 lincs-iter             = 1          ; accuracy of LINCS (1 is default)
 lincs-order            = 4          ; also related to accuracy (4 is default)
 lincs-warnangle        = 30         ; maximum angle that a bond can rotate before LINCS will complain (30 is default)
-continuation           = yes         ; formerly known as 'unconstrained-start' - useful for exact continuations and reruns
+continuation           = yes         ; Restarting after NVT  
 
 ;----------------------------------------------------
 ; NEIGHBOR SEARCHING
@@ -50,8 +50,8 @@ coulombtype      = PME      ; Particle Mesh Ewald for long-range electrostatics
 rcoulomb         = 1.0      ; short-range electrostatic cutoff (in nm)
 ewald-geometry   = 3d       ; Ewald sum is performed in all three dimensions
 pme-order        = 4        ; interpolation order for PME (default is 4)
-fourierspacing   = 0.16     ; grid spacing for FFT
-ewald-rtol       = 1e-5     ; relative strength of the Ewald-shifted direct potential at rcoulomb
+fourierspacing   = 0.12     ; grid spacing for FFT
+; ewald-rtol       = 1e-5     ; relative strength of the Ewald-shifted direct potential at rcoulomb
 
 ;----------------------------------------------------
 ; VDW
@@ -60,26 +60,30 @@ vdwtype                 = cutoff       ; Particle Mesh Ewald for long-range elec
 rvdw                    = 1.0
 ; rvdw-switch             = 1.0   ; charmm36
 ; vdw-modifier            = force-switch  ;force-switch for charmm36 ;Potential-Shift 将范德华电势移动一个常数，以使其在截止时为零。这使势能成为力的一部分
-ewald-rtol-lj           = 1e-3
+; ewald-rtol-lj           = 1e-3
 ; lj-pme-comb-rule        = Geometric
 DispCorr                = EnerPres           ; no for charmm36 对能量和压力进行远距离色散校正
 
 ;----------------------------------------------------
 ; TEMPERATURE & PRESSURE COUPL
 ;----------------------------------------------------
-tc-grps      =  Protein Non-Protein   ; Protein   Non-Protein  two coupling groups - more accurate
-tau-t       =  0.2    0.2                ; time constant, in ps
-ref-t       =  298    298            ; reference temperature, one for each group, in K
 tcoupl           = V-rescale            ; modified Berendsen thermostat
+tc-grps          =  Protein Non-Protein   ; Protein   Non-Protein  two coupling groups - more accurate
+tau-t            =  0.2    0.2                ; time constant, in ps
+ref-t            =  298    298            ; reference temperature, one for each group, in K
+
 pcoupl           = Berendsen            ; Pressure coupling on in NPT, also weak coupling
 pcoupltype       = isotropic            ; uniform scaling of x-y-z box vectors
 tau-p            = 2.0                  ; time constant (ps)
-ref-p            = 1.0                  ; reference pressure (bar)
+ref-p            = 1.013                  ; reference pressure (bar)
 compressibility  = 4.5e-5              ; isothermal compressibility of water (bar^-1)
 refcoord-scaling = com
 
 ;----------------------------------------------------
 ; VELOCITY GENERATION
 ;----------------------------------------------------
-gen-vel          = no                   ; Velocity generation is off (if gen_vel is 'yes', continuation should be 'no')
+gen_vel                 = no         ; Velocity generation is off (if gen_vel is 'yes', continuation should be 'no')
+gen_temp                = 298        ; temperature for Maxwell distribution
+gen_seed                = -1       ; generate a random seed
+
 

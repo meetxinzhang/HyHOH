@@ -11,14 +11,14 @@
 
 class Atom(object):
     def __init__(self, serial, name, res_name, chain_id, res_seq, x, y, z, element):
-        self._serial = serial
+        self._serial = int(serial)
         self._name = name
         self._res_name = res_name
         self._chain_id = chain_id
-        self._res_seq = res_seq
-        self._x = x
-        self._y = y
-        self._z = z
+        self._res_seq = int(res_seq)
+        self._x = float(x)
+        self._y = float(y)
+        self._z = float(z)
         self._element = element
 
     @property
