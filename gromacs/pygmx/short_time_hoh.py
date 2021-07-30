@@ -53,7 +53,7 @@ def assign_water(protein_atoms, waters):
             elif L_idx[0] <= a.res_seq <= L_idx[1]:
                 if d < d2L:
                     d2L = d
-        if d2R > 3.5 or d2L > 3.5:
+        if d2R > 3 and d2L > 3:  # A
             continue
         if d2R < d2L:
             RHOHs.append(w.res_seq)
@@ -111,7 +111,6 @@ def apply_windows(xtc, gro, ndx, win_params, num_hyHOH, thr=0.4):
             print('continue ----------')
             os.system('rm ' + str(start) + '_' + str(end) + '*')
             os.system('rm \#rmsf.xvg.*')
-            os.system('rm \#index.ndx.*')
             continue
 
         "run gmx-make_ndx to assign hyHOH molecules to R, L"
@@ -128,27 +127,30 @@ def apply_windows(xtc, gro, ndx, win_params, num_hyHOH, thr=0.4):
         os.system('rm \#rmsf.xvg.*')
         os.system('rm \#index.ndx.*')
 
-        # TODO: make index dic
+        # TODO: make index dictionary
         # TODO: run MMPBSA.sh in each windows
         # TODO: support for frames selection when MMPBSA
-        mmpbsa_on_windows(short_xtc, short_ndx, grp_pw, grp_R, grp_L)
+        mmpbsa_on_windows(short_xtc, short_ndx, short_ave_pdb, grp_pw, grp_R, grp_L)
 
 
-def mmpbsa_on_windows(short_xtc, short_ndx, grp_PW, grp_R, grp_L):
+def mmpbsa_on_windows(short_xtc, short_ndx, short_ave_pdb, grp_PW, grp_R, grp_L):
     # xtc_path = glob.glob('/*_.xtc')
     # for short_xtc in xtc_path:
-    # short_ndx = xtc.replace('.xtc', '.ndx')
+    short_rmsd = short_xtc.replace('.xtc', 'rmsd.xvg')
 
     # out_xtc = xtc.replace('.xtc', 'analysis.xtc')
     # gmx.trjconv(f=xtc, o=out_xtc, drop=drop, dropunder=dropunder, dropover=dropover)
 
-    os.system('/media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_ed.bsh -f ' + short_xtc
-              + ' -s /media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
-              + ' -n ' + short_ndx
-              + ' -com ' + grp_PW
-              + ' -pro ' + grp_R
-              + ' -lig ' + grp_L
-              + ' -cou dh -ts ie -i 100')
+    gmx.rms(f=short_xtc, s=short_ave_pdb, o=short_rmsd)
+    command = '/media/xin/WinData/ACS/gmx/gmx_mmpbsa_ed.bsh' \
+              + ' -s /media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr' \
+              + ' -f ' + short_xtc \
+              + ' -n ' + short_ndx\
+              + ' -com ' + grp_PW\
+              + ' -pro ' + grp_R\
+              + ' -lig ' + grp_L\
+              + ' -cou dh -ts ie -i 100'
+    os.system(command)
 
 
 if __name__ == '__main__':
@@ -159,4 +161,13 @@ if __name__ == '__main__':
     xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     gro = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/npt.gro'
 
-    apply_windows(xtc, gro, ndx, win_params=[0, 10000, 100, 100], num_hyHOH=100, thr=0.4)
+    command = '/media/xin/WinData/ACS/gmx/gmx_mmpbsa_ed.bsh' \
+              + ' -s /media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr' \
+              + ' -f ' + '/media/xin/WinData/ACS/github/BioUtil/PDB/process/0_100_.xtc' \
+              + ' -n ' + '/media/xin/WinData/ACS/github/BioUtil/PDB/process/0_100_.ndx'\
+              + ' -com ' + 'Protein'\
+              + ' -pro ' + 'receptor'\
+              + ' -lig ' + 'ligand'\
+              + ' -cou dh -ts ie -i 50'
+    os.system(command)
+    # apply_windows(xtc, gro, ndx, win_params=[0, 1000, 100, 100], num_hyHOH=100, thr=0.4)

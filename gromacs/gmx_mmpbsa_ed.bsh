@@ -191,7 +191,6 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 #### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames)
 
 echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end -dt $intervel &> $scr -pbc whole
-# echo $com              | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -dt $intervel &> $scr -pbc whole
 
 if [[ $withLig -eq 1 ]]; then
 # usful for single protein and ligand
