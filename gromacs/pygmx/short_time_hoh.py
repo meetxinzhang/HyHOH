@@ -12,6 +12,7 @@ import numpy as np
 import os
 import glob
 import gromacs as gmx
+
 print('gromacs version:', gmx.release())
 
 
@@ -42,8 +43,8 @@ def assign_water(protein_atoms, waters):
     RHOHs = []
     LHOHs = []
     for w in waters:
-        d2R = 99  # distance to Receptor
-        d2L = 99  # distance to Ligand
+        d2R = 10  # distance to Receptor
+        d2L = 10  # distance to Ligand
         for a in protein_atoms:
             d = np.sqrt(np.sum(np.square(np.array(w.coordinates) - np.array(a.coordinates))))
             if R_idx[0] <= a.res_seq <= R_idx[1]:
@@ -52,6 +53,8 @@ def assign_water(protein_atoms, waters):
             elif L_idx[0] <= a.res_seq <= L_idx[1]:
                 if d < d2L:
                     d2L = d
+        if d2R > 3.5 or d2L > 3.5:
+            continue
         if d2R < d2L:
             RHOHs.append(w.res_seq)
         else:
@@ -77,12 +80,13 @@ def apply_windows(xtc, gro, ndx, win_params, num_hyHOH, thr=0.4):
         "run gmx-rmsf on this windows"
         gmx.rmsf(s=gro, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=ndx, input='SOL')
 
-        "search HOH molecules which have minimal rmsf "
+        "run gmx-rmsf on this windows"
         try:
             hy_HOHs = sort_xvg(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
             print(e.message)
-            os.system('rm '+short_rmsf_xvg)
+            os.system('rm ' + short_rmsf_xvg)
+            os.system('rm \#rmsf.xvg.*')
             continue
         grp_w = 'r_' + '_'.join(str(hoh) for hoh in hy_HOHs)
         select_command = 'ri ' + ' '.join(str(hoh) for hoh in hy_HOHs)
@@ -105,7 +109,9 @@ def apply_windows(xtc, gro, ndx, win_params, num_hyHOH, thr=0.4):
         print('L_HOHs: ', LHOHs)
         if len(RHOHs) == 0 or len(LHOHs) == 0:
             print('continue ----------')
-            os.system('rm '+str(start) + '_' + str(end) + '*')
+            os.system('rm ' + str(start) + '_' + str(end) + '*')
+            os.system('rm \#rmsf.xvg.*')
+            os.system('rm \#index.ndx.*')
             continue
 
         "run gmx-make_ndx to assign hyHOH molecules to R, L"
@@ -125,24 +131,24 @@ def apply_windows(xtc, gro, ndx, win_params, num_hyHOH, thr=0.4):
         # TODO: make index dic
         # TODO: run MMPBSA.sh in each windows
         # TODO: support for frames selection when MMPBSA
-        mmpbsa_on_windows('rmsd.xvg', 0.38, 0.40, grp_pw, grp_R, grp_L)
+        mmpbsa_on_windows(short_xtc, short_ndx, grp_pw, grp_R, grp_L)
 
 
-def mmpbsa_on_windows(drop, dropunder, dropover, grp_PW, grp_R, grp_L):
-    xtc_path = glob.glob('/*_.xtc')
-    for short_xtc in xtc_path:
-        short_ndx = xtc.replace('.xtc', '.ndx')
+def mmpbsa_on_windows(short_xtc, short_ndx, grp_PW, grp_R, grp_L):
+    # xtc_path = glob.glob('/*_.xtc')
+    # for short_xtc in xtc_path:
+    # short_ndx = xtc.replace('.xtc', '.ndx')
 
-        # out_xtc = xtc.replace('.xtc', 'analysis.xtc')
-        # gmx.trjconv(f=xtc, o=out_xtc, drop=drop, dropunder=dropunder, dropover=dropover)
+    # out_xtc = xtc.replace('.xtc', 'analysis.xtc')
+    # gmx.trjconv(f=xtc, o=out_xtc, drop=drop, dropunder=dropunder, dropover=dropover)
 
-        os.system('/media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_ed.bsh -f ' + short_xtc
-                  + ' -s /media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
-                  + ' -n ' + short_ndx
-                  + ' -com ' + grp_PW
-                  + ' -pro ' + grp_R
-                  + ' -lig ' + grp_L
-                  + ' -cou dh -ts ie -i 100')
+    os.system('/media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_ed.bsh -f ' + short_xtc
+              + ' -s /media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
+              + ' -n ' + short_ndx
+              + ' -com ' + grp_PW
+              + ' -pro ' + grp_R
+              + ' -lig ' + grp_L
+              + ' -cou dh -ts ie -i 100')
 
 
 if __name__ == '__main__':
