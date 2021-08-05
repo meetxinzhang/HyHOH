@@ -19,7 +19,7 @@ aa_codes = {
     'ILE': 'I', 'LEU': 'L', 'MET': 'M', 'ASN': 'N',
     'PRO': 'P', 'GLN': 'Q', 'ARG': 'R', 'SER': 'S',
     'THR': 'T', 'VAL': 'V', 'TYR': 'Y', 'TRP': 'W',
-    'HOH': 'water'}
+    'SOL': 'Water'}
 
 # aa_codes = {
 #     'ALA': 1, 'CYS': 2, 'ASP': 3, 'GLU': 4,  # Amino acid
@@ -52,7 +52,7 @@ def parser_reader(file_path):
         chain_id = str(chain.get_id())
         primary_string = '>'
         for residue in chain:
-            if is_aa(residue) and residue.resname in aa_codes.keys():
+            if residue.resname in aa_codes.keys():
                 primary.append(aa_codes[residue.resname])
                 primary_string += aa_codes[residue.resname]
                 # try:

@@ -32,6 +32,9 @@ For example,
 ATOM     32  N  AARG A  -3      11.281  86.699  94.383  0.50 35.88           N
 ATOM     33  N  BARG A  -3      11.296  86.721  94.521  0.50 35.60           N
 ATOM     34  CA AARG A  -3      12.353  85.696  94.456  0.50 36.67           C
+
+Note that list index started with 0 and [s, e] denote e elements.
+So, line[0:2] == 'AT'
 """
 from collections import defaultdict as ddict
 from PDB.io.atom import Atom
@@ -70,34 +73,44 @@ def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2
     :param filepath
     :param options: atom names
     """
-    file = open(filepath, 'r')
-
     atoms = []
     waters = []
+    res_base = 0
+    times_pass_9999 = 0
 
-    # io atoms and water
-    for line in file.readlines():
-        if line[0:7].strip() == 'ATOM':
-            # Note that list index started with 0 and [s, e] not include e
-            serial = line[6:11].strip()
-            name = line[12:16].strip()
-            res_name = line[17:20].strip()
-            chain_id = line[21].strip()
-            res_seq = line[22:26].strip()
-            element = line[76:78].strip()
+    with open(filepath, 'r') as f:
+        for line in f:
+            if line[0:6].strip() == 'ATOM':
+                # Note that list index started with 0 and [s, e] denote e elements.
+                serial = line[6:11].strip()
+                name = line[12:16].strip()
+                res_name = line[17:20].strip()
+                chain_id = line[21].strip()
 
-            x = line[30:38].strip()
-            y = line[38:46].strip()
-            z = line[46:54].strip()
+                res_seq = int(line[22:26].strip())  # max 9999
+                true_res_seq = res_seq + res_base   # add a base to keep res_seq continue
+                if res_seq == 9999:
+                    if times_pass_9999 == 2:  # passed 2 times, 3 times totally.
+                        res_base += 10000  # add 10000 to next line
+                        times_pass_9999 = 0
+                    else:
+                        times_pass_9999 += 1
+                # print(serial, name, res_name, true_res_seq)
 
-            if name[0] in options:
-                atom = Atom(serial=serial, name=name, res_name=res_name, chain_id=chain_id, res_seq=res_seq,
-                            x=x, y=y, z=z, element=element)
+                element = line[76:78].strip()
 
-                if res_name == 'HOH' or res_name == 'SOL':
-                    waters.append(atom)
-                else:
-                    atoms.append(atom)
+                x = line[30:38].strip()
+                y = line[38:46].strip()
+                z = line[46:54].strip()
+
+                if name[0] in options:
+                    atom = Atom(serial=serial, name=name, res_name=res_name, chain_id=chain_id, res_seq=true_res_seq,
+                                x=x, y=y, z=z, element=element)
+
+                    if res_name == 'HOH' or res_name == 'SOL':
+                        waters.append(atom)
+                    else:
+                        atoms.append(atom)
 
     return atoms, waters
 

@@ -44,8 +44,8 @@ def assign_water(protein_atoms, waters, R_idx, L_idx):
         d2R = 10  # distance to Receptor
         d2L = 10  # distance to Ligand
         # TODO: handle exception manually
-        if w.res_seq == 794:
-            continue
+        # if w.res_seq == 794:
+        #     continue
         for a in protein_atoms:
             d = np.sqrt(np.sum(np.square(np.array(w.coordinates) - np.array(a.coordinates))))
             if R_idx[0] <= a.res_seq <= R_idx[1]:
@@ -76,6 +76,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         short_xtc = str(start) + '_' + str(end) + '_.xtc'
         short_tpr = str(start) + '_' + str(end) + '_.tpr'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
+        temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
         # ndx = '_index.ndx'
 
@@ -85,26 +86,24 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         gmx.make_ndx(f=tpr, o=short_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=short_ndx, input='SOL')
-        gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=short_ndx, input='System')
+        gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=short_ndx, input='System')
         os.system('rm rmsf.xvg')
         # gmx.covar(s=tpr, f=xtc, av=short_ave_pdb, b=start, e=end, n=short_ndx, input='System')
 
         "get index of hy_HOHs"
         try:
-            hy_HOHs_idx = sort_xvg(short_rmsf_xvg, num_hyHOH, thr)
+            ice_idx = sort_xvg(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
             print(e.message)
             os.system('rm ' + str(start) + '_' + str(end) + '*')
-            os.system('rm \#rmsf.xvg.*')
             continue
-
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
-        protein_atoms, waters = structure_reader(short_ave_pdb, ['N', 'C', 'O'])
-        "get hyHOH object"
-        hy_HOHs = [hyHOH for hyHOH in waters if hyHOH.res_seq in hy_HOHs_idx]
+        protein_atoms, waters = structure_reader(temp_ave_pdb, ['N', 'C', 'O'])
+        "get ice object"
+        ices = [ice for ice in waters if ice.res_seq in ice_idx]
 
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
-        RHOHs, LHOHs = assign_water(protein_atoms, hy_HOHs, R_idx, L_idx)
+        RHOHs, LHOHs = assign_water(protein_atoms, ices, R_idx, L_idx)
 
         print('num of R, L water atoms: ', len(RHOHs), len(LHOHs))
         print('R_HOHs: ', RHOHs)
@@ -112,7 +111,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         if len(RHOHs) == 0 or len(LHOHs) == 0:
             print('continue ----------')
             os.system('rm ' + str(start) + '_' + str(end) + '*')
-            os.system('rm \#rmsf.xvg.*')
             continue
 
         "generate short-term xtc and average pdb"
@@ -129,12 +127,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=short_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=short_ndx, nsteps=-1, input='20')
 
-        grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
-        grp_LHOHs = 'r_' + '_'.join(str(hoh) for hoh in LHOHs)
+        # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
+        # grp_LHOHs = 'r_' + '_'.join(str(hoh) for hoh in LHOHs)
         select_RH_cmd = 'r ' + ' '.join(str(hoh) for hoh in RHOHs)
         select_LH_cmd = 'r ' + ' '.join(str(hoh) for hoh in LHOHs)
-        grp_R = 'r_' + str(R_idx[0]) + '-' + str(R_idx[1])
-        grp_L = 'r_' + str(L_idx[0]) + '-' + str(L_idx[1])
+        # grp_R = 'r_' + str(R_idx[0]) + '-' + str(R_idx[1])
+        # grp_L = 'r_' + str(L_idx[0]) + '-' + str(L_idx[1])
         select_R_cmd = 'ri ' + str(R_idx[0]) + '-' + str(R_idx[1])
         select_L_cmd = 'ri ' + str(L_idx[0]) + '-' + str(L_idx[1])
 
@@ -148,10 +146,10 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
                                                       select_RH_cmd, select_LH_cmd,  # 17 18
                                                       'name 17 r_HOH', 'name 18 l_HOH', 'q'))  # 21 22 23 24
 
-        grp_R_pw = grp_R + '_' + grp_RHOHs
-        grp_L_pw = grp_L + '_' + grp_LHOHs
-        select_RPW_cmd = '"' + grp_R + '" | "' + grp_RHOHs + '"'
-        select_LPW_cmd = '"' + grp_L + '" | "' + grp_LHOHs + '"'
+        # grp_R_pw = grp_R + '_' + grp_RHOHs
+        # grp_L_pw = grp_L + '_' + grp_LHOHs
+        # select_RPW_cmd = '"' + grp_R + '" | "' + grp_RHOHs + '"'
+        # select_LPW_cmd = '"' + grp_L + '" | "' + grp_LHOHs + '"'
         gmx.make_ndx(f=short_tpr, n=short_ndx, o=short_ndx, input=('15 | 17', 'name 19 receptor',
                                                                    '16 | 18', 'name 20 ligand',
                                                                    '19 | 20', 'name 21 com', 'q'))  # 24 25
