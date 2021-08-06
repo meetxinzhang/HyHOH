@@ -157,11 +157,11 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         os.system('rm ' + temp_ndx)
         os.system('rm ' + temp_ave_pdb)
         os.system('rm rmsf.xvg')
-        os.system('rm /#rmsf*')
+        os.system('rm \#*')  # delete all # starting files
 
         "run MMPBSA script"
         command = 'mkdir ' + str(start) + '_' + str(end) + ' &&' \
-                  + '../gmx_mmpbsa_dir_seq.sh' \
+                  + ' /media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_dir_seq.sh' \
                   + ' -dir ' + str(start) + '_' + str(end)\
                   + ' -s ../' + short_tpr \
                   + ' -f ../' + short_xtc \
@@ -169,7 +169,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start + 50)) + ' -e ' + str(int(end - 50)) + ' -i 1' \
+                  + ' -b ' + str(int(start + 20)) + ' -e ' + str(int(end - 20)) + ' -i 30' \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)
