@@ -17,7 +17,3 @@ __pycache__
 *.zip
 *.err
 *.out
-charmm36-jul2020.ff
-/PDB/pdb-tools-master.zip
-/atom_files/*.pdb
-/outputs
