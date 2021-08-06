@@ -27,8 +27,8 @@ def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
         if (not line.strip().startswith("#")) and (not line.strip().startswith("@")):
             xy_lines.append([int(line.split()[0]), float(line.split()[1])])
 
-    # xy_lines.sort(key=lambda xy: xy[1])  # sorted by rmsf value
     xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
+    xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
     if len(xy_interest) <= 1:
         raise ExceptionPassing('!!! WARNING: len(xy_interest) <= 1')
     # x = [xy[0] for xy in xy_lines[:50]]
@@ -169,17 +169,17 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start + 20)) + ' -e ' + str(int(end - 20)) + ' -i 30' \
+                  + ' -b ' + str(int(start + 25)) + ' -e ' + str(int(end - 35)) + ' -i 70' \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)
 
 
 if __name__ == '__main__':
-    R_idx = [196, 632]  # antibody
+    R_idx = [196, 632]  # Antibody
     L_idx = [1, 195]  # RBD
 
     xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 1000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[1000, 5000, 200, 200], num_hyHOH=100, thr=0.4, bond_d=3)
