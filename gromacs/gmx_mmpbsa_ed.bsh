@@ -1,3 +1,4 @@
+#!/bin/bash
 echo -e "\
 --------------------------------------------------------------------------------
 >> Option:
@@ -190,7 +191,8 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # gmx rms -f md_0_1.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
 #### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames)
 
-echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end -dt $intervel &> $scr -pbc whole
+echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end -skip $intervel &> $scr -pbc whole
+#echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -dt $intervel &> $scr -pbc whole
 
 if [[ $withLig -eq 1 ]]; then
 # usful for single protein and ligand
@@ -536,6 +538,11 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 					for(j=1; j<=Nlig; j++) {
 						jj=j+Ilig-1; cj=Catm[jj]
 						r=sqrt( (xi-x[jj])^2+(yi-y[jj])^2+(zi-z[jj])^2 )
+						echo -e "11111111111111111111111111111111"
+						if(r==0) {
+						    echo -e "!!!!!!!!!!!!!!!!!! $i $j"
+							echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+						}
 						if(r<Rcut) {
 							t=1/(.1*r)^6
 							Ecou   = qi*Qatm[jj]/r;

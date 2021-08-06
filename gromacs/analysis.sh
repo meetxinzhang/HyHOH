@@ -16,12 +16,14 @@ gmx gyrate -s md_0.tpr -f md_0_noPBC.xtc -o md_out/gyrate.xvg
 # 1 for protein
 
 ################# trajectoty
-gmx trjconv -s ../npt.gro -f ../md_0.xtc -o md_0_noPBC.xtc -pbc mol #-ur compact
+gmx trjconv -s ../npt.gro -f ../md_0.xtc -o md_0_whole.xtc -pbc whole #-ur compact
+# 0 for system
+gmx trjconv -s ../npt.gro -f md_0_whole.xtc -o md_0_nojump.xtc -pbc nojump
 # 0 for system
 
 
 ################# RMSD
-gmx rms -s ../npt.gro -f md_0_noPBC.xtc -o rmsd.xvg #-tu ns
+gmx rms -s ../npt.gro -f md_0_nojump.xtc -o rmsd.xvg #-tu ns
 # 4 for backbone
 
 xmgrace -nxy rmsd.xvg
@@ -29,10 +31,10 @@ xmgrace -nxy rmsd.xvg
 
 ################# RMSD refers to average.pdb 
 
-gmx rmsf -f md_0_noPBC.xtc -s ../npt.gro -o rmsf-perdue.xvg -ox average.pdb  -b 1000 -res
+gmx rmsf -f md_0_nojump.xtc -s ../npt.gro -o rmsf-perdue.xvg -ox average.pdb  -b 1000 -res
 # Selects backbone for root mean qsuare calculatuion.
 
-gmx rms -f md_0_noPBC.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
+gmx rms -f md_0_nojump.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
 # Selects backbone 
 
 xmgrace -nxy rmsd-all-atom-vs-avg.xvg
@@ -41,7 +43,7 @@ python ../../../../xvgReorder.py rmsd-all-atom-vs-avg.xvg
 
 xmgrace -nxy rmsd-all-atom-vs-avg-reorder.xvg
 
-gmx trjconv -f md_0_noPBC.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -dropunder 2.80 -dropover 2.82
+gmx trjconv -f md_0_nojump.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -dropunder 2.80 -dropover 2.82
 
 
 ################# mostFre by Bio3D
@@ -49,11 +51,11 @@ R
 
 library(bio3d)
 
-dcdfile <- "md_0_noPBC.dcd"
+dcdfile <- "md_0_nojump.dcd"
 pdbfile <- "npt.pdb"
 
-dcd <- io.dcd(dcdfile)
-pdb <- io.pdb(pdbfile)
+dcd <- read.dcd(dcdfile)
+pdb <- read.pdb(pdbfile)
 
 # ca.inds <- atom.select(pdb, elety="CA")
 ca.inds <- atom.select(pdb, "backbone")
@@ -72,12 +74,12 @@ points(lowess(rd), typ="l", col="red", lty=2, lwd=2)
 hist(rd, breaks=40, freq=TRUE, main="RMSD Histogram", xlab="RMSD")
 lines(density(rd), col="gray", lwd=3)
 
-gmx trjconv -f md_0_noPBC.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder 0.38 -dropover 0.40
+gmx trjconv -f md_0_nojump.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder 0.38 -dropover 0.40
 
 
 ################ MMPBSA
-./../../../../gmx_mmpbsa_ed.bsh -f ../md_1.xtc -s ../md_1.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 2000 -i 100
-./../../../../gmx_mmpbsa_ed.bsh -f ../md_0.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 500
+./../../../../gmx_mmpbsa_ed.bsh -f ../analysis/md_0_nojump.xtc -s ../md_1.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 2000 -i 100
+./../../../../gmx_mmpbsa_ed.bsh -f ../analysis/md_0_nojump.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 2000 -e 10000 -i 1000
 # mostFre
 ./../../../../gmx_mmpbsa_ed.bsh -f ../analysis/mostFre.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 200
 # cloestAve
@@ -87,7 +89,7 @@ python ../../plotmmpb.py
 
 
 ################ schlitter
-gmx covar -s ../md_0.tpr -f ../analysis/md_0_noPBC.xtc -o eigenvalues.xvg -v eigenvectors.trr
+gmx covar -s ../md_0.tpr -f ../analysis/md_0_nojump.xtc -o eigenvalues.xvg -v eigenvectors.trr
 # backbone
 
-gmx anaeig -s ../md_0.tpr -f ../analysis/md_0_noPBC.xtc -v eigenvectors.trr -eig eigenvalues.xvg -entropy yes
+gmx anaeig -s ../md_0.tpr -f ../analysis/md_0_nojump.xtc -v eigenvectors.trr -eig eigenvalues.xvg -entropy yes

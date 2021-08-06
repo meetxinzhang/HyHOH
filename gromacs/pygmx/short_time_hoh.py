@@ -37,7 +37,7 @@ def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
     return x
 
 
-def assign_water(protein_atoms, waters, R_idx, L_idx):
+def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     RHOHs = []
     LHOHs = []
     for w in waters:
@@ -54,7 +54,7 @@ def assign_water(protein_atoms, waters, R_idx, L_idx):
             elif L_idx[0] <= a.res_seq <= L_idx[1]:
                 if d < d2L:
                     d2L = d
-        if d2R > 3 and d2L > 3:  # A
+        if d2R > bond_d and d2L > bond_d:  # A
             continue
         if d2R < d2L:
             RHOHs.append(w.res_seq)
@@ -63,7 +63,7 @@ def assign_water(protein_atoms, waters, R_idx, L_idx):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
+def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d=3):
     [begin, final, win_len, win_stride] = win_params
     # whole_xtc = 'whole.xtc'
     # nojump_xtc = 'nojump.xtc'
@@ -103,7 +103,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         ices = [ice for ice in waters if ice.res_seq in ice_idx]
 
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
-        RHOHs, LHOHs = assign_water(protein_atoms, ices, R_idx, L_idx)
+        RHOHs, LHOHs = assign_water(protein_atoms, ices, R_idx, L_idx, bond_d)
 
         print('num of R, L water atoms: ', len(RHOHs), len(LHOHs))
         print('R_HOHs: ', RHOHs)
@@ -165,8 +165,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
         # mmpbsa_on_windows(short_xtc, short_ndx, short_ave_pdb, grp_PW, grp_R, grp_L)
         # gmx.rms(f=short_xtc, s=short_ave_pdb, o=short_rmsd_xvg)
         command = 'mkdir ' + str(start) + '_' + str(end) + ' &&' \
-                  + ' cd ' + str(start) + '_' + str(end) + ' &&' \
-                  + '/media/xin/WinData/ACS/gmx/gmx_mmpbsa_ed.bsh' \
+                  + '../gmx_mmpbsa_dir_seq.sh' \
+                  + ' -dir ' + str(start) + '_' + str(end)\
                   + ' -s ../' + short_tpr \
                   + ' -f ../' + short_xtc \
                   + ' -n ../' + short_ndx \
@@ -174,7 +174,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4):
                   + ' -pro receptor' \
                   + ' -lig ligand' \
                   + ' -b ' + str(int(start + 50)) + ' -e ' + str(int(end - 50)) + ' -i 1' \
-                  + ' -cou dh -ts ie && cd ..'
+                  + ' -cou dh -ts ie'
         print(command)
         os.system(command)
 
@@ -187,4 +187,4 @@ if __name__ == '__main__':
     # gro = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/npt.gro'
     tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 1000, 100, 100], num_hyHOH=100, thr=0.4)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 1000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3)

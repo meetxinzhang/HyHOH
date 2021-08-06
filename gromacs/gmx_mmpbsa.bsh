@@ -70,7 +70,7 @@ step=1	# 从第几步开始运行 step number to run
 		# 2. abstract atomic parameters, charge, radius, C6/C12, then generate qrv file
 		# 3. run MM-PBSA, pdb->pqr, apbs, then calculate MM, PB, SA
 
-gmx='gmx'								# /path/to/gromacs/bin/gmx_mpi
+gmx='gmx'								# /path/to/GMX/bin/gmx_mpi
 dump="$gmx dump"						# gmx dump
 # trjconv="$gmx trjconv -dt 1000"			# gmx trjconv, use -b -e -dt, NOT -skip
 trjconv="$gmx trjconv"			# gmx trjconv, use -b -e -dt, NOT -skip
@@ -217,9 +217,9 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # $gmx rmsf -f $trj -s $tpr -o rmsf-per-residue.xvg -ox average.pdb -res $> $scr
 #### find closest structure refers to average.pdb
 # gmx rms -f md_0_1.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
-#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 100 (frames)
+#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames)
 
-echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b 0 -e 1000 -dt 300 &> $scr -pbc whole
+echo $com                | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b 2000 -e 20000 -dt 1000 &> $scr -pbc whole
 if [[ $withLig -eq 1 ]]; then
 # usful for single protein and ligand
 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o $trjcnt.xtc &>>$scr -pbc mol -center
