@@ -137,8 +137,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
         # select_com_cmd = '"Protein" | "' + grp_RHOHs + '" | "' + grp_LHOHs + '"'
         # grp_com = 'Protein_' + grp_RHOHs + '_' + grp_LHOHs
-
-        "run gmx-make_ndx for above short_ave_pdb"
         gmx.make_ndx(f=short_tpr, o=short_ndx, input=(select_R_cmd, select_L_cmd,  # 15 16
                                                       'name 15 r_p', 'name 16 l_p',
                                                       select_RH_cmd, select_LH_cmd,  # 17 18
