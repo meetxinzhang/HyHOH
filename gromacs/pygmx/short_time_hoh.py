@@ -30,8 +30,8 @@ def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
 
     xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
     xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
-    if len(xy_interest) <= 1:
-        raise ExceptionPassing('!!! WARNING: len(xy_interest) <= 1')
+    if len(xy_interest) < 1:
+        raise ExceptionPassing('!!! WARNING: len(xy_interest) < 1')
     # x = [xy[0] for xy in xy_lines[:50]]
     x = np.array(xy_interest[:num_hyHOH], dtype=int)[:, :1].squeeze().tolist()
     x.sort()  # if not then gmx make_ndx raise error: One of your groups is not ascending
@@ -71,8 +71,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     log_file = 'apply_windows.log'
 
     for (start, end) in windows(begin, final, win_len, win_stride):
-        # if start != 0:
-        #     break
+        if start <= 4600:  # rerun control
+            continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
 
@@ -140,16 +140,26 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         # grp_com = 'Protein_' + grp_RHOHs + '_' + grp_LHOHs
         gmx.make_ndx(f=short_tpr, o=short_ndx, input=(select_R_cmd, select_L_cmd,  # 15 16
                                                       'name 15 r_p', 'name 16 l_p',
-                                                      select_RH_cmd, select_LH_cmd,  # 17 18
-                                                      'name 17 r_HOH', 'name 18 l_HOH', 'q'))  # 21 22 23 24
+                                                      select_RH_cmd, select_LH_cmd,  # 17 (18)
+                                                      'name 17 r_HOH', 'name 18 l_HOH', 'q'))
 
         # grp_R_pw = grp_R + '_' + grp_RHOHs
         # grp_L_pw = grp_L + '_' + grp_LHOHs
         # select_RPW_cmd = '"' + grp_R + '" | "' + grp_RHOHs + '"'
         # select_LPW_cmd = '"' + grp_L + '" | "' + grp_LHOHs + '"'
-        gmx.make_ndx(f=short_tpr, n=short_ndx, o=short_ndx, input=('15 | 17', 'name 19 receptor',
-                                                                   '16 | 18', 'name 20 ligand',
-                                                                   '19 | 20', 'name 21 com', 'q'))  # 24 25
+        if len(RHOHs) == 0:
+            gmx.make_ndx(f=short_tpr, n=short_ndx, o=short_ndx, input=('15', 'name 18 receptor',  # 18
+                                                                       '16 | 17', 'name 19 ligand',  # 19
+                                                                       '18 | 19', 'name 20 com', 'q'))  # 20
+        elif len(LHOHs) == 0:
+            gmx.make_ndx(f=short_tpr, n=short_ndx, o=short_ndx, input=('15 | 17', 'name 18 receptor',  # 18
+                                                                       '16', 'name 19 ligand',  # 19
+                                                                       '18 | 19', 'name 20 com', 'q'))  # 20
+        else:
+            gmx.make_ndx(f=short_tpr, n=short_ndx, o=short_ndx, input=('15 | 17', 'name 19 receptor',  # 19
+                                                                       '16 | 18', 'name 20 ligand',  # 20
+                                                                       '19 | 20', 'name 21 com', 'q'))  # 21
+
         "deal with log and temp intermediate files"
         with open(log_file, 'a', encoding='utf-8') as fw:
             fw.writelines(short_ndx + ': \n' +
@@ -186,4 +196,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[1000, 5000, 200, 200], num_hyHOH=100, thr=0.4, bond_d=3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[1000, 10000, 200, 200], num_hyHOH=100, thr=0.4, bond_d=3)
