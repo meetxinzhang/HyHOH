@@ -5,11 +5,12 @@
 @time: 7/26/21 3:07 PM
 @desc:
 """
-
+import os
+import sys
+sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to enviroment
 from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
-import os
 import gromacs as gmx
 print('gromacs version:', gmx.release())
 
@@ -107,7 +108,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         print('num of R, L water atoms: ', len(RHOHs), len(LHOHs))
         print('R_HOHs: ', RHOHs)
         print('L_HOHs: ', LHOHs)
-        if len(RHOHs) == 0 or len(LHOHs) == 0:
+        if len(RHOHs) == 0 and len(LHOHs) == 0:
             print('continue ----------')
             os.system('rm ' + str(start) + '_' + str(end) + '*')
             continue
@@ -176,10 +177,13 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
 
 if __name__ == '__main__':
-    R_idx = [196, 632]  # Antibody
+    R_idx = [196, 634]  # Antibody
     L_idx = [1, 195]  # RBD
 
-    xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
-    tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
+    tpr = sys.argv[1]
+    xtc = sys.argv[2]
+
+    # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
+    # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
     apply_windows(xtc, tpr, R_idx, L_idx, win_params=[1000, 5000, 200, 200], num_hyHOH=100, thr=0.4, bond_d=3)
