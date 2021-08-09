@@ -5,7 +5,7 @@
 @file: fix.py
 @time: 2/3/21 8:43 PM
 @desc:
-    This file gives a more quickly method to performer atom/residue fixing relative modeller
+    This file gives a more quickly method to perform atom/residue fixing relative modeller
 """
 from biobb_model.model.fix_side_chain import FixSideChain
 from biobb_structure_checking import structure_checking

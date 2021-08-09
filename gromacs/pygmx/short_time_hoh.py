@@ -30,7 +30,7 @@ def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
 
     xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
     xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
-    if len(xy_interest) < 1:
+    if len(xy_interest) <= 1:
         raise ExceptionPassing('!!! WARNING: len(xy_interest) < 1')
     # x = [xy[0] for xy in xy_lines[:50]]
     x = np.array(xy_interest[:num_hyHOH], dtype=int)[:, :1].squeeze().tolist()
@@ -71,7 +71,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     log_file = 'apply_windows.log'
 
     for (start, end) in windows(begin, final, win_len, win_stride):
-        if start <= 4600:  # rerun control
+        if start <= 5400:  # rerun control
             continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
@@ -162,7 +162,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
         "deal with log and temp intermediate files"
         with open(log_file, 'a', encoding='utf-8') as fw:
-            fw.writelines(short_ndx + ': \n' +
+            fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
                           '   ' + select_LH_cmd + '\n' +
                           '   ' + select_RH_cmd + '\n')
         os.system('rm ' + temp_ndx)
@@ -187,7 +187,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
 
 if __name__ == '__main__':
-    R_idx = [196, 634]  # Antibody
+    R_idx = [196, 632]  # Antibody
     L_idx = [1, 195]  # RBD
 
     tpr = sys.argv[1]
