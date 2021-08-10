@@ -71,8 +71,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     log_file = 'apply_windows.log'
 
     for (start, end) in windows(begin, final, win_len, win_stride):
-        if start <= 5400:  # rerun control
-            continue
+        # if start <= 5400:  # rerun control
+        #     continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
 

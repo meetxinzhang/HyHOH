@@ -74,7 +74,7 @@ def plot_binding_bar(dataframe):
 
 
 def plot_plot_pie(datas):
-    '''Plot the composition curve and pie figure'''
+    """Plot the composition curve and pie figure"""
     fig, axs = plt.subplots(2, 2, figsize=(8, 8), dpi=72)
     axs = np.ravel(axs)
 
