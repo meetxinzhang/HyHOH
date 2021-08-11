@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
+import seaborn as sns
 
 matplotlib.rcParams['font.size'] = 10
 
@@ -32,7 +33,7 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(text[i].split()[0])  # L P R
+        index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -78,22 +79,19 @@ def read_mmpbsa_dat(file_path):
 #     plt.show()
 
 
-def plot_win_terms_curves(dataframe_dic):
-    x = []
-    y = []
-    mm = []
-    pb = []
-    sa = []
-    entropy = []
+def plot_win_mmpbsa_curves(df, rhoh_num, lhoh_num):
+    x = df.index.values.tolist()
+    y = np.squeeze(df[['Binding_DH']].values.tolist())
+    mm = np.squeeze(df[['MM_DH']].values.tolist())
+    pb = np.squeeze(df[['PB']].values.tolist())
+    sa = np.squeeze(df[['SA']].values.tolist())
+    entropy = np.squeeze(df[['-TdS']].values.tolist())
 
-    for key in sorted(dataframe_dic):
-        dat_win = dataframe_dic[key]
-        x.append(key)
-        y.append(dat_win['Binding_DH'].mean())
-        mm.append(dat_win['MM_DH'].mean())
-        pb.append(dat_win['PB'].mean())
-        sa.append(dat_win['SA'].mean())
-        entropy.append(dat_win['-TdS'].mean())
+    n_rhoh = []
+    n_lhoh = []
+    for key in sorted(rhoh_num):
+        n_rhoh.append(rhoh_num[key])
+        n_lhoh.append(lhoh_num[key])
 
     print('-------------- \ndG = ', np.mean(y))
     mm = [e/10 for e in mm]
@@ -105,6 +103,8 @@ def plot_win_terms_curves(dataframe_dic):
     ax.plot(x, pb, label='PB/10')
     ax.plot(x, sa, label='SA')
     ax.plot(x, entropy, label='-TdS')
+    ax.plot(x, n_rhoh, labels='n_RHOH')
+    ax.plot(x, n_lhoh, labels='n_LHOH')
 
     xmin, xmax = ax.get_xlim()
     ax.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
@@ -117,32 +117,42 @@ def plot_win_terms_curves(dataframe_dic):
     plt.show()
 
 
+def plot_win_aa_map(df):
+    df = df.iloc[:, 196:418]
+    # plt.pcolor(df)
+    # plt.yticks(np.arange(0.5, len(df.index), 1), df.index)
+    # plt.xticks(np.arange(0.5, len(df.columns), 1), df.columns)
+    sns.heatmap(df, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, square=False)
+
+    # ymin, ymax = ax.get_ylim()
+    # ax.set_yticks(np.round(np.linspace(ymin, ymax, 10), 2))
+    plt.show()
+
+
 if __name__ == '__main__':
     work_dir = sys.argv[1]
 
     # files_interest = ['_pid~MMPBSA.dat', '_pid~res_MMPBSA.dat', '_pid~resMM.dat', '_pid~resMM_COU.dat',
     # '_pid~resMM_VDW.dat', '_pid~resPBSA.dat', '_pid~resPBSA_PB.dat', '_pid~resPBSA_SA.dat']
 
-    mmpbsa_dat = {}
+    mmpbsa_df = []
     rhoh_num = {}
     lhoh_num = {}
-    res_mm_dat = {}
+    res_mm_df = []
 
     for path, dir_list, file_list in os.walk(work_dir, topdown=True):
 
         for filename in file_list:
             if filename == '_pid~MMPBSA.dat':
-                time = path.split('/')[-1].split('_')[0]
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
-                mmpbsa_dat[time] = dat
+                mmpbsa_df.append(dat)
 
             if filename == 'apply_windows.log':
-                with open(filename) as f:
+                with open(os.path.join(path, filename)) as f:
                     for line in f:
                         if line.startswith(' '):
                             pass
                         else:
-                            print(line)
                             time = line.split('_')[0]
                             RHOH_num = line.split()[1].replace(',', '')
                             LHOH_num = line.split()[2]
@@ -151,8 +161,16 @@ if __name__ == '__main__':
                 pass
 
             if filename == '_pid~resMM.dat':
-                time = path.split('/')[-1].split('_')[0]
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
-                res_mm_dat[time] = dat
+                res_mm_df.append(dat)
 
-    plot_win_terms_curves(mmpbsa_dat)
+    mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
+
+    res_mm_df = pd.concat(res_mm_df).sort_index()
+    hoh_exist = res_mm_df.columns.str.contains('SOL')
+    aa_mm_df = res_mm_df.loc[:, hoh_exist ^ True]
+    hoh_mm_df = res_mm_df.loc[:, hoh_exist]
+
+    print(mmpbsa_df)
+    plot_win_mmpbsa_curves(mmpbsa_df, rhoh_num, lhoh_num)
+    # plot_win_aa_map(aa_mm_df)

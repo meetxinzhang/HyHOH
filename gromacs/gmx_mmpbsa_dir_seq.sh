@@ -374,8 +374,8 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			if($NF=="Pro") { 
 				Npro++; if(Npro==1) Ipro=$1
 				ndxPro[$1]++; 
-				#resPro[Npro]="P~"$(NF-2)
-				resPro[$1]="P~"$(NF-2)
+				#resPro[Npro]="R~"$(NF-2)
+				resPro[$1]="R~"$(NF-2)
 			}
 			if($NF=="Lig") { Nlig++; if(Nlig==1) Ilig=$1
 				ndxLig[$1]++; 
