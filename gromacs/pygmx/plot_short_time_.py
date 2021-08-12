@@ -80,7 +80,7 @@ def read_mmpbsa_dat(file_path):
 #     plt.show()
 
 
-def plot_win_mmpbsa_curves(df, rhoh_num, lhoh_num):
+def plot_mmpbsa_curves(df, rhoh_num, lhoh_num):
     "mmpbsa"
     # df = df.iloc[:, 0:6]
     x = df.index.values.tolist()
@@ -128,15 +128,14 @@ def plot_win_mmpbsa_curves(df, rhoh_num, lhoh_num):
     plt.show()
 
 
-def plot_win_aa_map(df):
-    df = df.iloc[:, 196:418]
-    # plt.pcolor(df)
-    # plt.yticks(np.arange(0.5, len(df.index), 1), df.index)
-    # plt.xticks(np.arange(0.5, len(df.columns), 1), df.columns)
-    sns.heatmap(df, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, square=False)
+def plot_aa_heatmap(df):
+    # df = df.iloc[196:418, :]
+    fig, ax = plt.subplots(figsize=(3, 10))
+    sns.heatmap(df, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5}, square=False)
 
     # ymin, ymax = ax.get_ylim()
     # ax.set_yticks(np.round(np.linspace(ymin, ymax, 10), 2))
+    plt.xticks(rotation=70)
     plt.show()
 
 
@@ -177,6 +176,6 @@ if __name__ == '__main__':
     aa_mm_df = res_mm_df.loc[:, hoh_exist ^ True]
     hoh_mm_df = res_mm_df.loc[:, hoh_exist]
 
-    # print(hoh_mm_df)
-    plot_win_mmpbsa_curves(mmpbsa_df, rhoh_num, lhoh_num)
-    # plot_win_aa_map(aa_mm_df)
+    print(hoh_mm_df.T)
+    # plot_mmpbsa_curves(mmpbsa_df, rhoh_num, lhoh_num)
+    plot_aa_heatmap(hoh_mm_df.T)
