@@ -7,11 +7,13 @@
 """
 import os
 import sys
+
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to enviroment
 from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
+
 print('gromacs version:', gmx.release())
 
 
@@ -71,7 +73,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     log_file = 'apply_windows.log'
 
     for (start, end) in windows(begin, final, win_len, win_stride):
-        # if start <= 5400:  # rerun control
+        # TODO: rerun control
+        # if start <= 5400:
         #     continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
@@ -117,9 +120,9 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         hyHOH_list = RHOHs + LHOHs
         hyHOH_list.sort()
         gmx.make_ndx(f=tpr, n=temp_ndx, o=temp_ndx, input=('ri ' + ' '.join(str(hoh) for hoh in hyHOH_list),
-                                                             'name 19 hyHOH',
-                                                             '1 | 19',
-                                                             'name 20 com', 'q'))  # 19
+                                                           'name 19 hyHOH',
+                                                           '1 | 19',
+                                                           'name 20 com', 'q'))  # 19
         "generate short-term xtc and average pdb for mmpbsa"
         gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
@@ -172,8 +175,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
         "run MMPBSA script"
         command = 'mkdir ' + str(start) + '_' + str(end) + ' &&' \
-                  + ' /media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_dir_seq.sh' \
-                  + ' -dir ' + str(start) + '_' + str(end)\
+                  + ' /media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_dir_seq_DH.sh' \
+                  + ' -dir ' + str(start) + '_' + str(end) \
                   + ' -s ../' + short_tpr \
                   + ' -f ../' + short_xtc \
                   + ' -n ../' + short_ndx \

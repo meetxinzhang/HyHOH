@@ -6,6 +6,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
@@ -80,40 +81,50 @@ def read_mmpbsa_dat(file_path):
 
 
 def plot_win_mmpbsa_curves(df, rhoh_num, lhoh_num):
+    "mmpbsa"
+    # df = df.iloc[:, 0:6]
     x = df.index.values.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     entropy = np.squeeze(df[['-TdS']].values.tolist())
+    # y = mm + pb + sa + entropy
+    mm = [e / 10 for e in mm]
+    pb = [e / 10 for e in pb]
+    "HOH"
+    rhoh_num = np.repeat(rhoh_num, 3)
+    lhoh_num = np.repeat(lhoh_num, 3)
+    print(df)
+    print('---------\ndG=', y.mean(), ' -TdS=', entropy.mean())
+    # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
-    n_rhoh = []
-    n_lhoh = []
-    for key in sorted(rhoh_num):
-        n_rhoh.append(rhoh_num[key])
-        n_lhoh.append(lhoh_num[key])
+    "plot mmpbsa"
+    fig, ax1 = plt.subplots()
+    ax1.plot(x, y, label='dG', color='tab:red')
+    ax1.plot(x, mm, label='MM/10', color='tab:blue')
+    ax1.plot(x, pb, label='PB/10', color='tab:green')
+    ax1.plot(x, sa, label='SA', color='tab:purple')
+    ax1.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax1.set_xlabel('time (ps)')
+    ax1.set_ylabel('energy (kcal/mol)')
+    ax1.set_title('mmpbsa items')
+    xmin, xmax = ax1.get_xlim()
+    ax1.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
+    ax1.legend(loc='lower left')
 
-    print('-------------- \ndG = ', np.mean(y))
-    mm = [e/10 for e in mm]
-    pb = [e/10 for e in pb]
+    "plot HOH"
+    # ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    # ax2.plot(x, rhoh_num, label='RHOH', color='gray')
+    # ax2.plot(x, lhoh_num, label='LHOH', color='black')
+    # ax2.set_ylabel('hyHOH')
+    # ax2.invert_yaxis()
+    # y2min, y2max = ax2.get_ylim()
+    # ax2.set_yticks(np.round(np.linspace(y2min, y2max, 10), 2))
+    # ax2.legend(loc='upper right')
 
-    fig, ax = plt.subplots()
-    ax.plot(x, y, label='dG')
-    ax.plot(x, mm, label='MM/10')
-    ax.plot(x, pb, label='PB/10')
-    ax.plot(x, sa, label='SA')
-    ax.plot(x, entropy, label='-TdS')
-    ax.plot(x, n_rhoh, labels='n_RHOH')
-    ax.plot(x, n_lhoh, labels='n_LHOH')
-
-    xmin, xmax = ax.get_xlim()
-    ax.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
     plt.xticks(rotation=70)
-
-    ax.set_xlabel('time (ps)')
-    ax.set_ylabel('energy (kcal/mol)')
-    ax.set_title('mmpbsa items')
-    ax.legend()
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
 
 
@@ -132,12 +143,9 @@ def plot_win_aa_map(df):
 if __name__ == '__main__':
     work_dir = sys.argv[1]
 
-    # files_interest = ['_pid~MMPBSA.dat', '_pid~res_MMPBSA.dat', '_pid~resMM.dat', '_pid~resMM_COU.dat',
-    # '_pid~resMM_VDW.dat', '_pid~resPBSA.dat', '_pid~resPBSA_PB.dat', '_pid~resPBSA_SA.dat']
-
     mmpbsa_df = []
-    rhoh_num = {}
-    lhoh_num = {}
+    rhoh_num = []
+    lhoh_num = []
     res_mm_df = []
 
     for path, dir_list, file_list in os.walk(work_dir, topdown=True):
@@ -153,12 +161,10 @@ if __name__ == '__main__':
                         if line.startswith(' '):
                             pass
                         else:
-                            time = line.split('_')[0]
                             RHOH_num = line.split()[1].replace(',', '')
                             LHOH_num = line.split()[2]
-                            rhoh_num[time] = RHOH_num
-                            lhoh_num[time] = LHOH_num
-                pass
+                            rhoh_num.append(RHOH_num)
+                            lhoh_num.append(LHOH_num)
 
             if filename == '_pid~resMM.dat':
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
@@ -171,6 +177,6 @@ if __name__ == '__main__':
     aa_mm_df = res_mm_df.loc[:, hoh_exist ^ True]
     hoh_mm_df = res_mm_df.loc[:, hoh_exist]
 
-    print(mmpbsa_df)
+    # print(hoh_mm_df)
     plot_win_mmpbsa_curves(mmpbsa_df, rhoh_num, lhoh_num)
     # plot_win_aa_map(aa_mm_df)
