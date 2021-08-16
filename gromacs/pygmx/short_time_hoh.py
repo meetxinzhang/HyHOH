@@ -66,7 +66,7 @@ def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d=3):
+def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
     # whole_xtc = 'whole.xtc'
     nojump_xtc = 'nojump.xtc'
@@ -183,7 +183,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start)) + ' -e ' + str(int(end - 50)) + ' -i 50' \
+                  + ' -b ' + str(int(start)) + ' -e ' + str(int(end - 25)) + ' -i 25' \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)
@@ -199,4 +199,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[1000, 10000, 200, 200], num_hyHOH=100, thr=0.4, bond_d=3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[5000, 10000, 100, 100], num_hyHOH=100, thr=0.5, bond_d=3.3)
