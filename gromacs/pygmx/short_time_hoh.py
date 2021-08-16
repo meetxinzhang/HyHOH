@@ -72,6 +72,9 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     nojump_xtc = 'nojump.xtc'
     log_file = 'apply_windows.log'
 
+    # gmx.trjconv(s=gro, f=xtc, o=whole_xtc, pbc='whole', input='System')
+    gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
+
     for (start, end) in windows(begin, final, win_len, win_stride):
         # TODO: rerun control
         # if start <= 5400:
@@ -84,9 +87,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         short_tpr = str(start) + '_' + str(end) + '_.tpr'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
         short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
-
-        # gmx.trjconv(s=gro, f=xtc, o=whole_xtc, pbc='whole', input='System')
-        gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
 
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
@@ -190,7 +190,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
 
 if __name__ == '__main__':
-    R_idx = [196, 634]  # Antibody
+    R_idx = [196, 632]  # Antibody
     L_idx = [1, 195]  # RBD
 
     tpr = sys.argv[1]
