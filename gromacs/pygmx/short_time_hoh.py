@@ -69,7 +69,7 @@ def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
 def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d=3):
     [begin, final, win_len, win_stride] = win_params
     # whole_xtc = 'whole.xtc'
-    # nojump_xtc = 'nojump.xtc'
+    nojump_xtc = 'nojump.xtc'
     log_file = 'apply_windows.log'
 
     for (start, end) in windows(begin, final, win_len, win_stride):
@@ -86,12 +86,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         # gmx.trjconv(s=gro, f=xtc, o=whole_xtc, pbc='whole', input='System')
-        # gmx.trjconv(s=gro, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
+        gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
 
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
-        gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
-        gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
+        gmx.rmsf(s=tpr, f=nojump_xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
+        gmx.rmsf(s=tpr, f=nojump_xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
         # gmx.covar(s=tpr, f=xtc, av=short_ave_pdb, b=start, e=end, n=short_ndx, input='System')
 
         "get index of hy_HOHs"
@@ -124,10 +124,10 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                                                            '1 | 19',
                                                            'name 20 com', 'q'))  # 19
         "generate short-term xtc and average pdb for mmpbsa"
-        gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
+        gmx.trjconv(f=nojump_xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
-        gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
+        gmx.rmsf(s=tpr, f=nojump_xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
         "make new index for short_tpr and short_xtc"
         # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
@@ -183,7 +183,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start + 25)) + ' -e ' + str(int(end - 35)) + ' -i 70' \
+                  + ' -b ' + str(int(start)) + ' -e ' + str(int(end - 50)) + ' -i 50' \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)
