@@ -80,7 +80,7 @@ def read_mmpbsa_dat(file_path):
 #     plt.show()
 
 
-def plot_mmpbsa_curves(df, rhoh_num, lhoh_num):
+def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     "mmpbsa"
     # df = df.iloc[:, 0:6]
     x = df.index.values.tolist()
@@ -93,8 +93,8 @@ def plot_mmpbsa_curves(df, rhoh_num, lhoh_num):
     mm = [e / 10 for e in mm]
     pb = [e / 10 for e in pb]
     "HOH"
-    rhoh_num = np.repeat(rhoh_num, 3)
-    lhoh_num = np.repeat(lhoh_num, 3)
+    rHOH_num = np.repeat(rHOH_num, 3)
+    lHOH_num = np.repeat(lHOH_num, 3)
     print(df)
     print('---------\ndG=', y.mean(), ' -TdS=', entropy.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
@@ -128,13 +128,36 @@ def plot_mmpbsa_curves(df, rhoh_num, lhoh_num):
     plt.show()
 
 
-def plot_aa_heatmap(df):
-    # df = df.iloc[196:418, :]
-    fig, ax = plt.subplots(figsize=(3, 10))
-    sns.heatmap(df, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5}, square=False)
+def plot_heatmap(df, selection='AA'):
+    """
+    :param selection: AA, RHOH, LHOH
+    """
+    # df = df.iloc[:195, :]
+    HOH_exist = df.columns.str.contains('SOL')
+    HOH_df = df.loc[:, HOH_exist]
+    AA_df = df.loc[:, HOH_exist ^ True]
+    r_exist_inHOH = HOH_df.columns.str.contains('R~')
+    r_exist_inAA = AA_df.columns.str.contains('R~')
 
-    # ymin, ymax = ax.get_ylim()
-    # ax.set_yticks(np.round(np.linspace(ymin, ymax, 10), 2))
+    if selection == 'RAA':
+        df_plot = AA_df.loc[:, r_exist_inAA]
+    elif selection == 'LAA':
+        df_plot = AA_df.loc[:, r_exist_inAA ^ True]
+    elif selection == 'RHOH':
+        df_plot = HOH_df.loc[:, r_exist_inHOH]
+    elif selection == 'LHOH':
+        df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
+
+    print(df_plot.T)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(df_plot.T.min(axis=1))
+    fig, ax = plt.subplots(figsize=(3, 10))
+    sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
+                center=0, square=False)
+
+    ax.set_xlabel('time (ns)')
+    ax.set_ylabel('index')
+    ax.set_title('MM energy decomposition')
     plt.xticks(rotation=70)
     plt.show()
 
@@ -143,9 +166,10 @@ if __name__ == '__main__':
     work_dir = sys.argv[1]
 
     mmpbsa_df = []
-    rhoh_num = []
-    lhoh_num = []
+    rHOH_num = []
+    lHOH_num = []
     res_mm_df = []
+    res_dg_df = []
 
     for path, dir_list, file_list in os.walk(work_dir, topdown=True):
 
@@ -160,22 +184,21 @@ if __name__ == '__main__':
                         if line.startswith(' '):
                             pass
                         else:
-                            RHOH_num = line.split()[1].replace(',', '')
-                            LHOH_num = line.split()[2]
-                            rhoh_num.append(RHOH_num)
-                            lhoh_num.append(LHOH_num)
+                            rHOH_num.append(line.split()[1].replace(',', ''))
+                            lHOH_num.append(line.split()[2])
 
-            if filename == '_pid~resMM.dat':
+            if filename == '_pid~resMM_DH.dat':
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
                 res_mm_df.append(dat)
 
+            if filename == '_pid~res_MMPBSA_DH.dat':
+                dat = read_mmpbsa_dat(os.path.join(path, filename))
+                res_dg_df.append(dat)
+
     mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
-
     res_mm_df = pd.concat(res_mm_df).sort_index()
-    hoh_exist = res_mm_df.columns.str.contains('SOL')
-    aa_mm_df = res_mm_df.loc[:, hoh_exist ^ True]
-    hoh_mm_df = res_mm_df.loc[:, hoh_exist]
+    res_dg_df = pd.concat(res_dg_df).sort_index()
 
-    print(hoh_mm_df.T)
-    # plot_mmpbsa_curves(mmpbsa_df, rhoh_num, lhoh_num)
-    plot_aa_heatmap(hoh_mm_df.T)
+    "call plot function"
+    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    plot_heatmap(res_mm_df, selection='LAA')

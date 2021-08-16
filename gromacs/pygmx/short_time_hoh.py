@@ -119,7 +119,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         "run gmx-make_ndx to address (Protein + hydration HOH)"
         hyHOH_list = RHOHs + LHOHs
         hyHOH_list.sort()
-        gmx.make_ndx(f=tpr, n=temp_ndx, o=temp_ndx, input=('ri ' + ' '.join(str(hoh) for hoh in hyHOH_list),
+        gmx.make_ndx(f=tpr, n=temp_ndx, o=temp_ndx, input=('r ' + ' '.join(str(hoh) for hoh in hyHOH_list),
                                                            'name 19 hyHOH',
                                                            '1 | 19',
                                                            'name 20 com', 'q'))  # 19
@@ -166,8 +166,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         "deal with log and temp intermediate files"
         with open(log_file, 'a', encoding='utf-8') as fw:
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
-                          '   ' + select_LH_cmd + '\n' +
-                          '   ' + select_RH_cmd + '\n')
+                          '  LHOHs: ' + select_LH_cmd + '\n' +
+                          '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm ' + temp_ndx)
         os.system('rm ' + temp_ave_pdb)
         os.system('rm rmsf.xvg')
@@ -190,7 +190,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
 
 if __name__ == '__main__':
-    R_idx = [196, 632]  # Antibody
+    R_idx = [196, 634]  # Antibody
     L_idx = [1, 195]  # RBD
 
     tpr = sys.argv[1]

@@ -234,10 +234,6 @@ $dump -quiet -s $tpr 2>>$scr \
 		}
 		RS="\r?\n"
 		nres=0
-
-		# for( i in ndxPro)
-		# 	printf "proindex = %d, ndxPro[%d] = %d \n",i,i,ndxPro[i]
-
 	}
 
 	/#molblock/  { Ntyp=$3 }
@@ -270,7 +266,6 @@ $dump -quiet -s $tpr 2>>$scr \
 	/moltype.+\(/ { Imol=$0; gsub(/[^0-9]/,"",Imol)
 		getline txt; sub(/.*=/,"",txt); gsub(" ","_",txt)
 		Name[Imol]=txt
-	#	printf "----------moltype = %s --------------",txt
 		getline; getline txt;       gsub(/[^0-9]/,"",txt); Natm[Imol]=txt+0
 		for(i=0; i<Natm[Imol]; i++) {
 			getline; txt=$0; idx=$3; resID[Imol, i]=$(NF-2)+1+nres
@@ -288,11 +283,15 @@ $dump -quiet -s $tpr 2>>$scr \
 			Tatm[Imol, i]=txt
 		}
 	}
+	/residue\[/ { 
+		nres++;
+		theRes=$0;resN=$0;		
 
-	/residue\[/ { nres++
-		sub(/.*="/,"",$0); sub(/".*/,"",$0);
-		resName[nres]=sprintf("%05d%s", nres, $0)
+		sub(/.*nr=/,"",resN); sub(/,.*/,"",resN);
+		sub(/.*="/,"",theRes); sub(/".*/,"",theRes);
+		resName[nres]=sprintf("%05d%s", resN, theRes);
 	}
+
 
 	END {
 		Ntot=0; Nidx=0
@@ -374,12 +373,10 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			if($NF=="Pro") { 
 				Npro++; if(Npro==1) Ipro=$1
 				ndxPro[$1]++; 
-				#resPro[Npro]="R~"$(NF-2)
 				resPro[$1]="R~"$(NF-2)
 			}
 			if($NF=="Lig") { Nlig++; if(Nlig==1) Ilig=$1
 				ndxLig[$1]++; 
-				#resLig[Nlig]="L~"$(NF-2)
 				resLig[$1]="L~"$(NF-2)
 			}
 		}
@@ -512,6 +509,7 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			ii=Tres[i]; sub(/~0+/, "~", ii)
 			txt = txt""sprintf("%12s", ii)
 		}
+
 		if(withLig) {
 			print txt > pid"~resMM.dat"
 			print txt > pid"~resMM_COU.dat"
@@ -526,11 +524,6 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 		print txt > pid"~resPBSA.dat"
 		print txt > pid"~resPBSA_PB.dat"
 		print txt > pid"~resPBSA_SA.dat"
-
-		print txt > pid"~resMM_DH.dat"
-		print txt > pid"~resMM_COU_DH.dat"
-		print txt > pid"~resMM_VDW_DH.dat"
-		print txt > pid"~res_MMPBSA_DH.dat"
 
 
 		print "   #Frame      Binding   Binding_DH  "         \
@@ -556,7 +549,6 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			while(getline < txt) { n++;
 				type[n]=$3; res[n]=$4;
 				x[n]=$(NF-4);    y[n]=$(NF-3);   z[n]=$(NF-2)
-				#printf "------------- x[n] = %9.3f  y[n]j = %9.3f  z[n] = %9.3f--------\n",x[n],y[n],z[n]
 				resID[n]=$(NF-5); gsub(/[A-Z]+/, "", resID[n])
 			}
 			close(txt)
