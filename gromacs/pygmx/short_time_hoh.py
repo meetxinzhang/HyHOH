@@ -174,7 +174,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         os.system('rm \#*')  # delete all # starting files
 
         "run MMPBSA script"
-        command = 'mkdir ' + str(start) + '_' + str(end) + ' &&' \
+        command = 'mkdir -p ' + str(start) + '_' + str(end) + ' &&' \
                   + ' /media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_dir_seq_DH.sh' \
                   + ' -dir ' + str(start) + '_' + str(end) \
                   + ' -s ../' + short_tpr \
