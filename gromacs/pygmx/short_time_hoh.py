@@ -73,12 +73,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
     log_file = 'apply_windows.log'
 
     # gmx.trjconv(s=gro, f=xtc, o=whole_xtc, pbc='whole', input='System')
-    gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
+    # gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
 
     for (start, end) in windows(begin, final, win_len, win_stride):
         # TODO: rerun control
-        # if start <= 5400:
-        #     continue
+        if start <= 5500:
+            continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
 
@@ -190,11 +190,15 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
 
 if __name__ == '__main__':
-    R_idx = [196, 632]  # Antibody
-    L_idx = [1, 195]  # RBD
-
     tpr = sys.argv[1]
     xtc = sys.argv[2]
+    r_b = sys.argv[3]
+    r_e = sys.argv[4]
+    l_b = sys.argv[5]
+    l_e = sys.argv[6]
+
+    R_idx = [int(r_b), int(r_e)]  # Antibody
+    L_idx = [int(l_b), int(l_e)]  # RBD
 
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
