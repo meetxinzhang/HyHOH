@@ -203,4 +203,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[5000, 10000, 100, 100], num_hyHOH=100, thr=0.5, bond_d=3.3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 5000, 100, 100], num_hyHOH=100, thr=0.5, bond_d=3.3)

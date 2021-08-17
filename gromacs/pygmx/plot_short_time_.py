@@ -16,7 +16,7 @@ RT2KJ = 8.314462618*298/1E3
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = (int(file_path.split('/')[-2].split('_')[0]) + 50)/1000  # if frame is actually then delete this line.
+        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
         if file_path.endswith('_pid~MMPBSA.dat'):
             lines = file.readlines()
             entropy = float(lines[-3].split()[2])
