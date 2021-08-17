@@ -77,8 +77,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
     for (start, end) in windows(begin, final, win_len, win_stride):
         # TODO: rerun control
-        if start <= 5500:
-            continue
+        # if start <= 8000:
+        #     continue
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
 
@@ -183,7 +183,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start)) + ' -e ' + str(int(end - 25)) + ' -i 25' \
+                  + ' -b ' + str(int(start+50)) + ' -e ' + str(int(end-50)) \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)

@@ -10,31 +10,33 @@ from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-
 matplotlib.rcParams['font.size'] = 10
+RT2KJ = 8.314462618*298/1E3
 
 
 def read_mmpbsa_dat(file_path):
-    with open(file_path) as f:
+    with open(file_path) as file:
+        frame = (int(file_path.split('/')[-2].split('_')[0]) + 50)/1000  # if frame is actually then delete this line.
         if file_path.endswith('_pid~MMPBSA.dat'):
-            lines = f.readlines()
+            lines = file.readlines()
             entropy = float(lines[-3].split()[2])
             text = [lines[0].replace('\n', '') + '   |  -TdS \n']
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    frame = line.split()[0]
-                    binding = float(line.split()[1]) + entropy
-                    binding_DH = float(line.split()[2]) + entropy
-                    new_line = frame + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
+                    # frame = line.split()[0]
+                    binding = float(line.split()[1])  # + entropy
+                    binding_DH = float(line.split()[2])  # + entropy
+                    new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
                     text.append(new_line.replace('\n', '') + '   |  ' + str(entropy) + '\n')
         else:
-            text = f.readlines()
+            text = file.readlines()
 
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
+        # index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
+        index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -80,6 +82,22 @@ def read_mmpbsa_dat(file_path):
 #     plt.show()
 
 
+def entropy_cal(mm):
+    # RT2KJ=8.314462618*298/1E3
+    # mean = np.mean(mm)
+    # internal = np.mean([np.exp((e-mean)/RT2KJ) for e in mm])
+    # entropy = -RT2KJ*np.log(internal)
+    fn = []
+    entropy_list = []
+    for e in mm:
+        fn.append(e)
+        mean = np.mean(fn)
+        internal = np.mean([np.exp((e-mean)/RT2KJ) for e in fn])
+        entropy = RT2KJ*np.log(internal)
+        entropy_list.append(entropy)
+    return entropy_list
+
+
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     "mmpbsa"
     # df = df.iloc[:, 0:6]
@@ -88,7 +106,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
-    entropy = np.squeeze(df[['-TdS']].values.tolist())
+    # entropy = np.squeeze(df[['-TdS']].values.tolist())
+    entropy = entropy_cal(mm)
     # y = mm + pb + sa + entropy
     mm = [e / 10 for e in mm]
     pb = [e / 10 for e in pb]
@@ -96,7 +115,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     rHOH_num = np.repeat(rHOH_num, 3)
     lHOH_num = np.repeat(lHOH_num, 3)
     print(df)
-    print('---------\ndG=', y.mean(), ' -TdS=', entropy.mean())
+    print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     "plot mmpbsa"
@@ -200,5 +219,5 @@ if __name__ == '__main__':
     res_dg_df = pd.concat(res_dg_df).sort_index()
 
     "call plot function"
-    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    plot_heatmap(res_mm_df, selection='LAA')
+    plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    # plot_heatmap(res_mm_df, selection='LAA')

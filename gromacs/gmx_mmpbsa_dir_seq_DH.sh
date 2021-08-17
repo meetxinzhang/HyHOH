@@ -193,9 +193,9 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # $gmx rmsf -f $trj -s $tpr -o rmsf-per-residue.xvg -ox average.pdb -res $> $scr
 #### find closest structure refers to average.pdb
 # gmx rms -f md_0_1.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
-#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames)
+#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames) or -dt $intervel
 
-echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end -dt $intervel &> $scr -pbc whole
+echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end &> $scr -pbc whole
 
 if [[ $withLig -eq 1 ]]; then
 # usful for single protein and ligand
@@ -401,7 +401,7 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 		kb=1.380649e-23
 		Na=6.02214076e+23
 		qe=1.602176634e-19
-		RT2kJ=8.314462618*temp/1E3
+		# RT2kJ=8.314462618*temp/1E3
 		kap=1E-10/sqrt(eps0*kb*temp*sdie/(Iion*qe^2*Na*1E3))
 
 		PBEset0=PBEset; sub(/sdie +[0-9]*\.*[0-9]*/, "sdie  1", PBEset0)
@@ -761,12 +761,12 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			meanEsa += Esa[i]/Nfrm
 		}
 		TdS=0; TdS_dh=0
-		for(i=1; i<=Nfrm; i++) {
-			TdS    += exp((Emm[i]-meanEmm)/RT2kJ)/Nfrm
-			TdS_dh += exp((EmmDH[i]-meanEmmDH)/RT2kJ)/Nfrm
-		}
-		TdS=-RT2kJ*log(TdS)
-		TdS_dh=-RT2kJ*log(TdS_dh)
+		# for(i=1; i<=Nfrm; i++) {
+		# 	TdS    += exp((Emm[i]-meanEmm)/RT2kJ)/Nfrm
+		# 	TdS_dh += exp((EmmDH[i]-meanEmmDH)/RT2kJ)/Nfrm
+		# }
+		# TdS=-RT2kJ*log(TdS)
+		# TdS_dh=-RT2kJ*log(TdS_dh)
 
 		printf "----------------------------------" \
 			   "|------------------------------------------" \

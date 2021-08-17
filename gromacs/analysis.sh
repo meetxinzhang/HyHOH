@@ -60,7 +60,7 @@ pdb <- read.pdb(pdbfile)
 # ca.inds <- atom.select(pdb, elety="CA")
 ca.inds <- atom.select(pdb, "backbone")
 
-xyz <- fit.xyz(fixed=pdb$xyz, mobile=dcd, fixed.inds=ca.inds$xyz, mobile.inds=ca.inds$xyz)
+xyz <- fit.xyz(fixed=pdb$xyz, mobile=xdcd, fixed.inds=ca.inds$xyz, mobile.inds=ca.inds$xyz)
 
 dim(xyz) == dim(dcd)
 > [1]  TRUE TRUE 
