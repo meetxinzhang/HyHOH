@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 matplotlib.rcParams['font.size'] = 10
-RT2KJ = 8.314462618*298/1E3
+RT2KJ = 8.314462618*298.15/1E3
 
 
 def read_mmpbsa_dat(file_path):
@@ -51,69 +51,45 @@ def read_mmpbsa_dat(file_path):
     return dataframe
 
 
-# def plot_binding_bar(dataframe):
-#     """Plot the bar figure from total MMPBSA data"""
-#     names = [('Binding Free Energy\nBinding = MM + PB + SA - TdS',
-#               ['Binding_DH', 'MM_DH', 'PB', 'SA', '-TdS']),
-#              ('Molecule Mechanics\nMM = COU + VDW',
-#               ['MM_DH', 'COU_DH', 'VDW']),
-#              ('Poisson Boltzman\nPB = PBcom - PBpro - PBlig',
-#               ['PB', 'PBcom', 'PBpro', 'PBlig']),
-#              ('Surface Area\nSA = SAcom - SApro - SAlig',
-#               ['SA', 'SAcom', 'SApro', 'SAlig'])]
-#     fig, axs = plt.subplots(2, 2, figsize=(8, 8), dpi=72)
-#     axs = np.ravel(axs)
-#
-#     for ax, (title, name) in zip(axs, names):
-#         ax.bar(name, dataframe[name].mean(), width=0.5,
-#                yerr=dataframe[name].std(), color='rgby')
-#         for i in range(len(dataframe[name].mean())):
-#             ax.text(name[i], dataframe[name].mean()[i],
-#                     '%.3f' % dataframe[name].mean()[i],
-#                     ha='center', va='center')
-#         ax.grid(b=True, axis='y')
-#         ax.set_xlabel('Energy Decomposition Term')
-#         ax.set_ylabel('Free energy (kcal/mol)')
-#         ax.set_title(title)
-#     plt.suptitle('MMPBSA Results')
-#     plt.tight_layout()
-#     plt.subplots_adjust(top=0.9)
-#     plt.savefig('MMPBSA_Results.png')
-#     plt.show()
-
-
 def entropy_cal(mm):
     # RT2KJ=8.314462618*298/1E3
     # mean = np.mean(mm)
     # internal = np.mean([np.exp((e-mean)/RT2KJ) for e in mm])
     # entropy = -RT2KJ*np.log(internal)
+    # fh = []
     fn = []
     entropy_list = []
-    for e in mm:
+    for e, n in zip(mm, rHOH_num):
+        e = e*4.184
         fn.append(e)
+        # fh.append(float(n))
         mean = np.mean(fn)
+        # mean_h = np.mean(fh)
         internal = np.mean([np.exp((e-mean)/RT2KJ) for e in fn])
         entropy = RT2KJ*np.log(internal)
-        entropy_list.append(entropy)
+        entropy_list.append(entropy/4.184)
     return entropy_list
 
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     "mmpbsa"
-    # df = df.iloc[:, 0:6]
+    # df = df.iloc[0:50, :]
     x = df.index.values.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
-    mm = np.squeeze(df[['MM_DH']].values.tolist())
+    # mm = np.squeeze(df[['MM_DH']].values.tolist())
+    mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
+    mm_sol = np.squeeze(df[['MM_DH_SOL']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm)
+    entropy = entropy_cal(mm_pro)
     # y = mm + pb + sa + entropy
-    mm = [e / 10 for e in mm]
+    mm_pro = [e / 10 for e in mm_pro]
     pb = [e / 10 for e in pb]
     "HOH"
     rHOH_num = np.repeat(rHOH_num, 3)
     lHOH_num = np.repeat(lHOH_num, 3)
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df)
     print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
@@ -121,7 +97,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
     ax1.plot(x, y, label='dG', color='tab:red')
-    ax1.plot(x, mm, label='MM/10', color='tab:blue')
+    ax1.plot(x, mm_pro, label='MM/10', color='tab:cyan')
+    ax1.plot(x, mm_sol, label='SA', color='tab:blue')
     ax1.plot(x, pb, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:purple')
     ax1.plot(x, entropy, label='-TdS', color='tab:orange')

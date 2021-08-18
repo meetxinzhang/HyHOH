@@ -16,20 +16,8 @@ import pandas as pd
 from results import affinities, free_energies, affinities_restrained, free_energies_restrained
 
 
-def min_max_normalization(arr):
-    return [float(x - np.min(arr)) / (np.max(arr) - np.min(arr)) for x in arr]
-
-
-def mean_normaliztion(arr):
-    return [float(x - arr.mean()) / arr.std() for x in arr]
-
-
-def sigmoid(arr):
-    return 1. / (1 + np.exp(-arr))
-
-
-def log(arr, base=10):
-    return [math.log(e, base) for e in arr]
+def log_list(arr):
+    return [math.log(e) for e in arr]
 
 
 def alignment(affinities, free_energies):
@@ -43,7 +31,7 @@ def alignment(affinities, free_energies):
 
 
 aff_old, free = alignment(affinities, free_energies)
-aff = log(aff_old, base=10)
+aff = log_list(aff_old)
 # aff_r, free_r = alignment(affinities_restrained, free_energies_restrained)
 # aff_r = log(aff_r, base=10)
 

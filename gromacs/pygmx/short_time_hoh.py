@@ -7,13 +7,11 @@
 """
 import os
 import sys
-
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to enviroment
 from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
-
 print('gromacs version:', gmx.release())
 
 
@@ -44,8 +42,8 @@ def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     RHOHs = []
     LHOHs = []
     for w in waters:
-        d2R = 10  # distance to Receptor
-        d2L = 10  # distance to Ligand
+        d2R = 6  # distance to Receptor
+        d2L = 6  # distance to Ligand
         # TODO: handle exception manually
         # if w.res_seq == 794:
         #     continue
@@ -68,12 +66,17 @@ def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
 
 def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
-    # whole_xtc = 'whole.xtc'
+    whole_xtc = 'whole.xtc'
     nojump_xtc = 'nojump.xtc'
+    mol_xtc = 'mol_center.xtc'
+    fit_xtc = 'fit.xtc'
+
     log_file = 'apply_windows.log'
 
-    # gmx.trjconv(s=gro, f=xtc, o=whole_xtc, pbc='whole', input='System')
-    # gmx.trjconv(s=tpr, f=xtc, o=nojump_xtc, pbc='nojump', input='System')
+    gmx.trjconv(s=tpr, f=xtc, o=whole_xtc, pbc='whole', input='System')
+    gmx.trjconv(s=tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
+    gmx.trjconv(s=tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
+    gmx.trjconv(s=tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
 
     for (start, end) in windows(begin, final, win_len, win_stride):
         # TODO: rerun control
@@ -82,16 +85,16 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
         temp_ndx = str(start) + '_' + str(end) + '_tmp.ndx'
 
-        short_ndx = str(start) + '_' + str(end) + '_.ndx'
-        short_xtc = str(start) + '_' + str(end) + '_.xtc'
-        short_tpr = str(start) + '_' + str(end) + '_.tpr'
+        short_ndx = str(start) + '_' + str(end) + '.ndx'
+        short_xtc = str(start) + '_' + str(end) + '.xtc'
+        short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
         short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
-        gmx.rmsf(s=tpr, f=nojump_xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
-        gmx.rmsf(s=tpr, f=nojump_xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
+        gmx.rmsf(s=tpr, f=fit_xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
+        gmx.rmsf(s=tpr, f=fit_xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
         # gmx.covar(s=tpr, f=xtc, av=short_ave_pdb, b=start, e=end, n=short_ndx, input='System')
 
         "get index of hy_HOHs"
@@ -124,10 +127,10 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                                                            '1 | 19',
                                                            'name 20 com', 'q'))  # 19
         "generate short-term xtc and average pdb for mmpbsa"
-        gmx.trjconv(f=nojump_xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
+        gmx.trjconv(f=fit_xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
-        gmx.rmsf(s=tpr, f=nojump_xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
+        gmx.rmsf(s=tpr, f=fit_xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
         "make new index for short_tpr and short_xtc"
         # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
@@ -168,6 +171,9 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
+        os.system('rm ' + whole_xtc)
+        os.system('rm ' + nojump_xtc)
+        os.system('rm ' + mol_xtc)
         os.system('rm ' + temp_ndx)
         os.system('rm ' + temp_ave_pdb)
         os.system('rm rmsf.xvg')

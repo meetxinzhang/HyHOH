@@ -195,16 +195,20 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # gmx rms -f md_0_1.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
 #### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames) or -dt $intervel
 
-echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end &> $scr -pbc whole
+# echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end &> $scr -pbc whole
 
-if [[ $withLig -eq 1 ]]; then
-# usful for single protein and ligand
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o $trjcnt.xtc &>>$scr -pbc mol -center
-	echo -e "$com\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcnt -o $trjcls.xtc &>>$scr -pbc cluster
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcls -o _$pid.pdb   &>>$scr -fit rot+trans
-else
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o _$pid.pdb   &>>$scr -pbc mol -center
-fi
+# if [[ $withLig -eq 1 ]]; then
+# # usful for single protein and ligand
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o $trjcnt.xtc &>>$scr -pbc mol -center
+# 	echo -e "$com\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcnt -o $trjcls.xtc &>>$scr -pbc cluster
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcls -o _$pid.pdb   &>>$scr -fit rot+trans
+# else
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o _$pid.pdb   &>>$scr -pbc mol -center
+# fi
+
+
+echo $com  | $trjconv  -s $tpr -n $ndx -f $trj  -o _$pid.pdb -b $start -e $end 
+
 echo -e ">> 1. pre-processe trajectory: OK !\n"
 
 fi; if [[ $step -le 2 ]]; then
@@ -526,11 +530,11 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 		print txt > pid"~resPBSA_SA.dat"
 
 
-		print "   #Frame      Binding   Binding_DH  "         \
-			 "|    MM       MM_DH      PB        SA       " \
-			 "|   COU      COU_DH     VDW   "            \
-			 "|       PBcom        PBpro        PBlig  "   \
-			 "|    SAcom     SApro     SAlig"    >> pid"~MMPBSA.dat"
+		print "#Frame \t Binding \t Binding_DH \t"         \
+			 "| MM \t    MM_Pro \t    MM_SOL \t    MM_DH \t    MM_DH_Pro \t    MM_DH_SOL \t    PB \t    SA \t" \
+			 "|    COU \t    COU_DH \t    VDW \t"   \
+			 "|    PBcom \t    PBpro \t    PBlig \t"   \
+			 "|    SAcom \t    SApro \t    SAlig"  >> pid"~MMPBSA.dat"
 
 		maxstr=0
 		for(fr=1; fr<=Nfrm; fr++) maxstr=max(maxstr, length(Fname[fr]))
@@ -561,6 +565,9 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 				for( i in ndxPro) { dEcou[resPro[i]]=0; dEcouDH[resPro[i]]=0; dEvdw[resPro[i]]=0 }
 		        for( i in ndxLig) { dEcou[resLig[i]]=0; dEcouDH[resLig[i]]=0; dEvdw[resLig[i]]=0 }
 
+				for( i in ndxPro) { dEcou_SOL[resPro[i]]=0; dEcouDH_SOL[resPro[i]]=0; dEvdw_SOL[resPro[i]]=0 }
+		        for( i in ndxLig) { dEcou_SOL[resLig[i]]=0; dEcouDH_SOL[resLig[i]]=0; dEvdw_SOL[resLig[i]]=0 }
+
 			    for( ii in ndxPro) {
 					qi=Qatm[ii]; ci=Catm[ii]; si=Satm[ii]; ei=Eatm[ii]
 					xi=x[ii]; yi=y[ii]; zi=z[ii]
@@ -582,6 +589,23 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 							dEcou[resPro[ii]] += Ecou; dEcou[resLig[jj]] += Ecou
 							dEcouDH[resPro[ii]] += EcouDH; dEcouDH[resLig[jj]] += EcouDH
 							dEvdw[resPro[ii]] += Evdw; dEvdw[resLig[jj]] += Evdw
+
+							resProName_len = length(resPro[ii])
+							last3_pro = substr(resPro[ii],resProName_len-2,resProName_len)
+							if(last3_pro == "SOL"){
+								dEcou_SOL[resPro[ii]] += Ecou; 
+								dEcouDH_SOL[resPro[ii]] += EcouDH; 
+								dEvdw_SOL[resPro[ii]] += Evdw;
+							}
+
+							resLigName_len = length(resLig[jj])
+							last3_lig = substr(resLig[jj],resLigName_len-2,resLigName_len)
+							if(last3_lig == "SOL"){
+								dEcou_SOL[resLig[jj]] += Ecou
+								dEcouDH_SOL[resLig[jj]] += EcouDH
+								dEvdw_SOL[resLig[jj]] += Evdw
+							}
+
 						}
 					}
 				}
@@ -592,6 +616,14 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 					dEcouDH[i] *= kJcou/(2*pdie); EcouDH += dEcouDH[i];
 					dEvdw[i] /= 2;              Evdw += dEvdw[i]
 				}
+
+				Ecou_SOL=0; Evdw_SOL=0;EcouDH_SOL = 0
+				for(i in dEcou_SOL) {
+					dEcou_SOL[i] *= kJcou/(2*pdie); Ecou_SOL += dEcou_SOL[i];
+					dEcouDH_SOL[i] *= kJcou/(2*pdie); EcouDH_SOL += dEcouDH_SOL[i];
+					dEvdw_SOL[i] /= 2;              Evdw_SOL += dEvdw_SOL[i]
+				}
+
 			}
 
 			# 计算PBSA项
@@ -669,19 +701,26 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 				SAres[resLig[i]] += Esas[1, i]-Esas[3, i]
 			}
 
-
-
 			preK=-1; if(withLig) preK=1
 			Eco[fr]=Ecou;      EcoDH[fr]=EcouDH
 			Emm[fr]=Ecou+Evdw; EmmDH[fr]=EcouDH+Evdw
+
+			Emm_SOL[fr] = Ecou_SOL+Evdw_SOL; EmmDH_SOL[fr] = EcouDH_SOL + Evdw_SOL
+			Emm_noSOL[fr] = Emm[fr]-Emm_SOL[fr] ; EmmDH_noSOL[fr] = EmmDH[fr]-EmmDH_SOL[fr]
+
 			Evd[fr]=Evdw
 			Epb[fr]=preK*(PBcom-PBpro-PBlig)   #PB项   -------------------------------------------------
 			Esa[fr]=preK*(SAcom-SApro-SAlig)    #SA项  -------------------------------------------
 			Ebi[fr]=preK*(Ecou+Evdw+PBcom-PBpro-PBlig+SAcom-SApro-SAlig)
 			EbiDH[fr]=preK*(EcouDH+Evdw+PBcom-PBpro-PBlig+SAcom-SApro-SAlig)
-			printf "%-12s %9.3f  %9.3f   | %9.3f  %9.3f  %9.3f %9.3f " \
-				  "| %9.3f  %9.3f  %9.3f | %12.3f %12.3f %12.3f | %9.3f %9.3f %9.3f\n", \
-				Fout, Ebi[fr], EbiDH[fr], Emm[fr], EmmDH[fr], Epb[fr], Esa[fr], \
+			# printf "%-12s \t %9.3f \t %9.3f \t| %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t" \
+			# 	  "| %9.3f \t %9.3f \t %9.3f \t | %12.3f \t %12.3f \t %12.3f \t | %9.3f \t %9.3f \t %9.3f\n", \
+			# 	Fout, Ebi[fr], EbiDH[fr], Emm[fr], Emm_noSOL[fr], Emm_SOL[fr], EmmDH[fr],EmmDH_noSOL[fr], EmmDH_SOL[fr],Epb[fr], Esa[fr], \
+			# 	Ecou, EcouDH, Evdw, PBcom, PBpro, PBlig, SAcom, SApro, SAlig >> pid"~MMPBSA.dat"
+
+			printf "%s \t %.3f \t %.3f \t  | %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t" \
+				  "| %.3f \t %.3f \t %.3f \t | %.3f \t %.3f \t %.3f \t | %.3f \t %.3f \t %.3f\n", \
+				Fout, Ebi[fr], EbiDH[fr], Emm[fr], Emm_noSOL[fr], Emm_SOL[fr], EmmDH[fr],EmmDH_noSOL[fr], EmmDH_SOL[fr],Epb[fr], Esa[fr], \
 				Ecou, EcouDH, Evdw, PBcom, PBpro, PBlig, SAcom, SApro, SAlig >> pid"~MMPBSA.dat"
 
 			printf "    MM-PBSA(with DH) =  %9.3f(%9.3f) kJ/mol\n", Ebi[fr],  EbiDH[fr]
