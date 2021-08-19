@@ -11,12 +11,14 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 matplotlib.rcParams['font.size'] = 10
-RT2KJ = 8.314462618*298.15/1E3
 
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
         frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        # TODO: control time manually
+        # if frame > 5:
+        #     return
         if file_path.endswith('_pid~MMPBSA.dat'):
             lines = file.readlines()
             entropy = float(lines[-3].split()[2])
@@ -52,28 +54,28 @@ def read_mmpbsa_dat(file_path):
 
 
 def entropy_cal(mm):
-    # RT2KJ=8.314462618*298/1E3
+    KT = 0.001985875*298
+    # RT2KJ = 8.314462618 * 298.15 / 1E3
     # mean = np.mean(mm)
     # internal = np.mean([np.exp((e-mean)/RT2KJ) for e in mm])
     # entropy = -RT2KJ*np.log(internal)
-    # fh = []
     fn = []
     entropy_list = []
-    for e, n in zip(mm, rHOH_num):
-        e = e*4.184
+    for e in mm:
+        # e = e*4.184
         fn.append(e)
         # fh.append(float(n))
         mean = np.mean(fn)
         # mean_h = np.mean(fh)
-        internal = np.mean([np.exp((e-mean)/RT2KJ) for e in fn])
-        entropy = RT2KJ*np.log(internal)
-        entropy_list.append(entropy/4.184)
+        internal = np.mean([np.exp((e-mean)/KT) for e in fn])
+        entropy = KT*np.log(internal)
+        entropy_list.append(entropy)
     return entropy_list
 
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
-    "mmpbsa"
-    # df = df.iloc[0:50, :]
+    """mmpbsa"""
+    # df = df.iloc[10:, :]
     x = df.index.values.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     # mm = np.squeeze(df[['MM_DH']].values.tolist())
@@ -90,17 +92,18 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     rHOH_num = np.repeat(rHOH_num, 3)
     lHOH_num = np.repeat(lHOH_num, 3)
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    print(df)
+    print(df.iloc[:, 0:11])
+    print('\n', entropy)
     print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
     ax1.plot(x, y, label='dG', color='tab:red')
-    ax1.plot(x, mm_pro, label='MM/10', color='tab:cyan')
-    ax1.plot(x, mm_sol, label='SA', color='tab:blue')
+    ax1.plot(x, mm_pro, label='MM_pro/10', color='tab:cyan')
+    ax1.plot(x, mm_sol, label='MM_sol', color='tab:blue')
     ax1.plot(x, pb, label='PB/10', color='tab:green')
-    ax1.plot(x, sa, label='SA', color='tab:purple')
+    ax1.plot(x, sa, label='SA', color='tab:pink')
     ax1.plot(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('time (ps)')
     ax1.set_ylabel('energy (kcal/mol)')

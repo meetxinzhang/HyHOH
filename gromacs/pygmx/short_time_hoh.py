@@ -12,6 +12,7 @@ from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
+import time
 print('gromacs version:', gmx.release())
 
 
@@ -166,14 +167,11 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                                                                        '16 | 18', 'name 20 ligand',  # 20
                                                                        '19 | 20', 'name 21 com', 'q'))  # 21
 
-        "deal with log and temp intermediate files"
+        "deal with log and temp intermediate files 1"
         with open(log_file, 'a', encoding='utf-8') as fw:
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
-        os.system('rm ' + whole_xtc)
-        os.system('rm ' + nojump_xtc)
-        os.system('rm ' + mol_xtc)
         os.system('rm ' + temp_ndx)
         os.system('rm ' + temp_ave_pdb)
         os.system('rm rmsf.xvg')
@@ -194,6 +192,19 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         print(command)
         os.system(command)
 
+    "deal with log and temp intermediate files 2"
+    with open(log_file, 'a', encoding='utf-8') as fw:
+        fw.writelines('info: \n' + ' -win_params ' + win_params + '\n' +
+                      ' - R_idx ' + R_idx + '\n' +
+                      ' - L_idx ' + L_idx + '\n' +
+                      ' -thr ' + str(thr) + '\n' +
+                      ' -bond_d ' + str(bond_d) + '\n' +
+                      ' -num_hyHOH ' + str(num_hyHOH) + '\n' +
+                      time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
+    os.system('rm ' + whole_xtc)
+    os.system('rm ' + nojump_xtc)
+    os.system('rm ' + mol_xtc)
+
 
 if __name__ == '__main__':
     tpr = sys.argv[1]
@@ -209,4 +220,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 5000, 100, 100], num_hyHOH=100, thr=0.5, bond_d=3.3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
