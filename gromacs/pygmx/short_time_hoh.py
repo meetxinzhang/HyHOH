@@ -194,12 +194,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
     "deal with log and temp intermediate files 2"
     with open(log_file, 'a', encoding='utf-8') as fw:
-        fw.writelines('info: \n' + ' -win_params ' + win_params + '\n' +
-                      ' - R_idx ' + R_idx + '\n' +
-                      ' - L_idx ' + L_idx + '\n' +
-                      ' -thr ' + str(thr) + '\n' +
-                      ' -bond_d ' + str(bond_d) + '\n' +
-                      ' -num_hyHOH ' + str(num_hyHOH) + '\n' +
+        fw.writelines('  info: \n' + ' -win_params ' + ' '.join(win_params) + '\n' +
+                      '  - R_idx ' + ' '.join(R_idx) + '\n' +
+                      '  - L_idx ' + ' '.join(L_idx) + '\n' +
+                      '  -thr ' + str(thr) + '\n' +
+                      '  -bond_d ' + str(bond_d) + '\n' +
+                      '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
                       time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
     os.system('rm ' + whole_xtc)
     os.system('rm ' + nojump_xtc)
