@@ -19,4 +19,4 @@ def kd2kcal(kd):
     return 0.6*math.log(kd*1E-9)
 
 
-print(kd2kcal(12))
+# print(kd2kcal(6.4))

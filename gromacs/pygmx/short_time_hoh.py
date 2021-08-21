@@ -7,12 +7,14 @@
 """
 import os
 import sys
+
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to enviroment
 from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
 import time
+
 print('gromacs version:', gmx.release())
 
 
@@ -187,16 +189,16 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
                   + ' -com com' \
                   + ' -pro receptor' \
                   + ' -lig ligand' \
-                  + ' -b ' + str(int(start+50)) + ' -e ' + str(int(end-50)) \
+                  + ' -b ' + str(int(start + 50)) + ' -e ' + str(int(end - 50)) \
                   + ' -cou dh -ts ie'
         print(command)
         os.system(command)
 
     "deal with log and temp intermediate files 2"
     with open(log_file, 'a', encoding='utf-8') as fw:
-        fw.writelines('  info: \n' + ' -win_params ' + ' '.join(win_params) + '\n' +
-                      '  - R_idx ' + ' '.join(R_idx) + '\n' +
-                      '  - L_idx ' + ' '.join(L_idx) + '\n' +
+        fw.writelines('  info: \n' + ' -win_params ' + str(win_params[0]) + ' ' + str(win_params[1]) + '\n' +
+                      '  - R_idx ' + str(R_idx[0]) + ' ' + str(R_idx[1]) + '\n' +
+                      '  - L_idx ' + str(L_idx[0]) + ' ' + str(L_idx[1]) + '\n' +
                       '  -thr ' + str(thr) + '\n' +
                       '  -bond_d ' + str(bond_d) + '\n' +
                       '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
@@ -220,4 +222,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 2000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)

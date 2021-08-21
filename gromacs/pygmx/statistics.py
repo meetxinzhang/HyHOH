@@ -12,53 +12,27 @@ binding free energies are calculated by MMMPBSA
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import pandas as pd
-from results import affinities, free_energies, affinities_restrained, free_energies_restrained
+from scipy.stats import spearmanr
+# results
+from results import affinity, hyHOH_res, hyHOH_res_mm, hyHOH_12_mm
 
 
 def log_list(arr):
     return [math.log(e) for e in arr]
 
 
-def alignment(affinities, free_energies):
+def alignment(affinity, free_energy):
     aff = []
     free = []
-    for key, energy in free_energies.items():
-        if energy < 22:
-            free.append(energy)
-            aff.append(affinities[key])
+    for key, value in affinity.items():
+        aff.append(value)
+        free.append(free_energy[key])
     return aff, free
 
 
-aff_old, free = alignment(affinities, free_energies)
-aff = log_list(aff_old)
-# aff_r, free_r = alignment(affinities_restrained, free_energies_restrained)
-# aff_r = log(aff_r, base=10)
-
-# correlation coefficient --------------------------------
-data = pd.DataFrame({'affinity': aff, 'free energy': free})
-print('pearson', data.corr(method='pearson'))
-print('pearman', data.corr(method='spearman'))
-
-# print('-----------')
-# data = pd.DataFrame({'aff_r': aff_r, 'free_f': free_r})
-# print('pearson', data.corr(method='pearson'))
-# print('pearman', data.corr(method='spearman'))
-
-# fitting-------------------------------------------------
-para = np.polyfit(aff, free, 2)
-func = np.poly1d(para)
-print('\nfitting func: ', func)
-aff_plot = np.arange(-2, 4, 0.1)
-curve = plt.plot(aff_plot, func(aff_plot), 'r', label='polyfit values')
-
-# # plot points ----------------------------------------------
-plot1 = plt.plot(aff, free, '.', color='b', label='original values')
-# plot2 = plt.plot(aff_r, free_r, '*', color='k', label='restrain')
-
 # K-line ---------------------------------
 # k_line = np.array(free_r) - np.array(free)
-# for a, d, f in zip(aff, k_line, free):
+# for a, d, f in zip(aff2kcal, k_line, free):
 #     if d >= 0:
 #         color = 'red'
 #     else:
@@ -68,8 +42,27 @@ plot1 = plt.plot(aff, free, '.', color='b', label='original values')
 # plt.title("K-line of (restrained dG) - (relaxed dG)")
 
 
-plt.xlabel('affinity log10 (nM)')
-plt.ylabel('binding free energy (kcal/mol)')
-plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
-plt.title('polyfitting')
-plt.show()
+if __name__ == '__main__':
+    aff, free = alignment(affinity, hyHOH_12_mm)
+    aff2kcal = log_list(aff)
+
+    print(aff2kcal, '\n', free)
+    # correlation coefficient --------------------------------
+    print('---------\n', spearmanr(aff2kcal, free))
+
+    # fitting-------------------------------------------------
+    para = np.polyfit(aff2kcal, free, 1)
+    func = np.poly1d(para)
+    print('\nfitting func: ', func)
+    aff_plot = np.arange(0, 5, 0.1)
+    curve = plt.plot(aff_plot, func(aff_plot), 'r', label='polyfit values')
+
+    # # plot points ----------------------------------------------
+    plot1 = plt.plot(aff2kcal, free, '.', color='b', label='original values')
+    # plot2 = plt.plot(aff2kcal, free_r, '*', color='k', label='restrain')
+
+    plt.xlabel('affinity log10 (nM)')
+    plt.ylabel('binding free energy (kcal/mol)')
+    plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
+    plt.title('polyfitting')
+    plt.show()

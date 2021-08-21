@@ -6,7 +6,6 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
@@ -54,20 +53,13 @@ def read_mmpbsa_dat(file_path):
 
 
 def entropy_cal(mm):
-    KT = 0.001985875*298
-    # RT2KJ = 8.314462618 * 298.15 / 1E3
-    # mean = np.mean(mm)
-    # internal = np.mean([np.exp((e-mean)/RT2KJ) for e in mm])
-    # entropy = -RT2KJ*np.log(internal)
-    fn = []
+    KT = 0.001985875*298.15
+    fm = []
     entropy_list = []
     for e in mm:
-        # e = e*4.184
-        fn.append(e)
-        # fh.append(float(n))
-        mean = np.mean(fn)
-        # mean_h = np.mean(fh)
-        internal = np.mean([np.exp((e-mean)/KT) for e in fn])
+        fm.append(e)
+        mean = np.mean(fm)
+        internal = np.mean([np.exp((e-mean)/KT) for e in fm])
         entropy = KT*np.log(internal)
         entropy_list.append(entropy)
     return entropy_list
@@ -75,16 +67,16 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    # df = df.iloc[10:, :]
+    df = df.iloc[10:20, :]
     x = df.index.values.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
-    # mm = np.squeeze(df[['MM_DH']].values.tolist())
+    mm = np.squeeze(df[['MM_DH']].values.tolist())
     mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
     mm_sol = np.squeeze(df[['MM_DH_SOL']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm_pro)
+    entropy = entropy_cal(mm)
     # y = mm + pb + sa + entropy
     mm_pro = [e / 10 for e in mm_pro]
     pb = [e / 10 for e in pb]
