@@ -29,7 +29,7 @@ def sort(df, columns):
     return df.sort_values(columns=columns)
 
 
-def get_most_domain(df, columns):
+def most_domain(df, columns):
     copy = df
     copy[columns] = copy[columns].apply(lambda x: float(int(x*100)/100))
     freq = copy.apply(pd.value_counts).sort_index()
@@ -46,17 +46,18 @@ def indexing_frames(df, rd_min, rd_max):
     return df2
 
 
-def get_boundaries(xvg):
+def get_mostfreq_idx(xvg):
     dataframe = read_xvg(xvg)
-    rd_min, rd_max = get_most_domain(dataframe, 'RMSD(nm)')
-    return rd_min, rd_max
+    rd_min, rd_max = most_domain(dataframe, 'RMSD(nm)')
+    interest = indexing_frames(dataframe, rd_min, rd_max)
+    return interest.index.tolist()
 
 
 if __name__ == "__main__":
     xvg = sys.argv[1]
     dataframe = read_xvg(xvg)
 
-    rd_min, rd_max = get_most_domain(dataframe, 'RMSD(nm)')
+    rd_min, rd_max = most_domain(dataframe, 'RMSD(nm)')
     interest = indexing_frames(dataframe, rd_min, rd_max)
 
     print(rd_min, rd_max)

@@ -1,8 +1,8 @@
-# code_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
-# mkdir analysis
-# cd analysis
+code_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
+mkdir analysis
+cd analysis
 
-################ nm  
+############################ nm  
 # gmx energy -f nvt.edr -o md_out/temperature.xvg
 # # 16 0
 
@@ -16,24 +16,24 @@
 # # 1 for protein
 
 # ################# trajectoty
-# gmx trjconv -s ../md_0.tpr -f ../md_0.xtc -o md_0_whole.xtc -pbc whole #-ur compact
-# # 0 for system
-# gmx trjconv -s ../md_0.tpr -f md_0_whole.xtc -o md_0_nojump.xtc -pbc nojump
-# # 0 for system
-# gmx trjconv -s ../md_0.tpr -f md_0_nojump.xtc -o md_0_mol.xtc -pbc mol -center
-# # 1 for protein and 0 out for system
-# gmx trjconv -s ../md_0.tpr -f md_0_mol.xtc -o md_0_fit.xtc -fit rot+trans
+echo -e 0 \n | gmx trjconv -s ../md_0.tpr -f ../md_0.xtc -o md_0_whole.xtc -pbc whole #-ur compact
+# 0 for system
+echo -e 0 \n | gmx trjconv -s ../md_0.tpr -f md_0_whole.xtc -o md_0_nojump.xtc -pbc nojump
+# 0 for system
+echo -e 1 \n 0 \n | gmx trjconv -s ../md_0.tpr -f md_0_nojump.xtc -o md_0_mol.xtc -pbc mol -center
+# 1 for protein and 0 out for system
+echo -e 1 \n 0 \n | gmx trjconv -s ../md_0.tpr -f md_0_mol.xtc -o md_0_fit.xtc -fit rot+trans
 # 1 for protein and 0 out for system
 
 
-################# RMSD
-# gmx rms -s ../md_0.tpr -f md_0_fit.xtc -o rmsd.xvg #-tu ns
+############################## RMSD
+echo -e 4 \n | gmx rms -s ../md_0.tpr -f md_0_fit.xtc -o rmsd.xvg #-tu ns
 # 4 for backbone
 
 # xmgrace -nxy rmsd.xvg
 
 
-################# mostFre
+############################### mostFre
 
 output=$(python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/most_freq.py rmsd.xvg)
 boundaries=($output)
@@ -46,7 +46,6 @@ $code_dir/gmx_mmpbsa_normal_skip.sh -f ../analysis/mostFre.xtc -s ../md_0.tpr -n
 
 
 # R
-
 # library(bio3d)
 
 # dcdfile <- "md_0_nojump.dcd"
