@@ -15,7 +15,7 @@ import numpy as np
 import gromacs as gmx
 import time
 
-print('gromacs version:', gmx.release())
+print('gmx version:', gmx.release())
 
 
 def windows(b, f, window_len, move_stride):
@@ -25,7 +25,7 @@ def windows(b, f, window_len, move_stride):
         b += move_stride
 
 
-def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
+def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
     xy_lines = []
     for line in open(short_rmsf_xvg, 'r', encoding='utf-8'):
         if (not line.strip().startswith("#")) and (not line.strip().startswith("@")):
@@ -41,7 +41,7 @@ def sort_xvg(short_rmsf_xvg, num_hyHOH, thr=0.4):
     return x
 
 
-def assign_water(protein_atoms, waters, R_idx, L_idx, bond_d=3):
+def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     RHOHs = []
     LHOHs = []
     for w in waters:
@@ -102,7 +102,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
         "get index of hy_HOHs"
         try:
-            ice_idx = sort_xvg(short_rmsf_xvg, num_hyHOH, thr)
+            ice_idx = idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
             print(e.message)
             os.system('rm ' + str(start) + '_' + str(end) + '*')
@@ -112,7 +112,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
         "get ice object"
         ices = [ice for ice in waters if ice.res_seq in ice_idx]
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
-        RHOHs, LHOHs = assign_water(protein_atoms, ices, R_idx, L_idx, bond_d)
+        RHOHs, LHOHs = assign_hyhoh(protein_atoms, ices, R_idx, L_idx, bond_d)
 
         print('num of R, L water atoms: ', len(RHOHs), len(LHOHs))
         print('R_HOHs: ', RHOHs)
@@ -181,7 +181,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
         "run MMPBSA script"
         command = 'mkdir -p ' + str(start) + '_' + str(end) + ' &&' \
-                  + ' /media/xin/WinData/ACS/github/BioUtil/gromacs/gmx_mmpbsa_dir_seq_DH.sh' \
+                  + ' /media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_dir_seq_DH.sh' \
                   + ' -dir ' + str(start) + '_' + str(end) \
                   + ' -s ../' + short_tpr \
                   + ' -f ../' + short_xtc \
@@ -196,13 +196,13 @@ def apply_windows(xtc, tpr, R_idx, L_idx, win_params, num_hyHOH, thr=0.4, bond_d
 
     "deal with log and temp intermediate files 2"
     with open(log_file, 'a', encoding='utf-8') as fw:
-        fw.writelines('  info: \n' + ' -win_params ' + str(win_params[0]) + ' ' + str(win_params[1]) + '\n' +
+        fw.writelines('  info: \n' + '  -win_params ' + str(win_params[0]) + ' ' + str(win_params[1]) + '\n' +
                       '  - R_idx ' + str(R_idx[0]) + ' ' + str(R_idx[1]) + '\n' +
                       '  - L_idx ' + str(L_idx[0]) + ' ' + str(L_idx[1]) + '\n' +
                       '  -thr ' + str(thr) + '\n' +
                       '  -bond_d ' + str(bond_d) + '\n' +
                       '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
-                      time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
+                      '  ' + time.strftime("%a %b %d %H:%M:%S %Y", time.localtime())) + '\n'
     os.system('rm ' + whole_xtc)
     os.system('rm ' + nojump_xtc)
     os.system('rm ' + mol_xtc)
@@ -222,4 +222,4 @@ if __name__ == '__main__':
     # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
     # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[0, 2000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
+    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[2000, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)

@@ -14,7 +14,7 @@ import math
 import matplotlib.pyplot as plt
 from scipy.stats import spearmanr
 # results
-from results import affinity, hyHOH_res, hyHOH_res_mm, hyHOH_12_mm
+from results import affinity, hyHOH_res, hyHOH_res_mm, hyHOH_12, most, ave, relax10
 
 
 def log_list(arr):
@@ -43,10 +43,10 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, hyHOH_12_mm)
+    aff, free = alignment(affinity, most)
+    print(aff, '\n', free)
     aff2kcal = log_list(aff)
 
-    print(aff2kcal, '\n', free)
     # correlation coefficient --------------------------------
     print('---------\n', spearmanr(aff2kcal, free))
 

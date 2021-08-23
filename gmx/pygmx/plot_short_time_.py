@@ -54,6 +54,7 @@ def read_mmpbsa_dat(file_path):
 
 def entropy_cal(mm):
     KT = 0.001985875*298.15
+    # RT2KJ = 8.314462618*298.15/1E3
     fm = []
     entropy_list = []
     for e in mm:
@@ -67,8 +68,8 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    df = df.iloc[10:20, :]
-    x = df.index.values.tolist()
+    df = df.iloc[10:50, :]
+    x = df.idxmax.values.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
@@ -76,7 +77,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm)
+    entropy = entropy_cal(mm_pro)
     # y = mm + pb + sa + entropy
     mm_pro = [e / 10 for e in mm_pro]
     pb = [e / 10 for e in pb]
@@ -139,8 +140,8 @@ def plot_heatmap(df, selection='AA'):
     elif selection == 'LHOH':
         df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
 
-    print(df_plot.T)
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(df_plot.T)
         print(df_plot.T.min(axis=1))
     fig, ax = plt.subplots(figsize=(3, 10))
     sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
@@ -192,4 +193,4 @@ if __name__ == '__main__':
 
     "call plot function"
     plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    # plot_heatmap(res_mm_df, selection='LAA')
+    # plot_heatmap(res_mm_df, selection='LHOH')

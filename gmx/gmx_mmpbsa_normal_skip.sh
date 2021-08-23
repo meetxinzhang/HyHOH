@@ -193,18 +193,22 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # $gmx rmsf -f $trj -s $tpr -o rmsf-per-residue.xvg -ox average.pdb -res $> $scr
 #### find closest structure refers to average.pdb
 # gmx rms -f md_0_1.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
-#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames)
+#### adress the target frames -b 1000 -e 1500 (time unit ps) -skip 500 (frames) or -dt $intervel
 
-echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end -dt $intervel &> $scr -pbc whole
+# echo $com  | $trjconv  -s $tpr -n $ndx -f $trj -o $trjwho.xtc -b $start -e $end &> $scr -pbc whole
 
-if [[ $withLig -eq 1 ]]; then
-# usful for single protein and ligand
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o $trjcnt.xtc &>>$scr -pbc mol -center
-	echo -e "$com\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcnt -o $trjcls.xtc &>>$scr -pbc cluster
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcls -o _$pid.pdb   &>>$scr -fit rot+trans
-else
-	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o _$pid.pdb   &>>$scr -pbc mol -center
-fi
+# if [[ $withLig -eq 1 ]]; then
+# # usful for single protein and ligand
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o $trjcnt.xtc &>>$scr -pbc mol -center
+# 	echo -e "$com\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcnt -o $trjcls.xtc &>>$scr -pbc cluster
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjcls -o _$pid.pdb   &>>$scr -fit rot+trans
+# else
+# 	echo -e "$lig\n$com" | $trjconv  -s $tpr -n $ndx -f $trjwho -o _$pid.pdb   &>>$scr -pbc mol -center
+# fi
+
+
+echo $com  | $trjconv  -s $tpr -n $ndx -f $trj  -o _$pid.pdb -b $start -e $end -skip $intervel
+
 echo -e ">> 1. pre-processe trajectory: OK !\n"
 
 fi; if [[ $step -le 2 ]]; then
@@ -234,10 +238,6 @@ $dump -quiet -s $tpr 2>>$scr \
 		}
 		RS="\r?\n"
 		nres=0
-
-		# for( i in ndxPro)
-		# 	printf "proindex = %d, ndxPro[%d] = %d \n",i,i,ndxPro[i]
-
 	}
 
 	/#molblock/  { Ntyp=$3 }
@@ -270,7 +270,6 @@ $dump -quiet -s $tpr 2>>$scr \
 	/moltype.+\(/ { Imol=$0; gsub(/[^0-9]/,"",Imol)
 		getline txt; sub(/.*=/,"",txt); gsub(" ","_",txt)
 		Name[Imol]=txt
-	#	printf "----------moltype = %s --------------",txt
 		getline; getline txt;       gsub(/[^0-9]/,"",txt); Natm[Imol]=txt+0
 		for(i=0; i<Natm[Imol]; i++) {
 			getline; txt=$0; idx=$3; resID[Imol, i]=$(NF-2)+1+nres
@@ -288,11 +287,15 @@ $dump -quiet -s $tpr 2>>$scr \
 			Tatm[Imol, i]=txt
 		}
 	}
+	/residue\[/ { 
+		nres++;
+		theRes=$0;resN=$0;		
 
-	/residue\[/ { nres++
-		sub(/.*="/,"",$0); sub(/".*/,"",$0);
-		resName[nres]=sprintf("%05d%s", nres, $0)
+		sub(/.*nr=/,"",resN); sub(/,.*/,"",resN);
+		sub(/.*="/,"",theRes); sub(/".*/,"",theRes);
+		resName[nres]=sprintf("%05d%s", resN, theRes);
 	}
+
 
 	END {
 		Ntot=0; Nidx=0
@@ -374,12 +377,10 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			if($NF=="Pro") { 
 				Npro++; if(Npro==1) Ipro=$1
 				ndxPro[$1]++; 
-				#resPro[Npro]="R~"$(NF-2)
 				resPro[$1]="R~"$(NF-2)
 			}
 			if($NF=="Lig") { Nlig++; if(Nlig==1) Ilig=$1
 				ndxLig[$1]++; 
-				#resLig[Nlig]="L~"$(NF-2)
 				resLig[$1]="L~"$(NF-2)
 			}
 		}
@@ -404,7 +405,7 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 		kb=1.380649e-23
 		Na=6.02214076e+23
 		qe=1.602176634e-19
-		RT2kJ=8.314462618*temp/1E3
+		# RT2kJ=8.314462618*temp/1E3
 		kap=1E-10/sqrt(eps0*kb*temp*sdie/(Iion*qe^2*Na*1E3))
 
 		PBEset0=PBEset; sub(/sdie +[0-9]*\.*[0-9]*/, "sdie  1", PBEset0)
@@ -512,21 +513,28 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			ii=Tres[i]; sub(/~0+/, "~", ii)
 			txt = txt""sprintf("%12s", ii)
 		}
+
 		if(withLig) {
 			print txt > pid"~resMM.dat"
 			print txt > pid"~resMM_COU.dat"
 			print txt > pid"~resMM_VDW.dat"
 			print txt > pid"~res_MMPBSA.dat"
+
+			print txt > pid"~resMM_DH.dat"
+			print txt > pid"~resMM_COU_DH.dat"
+			print txt > pid"~resMM_VDW_DH.dat"
+			print txt > pid"~res_MMPBSA_DH.dat"
 		}
 		print txt > pid"~resPBSA.dat"
 		print txt > pid"~resPBSA_PB.dat"
 		print txt > pid"~resPBSA_SA.dat"
 
-		print "   #Frame      Binding   Binding_DH  "         \
-			 "|    MM       MM_DH      PB        SA       " \
-			 "|   COU      COU_DH     VDW   "            \
-			 "|       PBcom        PBpro        PBlig  "   \
-			 "|    SAcom     SApro     SAlig"    >> pid"~MMPBSA.dat"
+
+		print "#Frame \t Binding \t Binding_DH \t"         \
+			 "| MM \t    MM_Pro \t    MM_SOL \t    MM_DH \t    MM_DH_Pro \t    MM_DH_SOL \t    PB \t    SA \t" \
+			 "|    COU \t    COU_DH \t    VDW \t"   \
+			 "|    PBcom \t    PBpro \t    PBlig \t"   \
+			 "|    SAcom \t    SApro \t    SAlig"  >> pid"~MMPBSA.dat"
 
 		maxstr=0
 		for(fr=1; fr<=Nfrm; fr++) maxstr=max(maxstr, length(Fname[fr]))
@@ -545,7 +553,6 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			while(getline < txt) { n++;
 				type[n]=$3; res[n]=$4;
 				x[n]=$(NF-4);    y[n]=$(NF-3);   z[n]=$(NF-2)
-				#printf "------------- x[n] = %9.3f  y[n]j = %9.3f  z[n] = %9.3f--------\n",x[n],y[n],z[n]
 				resID[n]=$(NF-5); gsub(/[A-Z]+/, "", resID[n])
 			}
 			close(txt)
@@ -557,6 +564,9 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 
 				for( i in ndxPro) { dEcou[resPro[i]]=0; dEcouDH[resPro[i]]=0; dEvdw[resPro[i]]=0 }
 		        for( i in ndxLig) { dEcou[resLig[i]]=0; dEcouDH[resLig[i]]=0; dEvdw[resLig[i]]=0 }
+
+				for( i in ndxPro) { dEcou_SOL[resPro[i]]=0; dEcouDH_SOL[resPro[i]]=0; dEvdw_SOL[resPro[i]]=0 }
+		        for( i in ndxLig) { dEcou_SOL[resLig[i]]=0; dEcouDH_SOL[resLig[i]]=0; dEvdw_SOL[resLig[i]]=0 }
 
 			    for( ii in ndxPro) {
 					qi=Qatm[ii]; ci=Catm[ii]; si=Satm[ii]; ei=Eatm[ii]
@@ -579,6 +589,23 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 							dEcou[resPro[ii]] += Ecou; dEcou[resLig[jj]] += Ecou
 							dEcouDH[resPro[ii]] += EcouDH; dEcouDH[resLig[jj]] += EcouDH
 							dEvdw[resPro[ii]] += Evdw; dEvdw[resLig[jj]] += Evdw
+
+							resProName_len = length(resPro[ii])
+							last3_pro = substr(resPro[ii],resProName_len-2,resProName_len)
+							if(last3_pro == "SOL"){
+								dEcou_SOL[resPro[ii]] += Ecou; 
+								dEcouDH_SOL[resPro[ii]] += EcouDH; 
+								dEvdw_SOL[resPro[ii]] += Evdw;
+							}
+
+							resLigName_len = length(resLig[jj])
+							last3_lig = substr(resLig[jj],resLigName_len-2,resLigName_len)
+							if(last3_lig == "SOL"){
+								dEcou_SOL[resLig[jj]] += Ecou
+								dEcouDH_SOL[resLig[jj]] += EcouDH
+								dEvdw_SOL[resLig[jj]] += Evdw
+							}
+
 						}
 					}
 				}
@@ -589,6 +616,14 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 					dEcouDH[i] *= kJcou/(2*pdie); EcouDH += dEcouDH[i];
 					dEvdw[i] /= 2;              Evdw += dEvdw[i]
 				}
+
+				Ecou_SOL=0; Evdw_SOL=0;EcouDH_SOL = 0
+				for(i in dEcou_SOL) {
+					dEcou_SOL[i] *= kJcou/(2*pdie); Ecou_SOL += dEcou_SOL[i];
+					dEcouDH_SOL[i] *= kJcou/(2*pdie); EcouDH_SOL += dEcouDH_SOL[i];
+					dEvdw_SOL[i] /= 2;              Evdw_SOL += dEvdw_SOL[i]
+				}
+
 			}
 
 			# 计算PBSA项
@@ -666,19 +701,26 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 				SAres[resLig[i]] += Esas[1, i]-Esas[3, i]
 			}
 
-
-
 			preK=-1; if(withLig) preK=1
 			Eco[fr]=Ecou;      EcoDH[fr]=EcouDH
 			Emm[fr]=Ecou+Evdw; EmmDH[fr]=EcouDH+Evdw
+
+			Emm_SOL[fr] = Ecou_SOL+Evdw_SOL; EmmDH_SOL[fr] = EcouDH_SOL + Evdw_SOL
+			Emm_noSOL[fr] = Emm[fr]-Emm_SOL[fr] ; EmmDH_noSOL[fr] = EmmDH[fr]-EmmDH_SOL[fr]
+
 			Evd[fr]=Evdw
 			Epb[fr]=preK*(PBcom-PBpro-PBlig)   #PB项   -------------------------------------------------
 			Esa[fr]=preK*(SAcom-SApro-SAlig)    #SA项  -------------------------------------------
 			Ebi[fr]=preK*(Ecou+Evdw+PBcom-PBpro-PBlig+SAcom-SApro-SAlig)
 			EbiDH[fr]=preK*(EcouDH+Evdw+PBcom-PBpro-PBlig+SAcom-SApro-SAlig)
-			printf "%-12s %9.3f  %9.3f   | %9.3f  %9.3f  %9.3f %9.3f " \
-				  "| %9.3f  %9.3f  %9.3f | %12.3f %12.3f %12.3f | %9.3f %9.3f %9.3f\n", \
-				Fout, Ebi[fr], EbiDH[fr], Emm[fr], EmmDH[fr], Epb[fr], Esa[fr], \
+			# printf "%-12s \t %9.3f \t %9.3f \t| %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t %9.3f \t" \
+			# 	  "| %9.3f \t %9.3f \t %9.3f \t | %12.3f \t %12.3f \t %12.3f \t | %9.3f \t %9.3f \t %9.3f\n", \
+			# 	Fout, Ebi[fr], EbiDH[fr], Emm[fr], Emm_noSOL[fr], Emm_SOL[fr], EmmDH[fr],EmmDH_noSOL[fr], EmmDH_SOL[fr],Epb[fr], Esa[fr], \
+			# 	Ecou, EcouDH, Evdw, PBcom, PBpro, PBlig, SAcom, SApro, SAlig >> pid"~MMPBSA.dat"
+
+			printf "%s \t %.3f \t %.3f \t  | %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t %.3f \t" \
+				  "| %.3f \t %.3f \t %.3f \t | %.3f \t %.3f \t %.3f \t | %.3f \t %.3f \t %.3f\n", \
+				Fout, Ebi[fr], EbiDH[fr], Emm[fr], Emm_noSOL[fr], Emm_SOL[fr], EmmDH[fr],EmmDH_noSOL[fr], EmmDH_SOL[fr],Epb[fr], Esa[fr], \
 				Ecou, EcouDH, Evdw, PBcom, PBpro, PBlig, SAcom, SApro, SAlig >> pid"~MMPBSA.dat"
 
 			printf "    MM-PBSA(with DH) =  %9.3f(%9.3f) kJ/mol\n", Ebi[fr],  EbiDH[fr]
@@ -693,6 +735,12 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 					printf fmt, ii, dEcou[Tres[i]]+dEvdw[Tres[i]], txt > pid"~resMM.dat"
 					printf fmt, ii, dEcou[Tres[i]]+dEvdw[Tres[i]] \
 								   +PBres[Tres[i]]+SAres[Tres[i]], txt > pid"~res_MMPBSA.dat"
+
+					printf fmt, ii, dEcouDH[Tres[i]], txt                > pid"~resMM_COU_DH.dat"
+					printf fmt, ii, dEvdwDH[Tres[i]], txt                > pid"~resMM_VDW_DH.dat"
+					printf fmt, ii, dEcouDH[Tres[i]]+dEvdwDH[Tres[i]], txt > pid"~resMM_DH.dat"
+					printf fmt, ii, dEcouDH[Tres[i]]+dEvdwDH[Tres[i]] \
+								   +PBres[Tres[i]]+SAres[Tres[i]], txt > pid"~res_MMPBSA_DH.dat"
 				}
 				printf fmt, ii, preK*(PBres[Tres[i]]), txt                > pid"~resPBSA_PB.dat"
 				printf fmt, ii, preK*(SAres[Tres[i]]), txt                > pid"~resPBSA_SA.dat"
@@ -708,10 +756,17 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 					printf fmt, txt, dEcou[resPro[i]], dEvdw[resPro[i]] > Fout"~COU+VDW.pdb"
 					printf fmt, txt, dEcou[resPro[i]]+dEvdw[resPro[i]], \
 								 PBres[resPro[i]]+SAres[resPro[i]]  > Fout"~res_MM+PBSA.pdb"
+
+					printf fmt, txt, dEcouDH[resPro[i]], dEvdwDH[resPro[i]] > Fout"~COU+VDW_DH.pdb"
+					printf fmt, txt, dEcouDH[resPro[i]]+dEvdwDH[resPro[i]], \
+								 PBres[resPro[i]]+SAres[resPro[i]]  > Fout"~res_MM+PBSA_DH.pdb"
 				}
 				printf fmt, txt, preK*PBres[resPro[i]], preK*SAres[resPro[i]] > Fout"~PB+SA.pdb"
 				printf fmt, txt, 0, dEcou[resPro[i]]+dEvdw[resPro[i]]  \
 								+preK*(PBres[resPro[i]]+SAres[resPro[i]])  > Fout"~res_MMPBSA.pdb"
+				
+				printf fmt, txt, 0, dEcouDH[resPro[i]]+dEvdwDH[resPro[i]]  \
+								+preK*(PBres[resPro[i]]+SAres[resPro[i]])  > Fout"~res_MMPBSA_DH.pdb"
 			}
 		
 			for(i in ndxLig) {
@@ -723,6 +778,12 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 								 PBres[resLig[i]]+SAres[resLig[i]]  > Fout"~res_MM+PBSA.pdb"
 				printf fmt, txt, 0, dEcou[resLig[i]]+dEvdw[resLig[i]]  \
 								+PBres[resLig[i]]+SAres[resLig[i]]  > Fout"~res_MMPBSA.pdb"
+
+				printf fmt, txt, dEcouDH[resLig[i]], dEvdwDH[resLig[i]] > Fout"~COU+VDW_DH.pdb"
+				printf fmt, txt, dEcouDH[resLig[i]]+dEvdwDH[resLig[i]], \
+								 PBres[resLig[i]]+SAres[resLig[i]]  > Fout"~res_MM+PBSA_DH.pdb"
+				printf fmt, txt, 0, dEcouDH[resLig[i]]+dEvdwDH[resLig[i]]  \
+								+PBres[resLig[i]]+SAres[resLig[i]]  > Fout"~res_MMPBSA_DH.pdb"
 			}
 
 		}
@@ -739,12 +800,12 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			meanEsa += Esa[i]/Nfrm
 		}
 		TdS=0; TdS_dh=0
-		for(i=1; i<=Nfrm; i++) {
-			TdS    += exp((Emm[i]-meanEmm)/RT2kJ)/Nfrm
-			TdS_dh += exp((EmmDH[i]-meanEmmDH)/RT2kJ)/Nfrm
-		}
-		TdS=-RT2kJ*log(TdS)
-		TdS_dh=-RT2kJ*log(TdS_dh)
+		# for(i=1; i<=Nfrm; i++) {
+		# 	TdS    += exp((Emm[i]-meanEmm)/RT2kJ)/Nfrm
+		# 	TdS_dh += exp((EmmDH[i]-meanEmmDH)/RT2kJ)/Nfrm
+		# }
+		# TdS=-RT2kJ*log(TdS)
+		# TdS_dh=-RT2kJ*log(TdS_dh)
 
 		printf "----------------------------------" \
 			   "|------------------------------------------" \

@@ -36,7 +36,7 @@ aln = alignment(env)
 mdl = model(env, file=in_name+'.pdb')
 print("Mapping from residue indices to PDB residue and chain names:")
 for r in mdl.residues:
-    print("%6d   %3s:%s   %s" % (r.index, r.num, r.chain.win_dir, r.pdb_name))
+    print("%6d   %3s:%s   %s" % (r.idxmax, r.num, r.chain.win_dir, r.pdb_name))
 
 # -------------- step 2: performs mutants -----------------------------
 aln.append_model(mdl, atom_files=in_name+'.pdb', align_codes=in_name)

@@ -13,7 +13,7 @@ module load intel_mpi/2018_u1
 module load gcc/7.5.0
 module load gromacs/2019.3-intel_2018_u1-gcc_7.5.0-cuda10.0
 module load fftw/3.3.4-intel_2018_u1
-# source /lustre/software/gromacs/gromacs_2019.3-intel_2018_u1-gcc_7.5.0-cuda10/bin/GMXRC
+# source /lustre/software/gmx/gromacs_2019.3-intel_2018_u1-gcc_7.5.0-cuda10/bin/GMXRC
 source /lustre/home/xzhang/env/gmx2020/bin/GMXRC
 
 ########Get computing resource variables
