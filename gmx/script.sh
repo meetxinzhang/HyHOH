@@ -5,7 +5,7 @@
 # >./script.sh
 
 gpu_id=01
-mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gromacs
+mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 
 ################### Pre Process ##################
 # cd interaction/ding/7KFY

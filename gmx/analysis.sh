@@ -1,4 +1,4 @@
-code_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
+
 mkdir analysis
 cd analysis
 
@@ -29,20 +29,19 @@ echo -e 1 \n 0 \n | gmx trjconv -s ../md_0.tpr -f md_0_mol.xtc -o md_0_fit.xtc -
 ############################## RMSD
 echo -e 4 \n | gmx rms -s ../md_0.tpr -f md_0_fit.xtc -o rmsd.xvg #-tu ns
 # 4 for backbone
-
 # xmgrace -nxy rmsd.xvg
 
 
 ############################### mostFre
 
-output=$(python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/most_freq.py rmsd.xvg)
+output=$(python /pygmx/most_freq.py rmsd.xvg)
 boundaries=($output)
 rd_min=${boundaries[0]}
 rd_max=${boundaries[1]}
 
 gmx trjconv -f md_0_fit.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder $rd_min -dropover $rd_max
 
-$code_dir/gmx_mmpbsa_normal_skip.sh -f ../analysis/mostFre.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 200
+./gmx_mmpbsa_normal_skip.sh -f ../analysis/mostFre.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 200
 
 
 # R
