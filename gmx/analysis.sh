@@ -27,7 +27,7 @@ echo -e 1 \n 0 \n | gmx trjconv -s ../md_0.tpr -f md_0_mol.xtc -o md_0_fit.xtc -
 
 
 ############################## RMSD
-echo -e 4 \n | gmx rms -s ../md_0.tpr -f md_0_fit.xtc -o rmsd.xvg #-tu ns
+echo -e 4 \n 4 \n | gmx rms -s ../md_0.tpr -f md_0_fit.xtc -o rmsd.xvg #-tu ns
 # 4 for backbone
 # xmgrace -nxy rmsd.xvg
 

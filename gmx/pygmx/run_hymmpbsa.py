@@ -1,7 +1,13 @@
 import os
+import random
 import sys
 import gromacs as gmx
+"""Attention!! source code modified at gromacs/core.py
+line 701:   self.command_string = self.command_string + " 2>> gmx_run_log.log >> gmx_run_log.log"
+To redirect terminal output to gmx_run_log.log
+"""
 from most_freq import get_mostfreq_idx
+from short_time_hoh import apply_windows
 
 
 def run(dir, tpr, xtc, ndx, b, e):
@@ -53,20 +59,33 @@ if __name__ == '__main__':
     nojump_xtc = 'nojump.xtc'
     mol_xtc = 'mol_center.xtc'
     fit_xtc = 'fit.xtc'
-    final_xtc = 'final.xtc'
     rmsd_xvg = 'rmsd.xvg'
+    frame_idx_log = 'frame_idx_log'
+
 
     # preprocessing
-    gmx.trjconv(s=tpr, f=xtc, o=whole_xtc, pbc='whole', b=begin, e=final, input='System')
-    gmx.trjconv(s=tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
-    gmx.trjconv(s=tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
-    gmx.trjconv(s=tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
+    # gmx.trjconv(s=tpr, f=xtc, o=whole_xtc, pbc='whole', b=begin, e=final, input='System')
+    # gmx.trjconv(s=tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
+    # gmx.trjconv(s=tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
+    # gmx.trjconv(s=tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
 
     # most frequency method
-    gmx.rms(s=tpr, f=fit_xtc, o=rmsd_xvg, input='backbone')
+    # gmx.rms(s=tpr, f=fit_xtc, o=rmsd_xvg, input='backbone')
+    # frame_idx = get_mostfreq_idx(rmsd_xvg)
+
+    "most frequency"
+    gmx.rms(s=tpr, f=fit_xtc, o=rmsd_xvg, b=begin, e=final, input=('Backbone', 'Backbone'))
     frame_idx = get_mostfreq_idx(rmsd_xvg)
+    frame_idx_list = frame_idx.index.tolist()
+    frame_rd_list = random.sample(frame_idx_list, 15)
+    print('------- most frames --------:\n', frame_idx)
+    print('Total ', len(frame_rd_list), ' frames selected by random for calculation')
+    with open('frame_idx.ndx', 'w') as f:
+        f.write(frame_idx_log)
 
-
+    "HyHOH"
+    apply_windows(fit_xtc, tpr, R_idx, L_idx, frame_idx=frame_rd_list,
+                  win_params=[int(begin), int(final), 50, 50], num_hyHOH=100, thr=0.4)
 
 
 

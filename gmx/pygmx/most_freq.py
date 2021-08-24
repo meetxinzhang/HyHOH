@@ -50,7 +50,7 @@ def get_mostfreq_idx(xvg):
     dataframe = read_xvg(xvg)
     rd_min, rd_max = most_domain(dataframe, 'RMSD(nm)')
     interest = indexing_frames(dataframe, rd_min, rd_max)
-    return interest.index.tolist()
+    return interest
 
 
 if __name__ == "__main__":
