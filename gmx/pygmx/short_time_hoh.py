@@ -7,22 +7,20 @@
 """
 import os
 import sys
-
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to enviroment
+import time
+from rich.console import Console
+from rich.progress import track
+sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+from run_mmpbsa import run_api
 from PDB.io.reader import structure_reader
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
-import time
-
-# print('gmx version:', gmx.release())
-
-
-def windows(b, f, window_len, move_stride):
-    """Sliding window algorithm"""
-    while b + window_len <= f:
-        yield b, b + window_len
-        b += move_stride
+cs = Console()
+flags = gmx.environment.flags
+flags['capture_output'] = 'file'
+flags['capture_output_filename'] = 'gmx_wrapper.log'
+log_file = 'apply_windows.log'
 
 
 def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
@@ -67,20 +65,13 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
+def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
-    # whole_xtc = 'whole.xtc'
-    # nojump_xtc = 'nojump.xtc'
-    # mol_xtc = 'mol_center.xtc'
 
-    log_file = 'apply_windows.log'
-
-    # gmx.trjconv(s=tpr, f=xtc, o=whole_xtc, pbc='whole', b=begin, e=final, input='System')
-    # gmx.trjconv(s=tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
-    # gmx.trjconv(s=tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
-    # gmx.trjconv(s=tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
-
-    for (start, end) in windows(begin, final, win_len, win_stride):
+    for start in range(begin, final, win_stride):
+        end = start + win_len
+        HAVE_FRAMES = True
+        cs.log('Processing window: '+str(start)+'-'+str(end))
         # TODO: rerun control
         # if start <= 8000:
         #     continue
@@ -94,17 +85,28 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
         short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
+        "Determines whether to perform this window"
+        with open(short_frame_idx, 'w') as f:
+            f.writelines('[ frames ]\n')
+            for idx in frames_idx:
+                if start <= float(idx) < end:
+                    f.writelines(str(float(idx)-start)+'\n')
+                else:
+                    HAVE_FRAMES = False
+        if not HAVE_FRAMES:
+            cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
+            continue
+
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
         gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
-        # gmx.covar(s=tpr, f=xtc, av=short_ave_pdb, b=start, e=end, n=short_ndx, input='System')
 
         "get index of hy_HOHs"
         try:
             ice_idx = idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
-            print(e.message)
+            cs.print(e.message, style=f"red")
             os.system('rm ' + str(start) + '_' + str(end) + '*')
             continue
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
@@ -114,11 +116,11 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
         RHOHs, LHOHs = assign_hyhoh(protein_atoms, ices, R_idx, L_idx, bond_d)
 
-        print('num of R, L water atoms: ', len(RHOHs), len(LHOHs))
-        print('R_HOHs: ', RHOHs)
-        print('L_HOHs: ', LHOHs)
+        cs.print('\nNum of R/L HOH: ', len(RHOHs), len(LHOHs))
+        cs.print('R_HOHs:\n', np.array(RHOHs))
+        cs.print('L_HOHs:\n', np.array(LHOHs))
         if len(RHOHs) == 0 and len(LHOHs) == 0:
-            print('continue ----------')
+            cs.print('\n----- continue op occurred!!!!!!!', style=f"red")
             os.system('rm ' + str(start) + '_' + str(end) + '*')
             continue
 
@@ -131,11 +133,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=
                                                            'name 20 com', 'q'))  # 19
         "generate short-term xtc and average pdb for mmpbsa"
         # gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
-        with open(short_frame_idx, 'w') as f:
-            f.writelines('[ frames ]\n')
-            for idx in frame_idx:
-                if start <= float(idx) < end:
-                    f.writelines(str(float(idx)-start)+'\n')
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
@@ -186,19 +183,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=
         os.system('rm \#*')  # delete all # starting files
 
         "run MMPBSA script"
-        command = 'mkdir -p ' + str(start) + '_' + str(end) + ' &&' \
-                  + ' /media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_dir_seq_DH.sh' \
-                  + ' -dir ' + str(start) + '_' + str(end) \
-                  + ' -s ../' + short_tpr \
-                  + ' -f ../' + short_xtc \
-                  + ' -n ../' + short_ndx \
-                  + ' -com com' \
-                  + ' -pro receptor' \
-                  + ' -lig ligand' \
-                  + ' -b ' + str(start) + ' -e ' + str(end) + ' -i 1'\
-                  + ' -cou dh -ts ie'
-        print(command)
-        os.system(command)
+        run_api(dir=str(start) + '_' + str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
+                com='com', rec='receptor', lig='ligand', b=start, e=end, i=1)
 
     # "deal with log and temp intermediate files 2"
     with open(log_file, 'a', encoding='utf-8') as fw:
@@ -209,9 +195,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frame_idx, win_params, num_hyHOH, thr=
                       '  -bond_d ' + str(bond_d) + '\n' +
                       '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
                       '  ' + time.strftime("%a %b %d %H:%M:%S %Y", time.localtime())) + '\n'
-    os.system('rm ' + whole_xtc)
-    os.system('rm ' + nojump_xtc)
-    os.system('rm ' + mol_xtc)
 
 
 if __name__ == '__main__':
@@ -224,8 +207,5 @@ if __name__ == '__main__':
 
     R_idx = [int(r_b), int(r_e)]  # Antibody
     L_idx = [int(l_b), int(l_e)]  # RBD
-
-    # xtc = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/analysis/md_0_noPBC.xtc'
-    # tpr = '/media/xin/WinData/ACS/gmx/interaction/ding/7KFY/md_0.tpr'
 
     apply_windows(xtc, tpr, R_idx, L_idx, win_params=[2000, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)

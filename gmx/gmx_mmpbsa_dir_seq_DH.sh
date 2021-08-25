@@ -207,7 +207,7 @@ trjwho=$pid~who; trjcnt=$pid~cnt; trjcls=$pid~cls
 # fi
 
 
-echo $com  | $trjconv  -s $tpr -n $ndx -f $trj  -o _$pid.pdb -b $start -e $end 
+echo $com  | $trjconv  -s $tpr -n $ndx -f $trj  -o _$pid.pdb -b $start -e $end -skip $intervel 2>>gmx_calculate.log >> gmx_calculate.log
 
 echo -e ">> 1. pre-processe trajectory: OK !\n"
 
@@ -312,7 +312,7 @@ $dump -quiet -s $tpr 2>>$scr \
 						Ntot, Name[i]"-"n+1"."j+1, \
 						resName[resID[i,j]], Tatm[i, j]
 						if(Ntot in ndxPro) print "Pro"
-						if(Ntot in ndxLig) print "Lig"
+						else if(Ntot in ndxLig) print "Lig"
 					}
 				}
 			}

@@ -19,4 +19,12 @@ def kd2kcal(kd):
     return 0.6*math.log(kd*1E-9)
 
 
+list = range(0, 100, 2)
 # print(kd2kcal(6.4))
+from rich import print
+from rich.panel import Panel
+from rich.console import Console
+cs = Console()
+print("[red]hi[/red] ff")
+cs.print('hello', style=f"red")
+cs.print((np.array(list)))
