@@ -44,4 +44,4 @@ def mmpbsa(dir, xtc, tpr, R_idx, L_idx, fr_idx):
     cs.log('gmx-trjconv by frames idx list...')
     gmx.trjconv(f=xtc, o=final_xtc, fr=framrs_idx, n=index, input='1')
 
-    run_api(dir, tpr, xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
+    run_api(dir, tpr, final_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)

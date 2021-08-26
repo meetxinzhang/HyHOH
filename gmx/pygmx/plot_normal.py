@@ -104,23 +104,15 @@ def plot_mmpbsa_curves(df):
 
 def plot_heatmap(df, selection='AA'):
     """
-    :param selection: AA, RHOH, LHOH
+    :param selection: RAA, LAA
     """
     # df = df.iloc[:195, :]
-    HOH_exist = df.columns.str.contains('SOL')
-    HOH_df = df.loc[:, HOH_exist]
-    AA_df = df.loc[:, HOH_exist ^ True]
-    r_exist_inHOH = HOH_df.columns.str.contains('R~')
-    r_exist_inAA = AA_df.columns.str.contains('R~')
+    r_exist = df.columns.str.contains('R~')
 
     if selection == 'RAA':
-        df_plot = AA_df.loc[:, r_exist_inAA]
+        df_plot = df.loc[:, r_exist]
     elif selection == 'LAA':
-        df_plot = AA_df.loc[:, r_exist_inAA ^ True]
-    elif selection == 'RHOH':
-        df_plot = HOH_df.loc[:, r_exist_inHOH]
-    elif selection == 'LHOH':
-        df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
+        df_plot = df.loc[:, r_exist ^ True]
 
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):
         print(df_plot.T)

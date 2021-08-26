@@ -50,13 +50,15 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
         #     continue
         for a in protein_atoms:
             d = np.sqrt(np.sum(np.square(np.array(w.coordinates) - np.array(a.coordinates))))
-            if R_idx[0] <= a.res_seq <= R_idx[1]:
+            if R_idx[0] <= a.res_seq <= R_idx[1]:  # belongs to receptor chain
                 if d < d2R:
                     d2R = d
-            elif L_idx[0] <= a.res_seq <= L_idx[1]:
+            elif L_idx[0] <= a.res_seq <= L_idx[1]:  # belongs to ligand chain
                 if d < d2L:
                     d2L = d
         if d2R > bond_d and d2L > bond_d:  # A
+            continue
+        if d2R + d2L > 2*bond_d+0.96:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
             continue
         if d2R < d2L:
             RHOHs.append(w.res_seq)
@@ -186,7 +188,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         run_api(dir=str(start) + '_' + str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
                 com='com', rec='receptor', lig='ligand', b=start, e=end, i=1)
 
-    # "deal with log and temp intermediate files 2"
+    "deal with log"
     with open(log_file, 'a', encoding='utf-8') as fw:
         fw.writelines('  info: \n' + '  -win_params ' + str(win_params[0]) + ' ' + str(win_params[1]) + '\n' +
                       '  - R_idx ' + str(R_idx[0]) + ' ' + str(R_idx[1]) + '\n' +

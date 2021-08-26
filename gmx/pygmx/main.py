@@ -73,8 +73,8 @@ if __name__ == '__main__':
 
     "HyHOH"
     apply_windows(fit_xtc, tpr, R_idx, L_idx, frames_idx=frames_rd,
-                  win_params=[int(begin), int(final), 100, 100], num_hyHOH=100, thr=0.4)
+                  win_params=[int(begin), int(final), 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
 
     "run MMPBSA"
     # fr_idx = []
-    # mmpbsa('mmpbsa_normal', xtc, tpr, R_idx, L_idx, fr_idx)
+    # mmpbsa('mmpbsa_normal', fit_xtc, tpr, R_idx, L_idx, fr_idx)

@@ -1,4 +1,4 @@
-
+code_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 mkdir analysis
 cd analysis
 
@@ -86,8 +86,8 @@ gmx trjconv -f md_0_fit.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder $rd_min -dr
 # gmx trjconv -f md_0_nojump.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -dropunder 2.80 -dropover 2.82
 
 ################ MMPBSA
-# $code_dir/gmx_mmpbsa_normal_skip_TdS.sh -f ../analysis/md_0_fit.xtc -s ../md_1.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 2000 -i 100 -dir ./
-# $code_dir/gmx_mmpbsa_normal_skip_TdS.sh -f ../analysis/md_0_fit.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 1000 -dir ./
+# $code_dir/gmx_mmpbsa_normal.sh -f ../analysis/md_1_fit.xtc -s ../md_1.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 2000 -i 100 -dir ./
+# $code_dir/gmx_mmpbsa_normal.sh -f ../analysis/md_0_fit.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 500 -dir ./
 # # mostFre
 # ./../../../../gmx_mmpbsa_ed.bsh -f ../analysis/mostFre.xtc -s ../md_0.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 10000 -i 200
 # # cloestAve
@@ -101,7 +101,3 @@ gmx trjconv -f md_0_fit.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder $rd_min -dr
 # # backbone
 
 # gmx anaeig -s ../md_0.tpr -f ../analysis/md_0_nojump.xtc -v eigenvectors.trr -eig eigenvalues.xvg -entropy yes
-
-
-# ################# hyHOH
-# python /media/xin/WinData/ACS/github/BioUtil/gromacs/pygmx/short_time_hoh.py /media/xin/Raid0/ACS/gmx/interaction/ding/7KFY/md_0.tpr /media/xin/Raid0/ACS/gmx/interaction/ding/7KFY/analysis/mostFre.xtc 196 632 1 195
