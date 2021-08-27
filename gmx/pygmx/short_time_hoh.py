@@ -56,11 +56,11 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
             elif L_idx[0] <= a.res_seq <= L_idx[1]:  # belongs to ligand chain
                 if d < d2L:
                     d2L = d
-        if d2R > bond_d and d2L > bond_d:  # A
+        if d2R > bond_d and d2L > bond_d:  # far away from protein_atoms
             continue
         if d2R + d2L > 2*bond_d+0.96:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
             continue
-        if d2R < d2L:
+        if d2R < d2L:  #
             RHOHs.append(w.res_seq)
         else:
             LHOHs.append(w.res_seq)
@@ -70,7 +70,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
 def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
 
-    for start in track(range(begin, final, win_stride), console=cs, description='Windowing...'):
+    for start in track(range(begin, final, win_stride), console=cs, description='WINDOWING >'):
         end = start + win_len
         cs.rule('Processing window: '+str(start)+'-'+str(end))
         # TODO: rerun control
@@ -88,18 +88,19 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
 
         "Determines whether to perform this window"
         fr_idx = []
-        with open(short_frame_idx, 'w') as f:
-            f.writelines('[ frames ]\n')
-            for idx in frames_idx:
-                if start <= float(idx) < end:
-                    fr_idx.append(float(idx))
-                    f.writelines(str(float(idx)-start)+'\n')
-        if not len(fr_idx) == 0:
-            cs.print('----- No frames located in this window!!!!!, skip it.', style=f'red')
+        for idx in frames_idx:
+            if start <= float(idx) < end:
+                fr_idx.append(float(idx))
+        if len(fr_idx) == 0:
+            cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
             continue
-        cs.print('frames index for calculating:\n', np.array(fr_idx))
+        else:
+            with open(short_frame_idx, 'w') as f:
+                f.writelines('[ frames ]\n')
+                f.writelines('\n'.join([str(e) for e in fr_idx]))
+                cs.print('Frames index for calculating:\n', np.array(fr_idx))
 
-        cs.print('deal with temp files ...', style=f'blue')
+        cs.log('Generate temp files ...', style=f'blue')
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
@@ -110,7 +111,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
             ice_idx = idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
             cs.print(e.message, style=f"red")
-            os.system('rm ' + str(start) + '_' + str(end) + '*')
+            os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
         protein_atoms, waters = structure_reader(temp_ave_pdb, ['N', 'C', 'O'])
@@ -123,8 +124,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         cs.print('R_HOHs:\n', np.array(RHOHs))
         cs.print('L_HOHs:\n', np.array(LHOHs))
         if len(RHOHs) == 0 and len(LHOHs) == 0:
-            cs.print('\n----- continue op occurred!!!!!!!', style=f"red")
-            os.system('rm ' + str(start) + '_' + str(end) + '*')
+            cs.print('\nContinue op occurred!!!!!!!', style=f"red")
+            os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
 
         "run gmx-make_ndx to address (Protein + hydration HOH)"
@@ -134,7 +135,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
                                                            'name 19 hyHOH',
                                                            '1 | 19',
                                                            'name 20 com', 'q'))  # 19
-        "generate short-term xtc and sub-group tpr for mmpbsa"
+        cs.log("generate short-term xtc and sub-group tpr for mmpbsa", style=f'blue')
         # gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
@@ -180,12 +181,13 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
-        os.system('rm ' + temp_ndx)
-        os.system('rm ' + temp_ave_pdb)
-        os.system('rm rmsf.xvg')
-        os.system('rm \#*')  # delete all # starting files
+        os.system('rm -v ' + temp_ndx)
+        os.system('rm -v ' + temp_ave_pdb)
+        os.system('rm -v rmsf.xvg')
+        os.system('rm -v \#*')  # delete all # starting files
 
         "run MMPBSA script"
+        os.system('mkdir -p -v '+str(start)+'_'+str(end))
         run_api(dir=str(start) + '_' + str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
                 com='com', rec='receptor', lig='ligand', b=start, e=end, i=1)
 

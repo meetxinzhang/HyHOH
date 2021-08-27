@@ -21,7 +21,7 @@ indexed_xtc = 'final.xtc'
 
 
 def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
-    command = '/media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_dir_seq_DH.sh' \
+    command = '/media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_normal.sh' \
               + ' -dir ' + dir \
               + ' -s ' + tpr \
               + ' -f ' + xtc \

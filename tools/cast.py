@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from rich import progress
 
 
 def min_max_normalization(arr):
@@ -21,18 +22,23 @@ def kd2kcal(kd):
 
 # print(kd2kcal(6.4))
 
-
-from rich.progress import track
+import time
+from rich.progress import track, Progress
 from rich.console import Console
 cs = Console()
-import time
+from files import get_last_line
 
-for i in track(range(0, 100, 1), console=cs, description='out'):
-    time.sleep(1)
-    # cs.print('--> ', i)
+with Progress() as progress:
+    task = progress.add_task('[red]deal with pbc', total=10000)
 
-# overflow_methods: List[OverflowMethod] = ["fold", "crop", "ellipsis"]
-# for overflow in overflow_methods:
-#     console.rule(overflow)
-#     console.print(supercali, overflow=overflow, style="bold blue")
-#     console.print()
+    while not progress.finished:
+        last_line = get_last_line('/media/xin/WinData/ACS/gmx/ding/7CH4/1-10-1000/gmx_wrapper.log')
+
+        if last_line.startswith(' ->  frame'):
+            realtime = float(last_line.split()[4])
+            print(realtime, 'qqqqqqqqqqq')
+            progress.update(task, advance=realtime)
+        pass
+
+
+
