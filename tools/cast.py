@@ -20,3 +20,19 @@ def kd2kcal(kd):
 
 
 # print(kd2kcal(6.4))
+
+
+from rich.progress import track
+from rich.console import Console
+cs = Console()
+import time
+
+for i in track(range(0, 100, 1), console=cs, description='out'):
+    time.sleep(1)
+    # cs.print('--> ', i)
+
+# overflow_methods: List[OverflowMethod] = ["fold", "crop", "ellipsis"]
+# for overflow in overflow_methods:
+#     console.rule(overflow)
+#     console.print(supercali, overflow=overflow, style="bold blue")
+#     console.print()

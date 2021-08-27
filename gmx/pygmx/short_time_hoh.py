@@ -70,10 +70,9 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
 def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
 
-    for start in range(begin, final, win_stride):
+    for start in track(range(begin, final, win_stride), console=cs, description='Windowing...'):
         end = start + win_len
-        HAVE_FRAMES = True
-        cs.log('Processing window: '+str(start)+'-'+str(end))
+        cs.rule('Processing window: '+str(start)+'-'+str(end))
         # TODO: rerun control
         # if start <= 8000:
         #     continue
@@ -85,26 +84,28 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
-        short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
+        # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         "Determines whether to perform this window"
+        fr_idx = []
         with open(short_frame_idx, 'w') as f:
             f.writelines('[ frames ]\n')
             for idx in frames_idx:
                 if start <= float(idx) < end:
+                    fr_idx.append(float(idx))
                     f.writelines(str(float(idx)-start)+'\n')
-                else:
-                    HAVE_FRAMES = False
-        if not HAVE_FRAMES:
-            cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
+        if not len(fr_idx) == 0:
+            cs.print('----- No frames located in this window!!!!!, skip it.', style=f'red')
             continue
+        cs.print('frames index for calculating:\n', np.array(fr_idx))
 
+        cs.print('deal with temp files ...', style=f'blue')
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
         gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
 
-        "get index of hy_HOHs"
+        cs.log('Searching Hy-HOHs ...', style=f'blue')
         try:
             ice_idx = idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
@@ -133,12 +134,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
                                                            'name 19 hyHOH',
                                                            '1 | 19',
                                                            'name 20 com', 'q'))  # 19
-        "generate short-term xtc and average pdb for mmpbsa"
+        "generate short-term xtc and sub-group tpr for mmpbsa"
         # gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
-        gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
+        # gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
         "make new index for short_tpr and short_xtc"
         # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
@@ -191,8 +192,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
     "deal with log"
     with open(log_file, 'a', encoding='utf-8') as fw:
         fw.writelines('  info: \n' + '  -win_params ' + str(win_params[0]) + ' ' + str(win_params[1]) + '\n' +
-                      '  - R_idx ' + str(R_idx[0]) + ' ' + str(R_idx[1]) + '\n' +
-                      '  - L_idx ' + str(L_idx[0]) + ' ' + str(L_idx[1]) + '\n' +
+                      '  -R_idx ' + str(R_idx[0]) + ' ' + str(R_idx[1]) + '\n' +
+                      '  -L_idx ' + str(L_idx[0]) + ' ' + str(L_idx[1]) + '\n' +
                       '  -thr ' + str(thr) + '\n' +
                       '  -bond_d ' + str(bond_d) + '\n' +
                       '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
@@ -206,8 +207,10 @@ if __name__ == '__main__':
     r_e = sys.argv[4]
     l_b = sys.argv[5]
     l_e = sys.argv[6]
+    frames_idx = sys.argv[7]
 
     R_idx = [int(r_b), int(r_e)]  # Antibody
     L_idx = [int(l_b), int(l_e)]  # RBD
 
-    apply_windows(xtc, tpr, R_idx, L_idx, win_params=[2000, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
+    apply_windows(xtc, tpr, R_idx, L_idx, frames_idx,
+                  win_params=[2000, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)

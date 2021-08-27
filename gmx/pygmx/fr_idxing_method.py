@@ -46,7 +46,7 @@ def indexing_frames(df, rd_min, rd_max):
     return df2
 
 
-def get_mostfreq_idx(xvg):
+def get_mostfreq_df(xvg):
     dataframe = read_xvg(xvg)
     rd_min, rd_max = most_domain(dataframe, 'RMSD(nm)')
     interest = indexing_frames(dataframe, rd_min, rd_max)
