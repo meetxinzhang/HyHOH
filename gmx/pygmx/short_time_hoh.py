@@ -98,6 +98,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
             with open(short_frame_idx, 'w') as f:
                 f.writelines('[ frames ]\n')
                 f.writelines('\n'.join([str(e) for e in fr_idx]))
+                f.writelines('\n')
                 cs.print('Frames index for calculating:\n', np.array(fr_idx))
 
         cs.log('Generate temp files ...', style=f'blue')
@@ -188,7 +189,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
 
         "run MMPBSA script"
         os.system('mkdir -p -v '+str(start)+'_'+str(end))
-        run_api(dir=str(start) + '_' + str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
+        run_api(dir=str(start)+'_'+str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
                 com='com', rec='receptor', lig='ligand', b=start, e=end, i=1)
 
     "deal with log"

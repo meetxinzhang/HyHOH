@@ -10,6 +10,7 @@ import os
 import numpy as np
 from rich.console import Console
 import gromacs as gmx
+
 flags = gmx.environment.flags
 flags['capture_output'] = 'file'
 flags['capture_output_filename'] = 'gmx_wrapper.log'
@@ -23,9 +24,9 @@ indexed_xtc = 'final.xtc'
 def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
     command = '/media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_normal.sh' \
               + ' -dir ' + dir \
-              + ' -s ' + tpr \
-              + ' -f ' + xtc \
-              + ' -n ' + ndx \
+              + ' -s ../' + tpr \
+              + ' -f ../' + xtc \
+              + ' -n ../' + ndx \
               + ' -com ' + com \
               + ' -pro ' + rec \
               + ' -lig ' + lig \

@@ -66,20 +66,22 @@ if __name__ == '__main__':
     "most frequency"
     cs.log('calculating most frames...', style=f'green')
     gmx.rms(s=args.tpr, f=fit_xtc, o=rmsd_xvg, input=('Backbone', 'Backbone'))
-    idx_df = get_mostfreq_df(rmsd_xvg)
-    idx_sub_rd = idx_df.sample(n=20).sort_index()
-    cs.print('most frequency frames:\n', idx_df)
-    cs.print('Select by random for calculating:\n', idx_sub_rd)
-    cs.print('\nTotal ', len(idx_sub_rd), ' frames selected by random for calculation')
+    mf_df = get_mostfreq_df(rmsd_xvg)
+    mf_sub_rd = mf_df.sample(n=20).sort_index()
+    cs.print('most frequency frames:\n', mf_df)
+    cs.print('Select by random for calculating:\n', mf_sub_rd)
+    cs.print('\nTotal ', len(mf_sub_rd), ' frames selected by random for calculation')
     with open(main_log, 'w') as f:
-        f.write('most frequency frames:\n'+idx_df.to_string())
-        f.writelines('\nselected by random for calculation:\n'+idx_sub_rd.to_string())
-    frames_idx = idx_sub_rd.index.tolist()
-    # "average structure"
+        f.write('most frequency frames:\n' + mf_df.to_string())
+        f.writelines('\nselected by random for calculation:\n' + mf_sub_rd.to_string())
+    frame_times = mf_sub_rd.index.tolist()
+    frame_idx = [float(i)+1 for i in frame_times]  # time start with 0 while frame start with 1
+
+    "average structure"
     # TODO command here
 
     "HyHOH"
-    apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frames_idx,
+    apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx,
                   win_params=[int(args.t[0]), int(args.t[1]), 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
 
     "run MMPBSA"
