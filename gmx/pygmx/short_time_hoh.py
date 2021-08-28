@@ -70,7 +70,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
 def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
 
-    for start in track(range(begin, final, win_stride), console=cs, description='WINDOWING >'):
+    for start in range(begin, final, win_stride):
         end = start + win_len
         cs.rule('Processing window: '+str(start)+'-'+str(end))
         # TODO: rerun control
@@ -200,7 +200,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
                       '  -thr ' + str(thr) + '\n' +
                       '  -bond_d ' + str(bond_d) + '\n' +
                       '  -num_hyHOH ' + str(num_hyHOH) + '\n' +
-                      '  ' + time.strftime("%a %b %d %H:%M:%S %Y", time.localtime())) + '\n'
+                      '  ' + time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
+        fw.writelines('\n')
 
 
 if __name__ == '__main__':
