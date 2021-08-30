@@ -85,7 +85,7 @@ gmx mdrun -deffnm npt -update gpu -gpu_id $gpu_id
 ################## MD ########################
 gmx grompp -f $mdp_dir/mdp/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr
 
-gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu -pin on -ntmpi 2 -ntomp 6
+gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu -pin on -ntmpi 2 -ntomp 6 -npme 1
 
 ################ extend MD #################
 # gmx convert-tpr -s md_0.tpr -extend 13000 -o md_0.tpr

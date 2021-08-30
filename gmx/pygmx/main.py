@@ -51,19 +51,21 @@ if __name__ == '__main__':
     rmsd_xvg = '../analysis/rmsd.xvg'
     args = parser.parse_args()
 
-    cs.log('starting gmx-trjconv to deal with PBC ...\n '
-           '(Some time needed, visit local file: [red]gmx_wrapper.log[/red] to monitor realtime progress)', end='\n')
-    gmx.trjconv(s=args.tpr, f=args.xtc, o=whole_xtc, pbc='whole', e=args.t[1], input='System')
-    cs.log('done [blue]whole.xtc[/blue]')
-    gmx.trjconv(s=args.tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
-    cs.log('done [blue]nojump.xtc[/blue]')
-    gmx.trjconv(s=args.tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
-    cs.log('done [blue]mol_center.xtc[/blue]')
-    gmx.trjconv(s=args.tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
-    cs.log('done [blue]fit_xtc.xtc[/blue]')
-    os.system('rm -v ' + whole_xtc)
-    os.system('rm -v ' + nojump_xtc)
-    os.system('rm -v ' + mol_xtc)
+    if not os.path.exists(fit_xtc):
+        cs.log('starting gmx-trjconv to deal with PBC ...\n '
+               '(Some time needed, visit local file: [red]gmx_wrapper.log[/red] to monitor realtime progress)',
+               end='\n')
+        gmx.trjconv(s=args.tpr, f=args.xtc, o=whole_xtc, pbc='whole', e=args.t[1], input='System')
+        cs.log('done [blue]whole.xtc[/blue]')
+        gmx.trjconv(s=args.tpr, f=whole_xtc, o=nojump_xtc, pbc='nojump', input='System')
+        cs.log('done [blue]nojump.xtc[/blue]')
+        gmx.trjconv(s=args.tpr, f=nojump_xtc, o=mol_xtc, pbc='mol', center='true', input=('Protein', 'System'))
+        cs.log('done [blue]mol_center.xtc[/blue]')
+        gmx.trjconv(s=args.tpr, f=mol_xtc, o=fit_xtc, fit='rot+trans', input=('Protein', 'System'))
+        cs.log('done [blue]fit_xtc.xtc[/blue]')
+        os.system('rm -v ' + whole_xtc)
+        os.system('rm -v ' + nojump_xtc)
+        os.system('rm -v ' + mol_xtc)
 
     if args.fm == 'most':
         "most frequency"

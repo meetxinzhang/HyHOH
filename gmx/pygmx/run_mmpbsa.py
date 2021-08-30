@@ -38,15 +38,15 @@ def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
 
 
 def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):
-    cs.print('frames index for calculating:\n', np.array(fr_idx))
     with open(frames_idx, 'w') as f:
         f.writelines('[ frames ]\n')
-        for idx in fr_idx:
-            f.writelines(str(float(idx)) + '\n')
-
+        f.writelines('\n'.join([str(e) for e in fr_idx]))
+        f.writelines('\n')
+        cs.print('Frames index for calculating:\n', np.array(fr_idx))
     gmx.make_ndx(f=tpr, o=index,
                  input=('ri ' + str(R_idx[0]) + '-' + str(R_idx[1]), 'name 19 receptor',  # 19
                         'ri ' + str(L_idx[0]) + '-' + str(L_idx[1]), 'name 20 ligand', 'q'))  # 20
     cs.log('gmx-trjconv by frames idx list...')
     gmx.trjconv(f=xtc, o=indexed_xtc, fr=frames_idx, n=index, input='1')
-    run_api('./', tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
+    os.system('mkdir -p normal')
+    run_api('normal', tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
