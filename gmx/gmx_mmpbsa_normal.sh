@@ -897,7 +897,7 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 	function max(x, y) { return x>y ? x : y }
 	function round(x)  { return int(x+0.5)  }
 ' _$pid.pdb
-echo -e "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
+echo -e "\n<< 4. calculation complete !\n"
 fi
 
 ################################################################################
