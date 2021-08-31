@@ -13,7 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-
+from scipy.stats import pearsonr
 from gmx.pygmx.results import affinity
 
 matplotlib.rcParams['font.size'] = 10
@@ -27,16 +27,21 @@ files = {
     '7KGJ': '/media/xin/Raid0/ACS/gmx/interaction/ding/7KGJ/1-10-500/_pid~MMPBSA.dat',
     '7KGK': '/media/xin/Raid0/ACS/gmx/interaction/ding/7KGK/2-10-500/_pid~MMPBSA.dat',
     '7C8D': '/media/xin/Raid0/ACS/gmx/interaction/ding/7C8D/1-10-500/_pid~MMPBSA.dat',
-    '7L5B': -20.160,
-    '7JW0': '/media/xin/Raid0/ACS/gmx/interaction/ding/7JW0/1-10-500/_pid~MMPBSA.dat',
-    # Rp
-    # '6YZ5': -2.874,
-    # '6ZBP': -23.671,
-    # '7B27': -5.256,
-    # '7BWJ': -17.503,
-    # '7CH4': -22.238,
-    # '7CH5': -6.655,
-    # '7E23': -33.263
+    '7L5B': '/media/xin/Raid0/ACS/gmx/interaction/ding/7L5B/1-10-500/normal/_pid~MMPBSA.dat',
+    '7JW0': '/media/xin/Raid0/ACS/gmx/interaction/ding/7JW0/1-10-500/normal/_pid~MMPBSA.dat',
+}
+
+entropy = {
+    '7KFY': 19.410,
+    '7KFX': 34.692,
+    '7KFV': 16.975,
+    '7KFW': 22.716,
+    '7JVA': 12.659,
+    '7KGJ': 22.258,
+    '7KGK': 20.791,
+    '7C8D': 12.791,
+    '7L5B': 7.501,
+    '7JW0': 37.533,
 }
 
 
@@ -80,17 +85,23 @@ def read_mmpbsa_dat(file_path):
 if __name__ == '__main__':
     dataframes = []
     affinities = []
+    TdS = []
     for k, v in files.items():
         dat = read_mmpbsa_dat(v)
         aff = affinity[k]
+        etp = entropy[k]
         dataframes.append(dat)
         affinities.append(aff)
+        TdS.append(etp)
 
     correction = []
-    for t in range(0, 10, 1):
+    print(affinities)
+    for t in np.arange(2, 10, 1):
         dgs = []
-        for df in dataframes:
-            dg = df.at[t, 'Binding_DH']
+        for df, tds in zip(dataframes, TdS):
+            dg = df.at[t, 'Binding_DH'] + tds
             dgs.append(dg)
-        # corr = [dgs, affinities]
-    # correction.append(corr)
+        corr = pearsonr(dgs, affinities)
+        print(t, dgs)
+        correction.append(corr[0])
+    print('\n', correction)

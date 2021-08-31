@@ -12,7 +12,7 @@ binding free energies are calculated by MMMPBSA
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from scipy.stats import spearmanr
+from scipy.stats import pearsonr
 # results
 from results import affinity, hyHOH_res, hyHOH_res_mm, hyHOH_12, most, ave, relax10
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     aff2kcal = log_list(aff)
 
     # correlation coefficient --------------------------------
-    print('---------\n', spearmanr(aff2kcal, free))
+    print('---------\n', pearsonr(aff2kcal, free))
 
     # fitting-------------------------------------------------
     para = np.polyfit(aff2kcal, free, 1)
