@@ -61,7 +61,7 @@ if __name__ == '__main__':
     plot1 = plt.plot(aff2kcal, free, '.', color='b', label='original values')
     # plot2 = plt.plot(aff2kcal, free_r, '*', color='k', label='restrain')
 
-    plt.xlabel('affinity log10 (nM)')
+    plt.xlabel('affinity ln (nM)')
     plt.ylabel('binding free energy (kcal/mol)')
     plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
     plt.title('polyfitting')

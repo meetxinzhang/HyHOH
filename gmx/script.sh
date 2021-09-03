@@ -4,7 +4,7 @@
 # >chmod a+x script.sh
 # >./script.sh
 
-gpu_id=01
+gpu_id=0
 mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 
 ################### Pre Process ##################
@@ -20,10 +20,14 @@ mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 > echo -e chain H L & 1 \n  gmx make_ndx -f renum.pdb -o index.ndx
 
 # generate weak constrain which used in constraining MD.
-# 1. Copy posre_Protein_chain_X.itp and rename > posre100_chain_X.
-# 2. Modify all force values from 1000 to 100 carefully, pay attention to 1000th atom if you use [change all] by text editor like VScode. 
-# 3. Add following code at last line of each topol_Protein_chain_X.itp respectively  
+1. divide the processed.gro into chain.gro by chains manually
+2. run:
+echo -e 4 \n | gmx genrestr -fc 100 100 100 -f chain.gro -o posre100_chain_ID
 
+# 1. Copy posre_Protein_chain_X.itp and rename > posre100_chain_X.
+# 2. Modify all force values from 1000 to 100 carefully, pay attention to 1000th atom if you use [change all] by text editor like VScode.
+
+3. Add following code at last line of each topol_Protein_chain_X.itp respectively  
 ; Include Prodution Position restraint file 
 #ifdef POSRES100 
 #include "posre100_chain_X.itp" 
@@ -77,15 +81,15 @@ gmx mdrun -deffnm npt -update gpu -gpu_id $gpu_id
 
 
 ################ MD with posres ###############
-# gmx grompp -f ../../../mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
 
-# # gmx mdrun -deffnm md_1 -pin on -ntmpi 1 -ntomp 6 -gpu_id 0 -pme gpu -npme 1 -update gpu -bonded gpu
-# gmx mdrun -deffnm md_1 -pin on -ntmpi 1 -ntomp 6 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu
+# gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
+
+# gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu
 
 ################## MD ########################
 gmx grompp -f $mdp_dir/mdp/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr
 
-gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu -pin on -ntmpi 2 -ntomp 6 -npme 1
+gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -ntmpi 2 -ntomp 6 -npme 1
 
 ################ extend MD #################
 # gmx convert-tpr -s md_0.tpr -extend 13000 -o md_0.tpr

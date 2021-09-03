@@ -86,7 +86,7 @@ if __name__ == '__main__':
         frame_idx = []
         pass
     elif args.fm == 'normal':
-        frame_times = range(int(args.t[0]), int(args.t[1]), int(args.t[2]))
+        frame_times = range(int(args.t[0]), int(args.t[1])+int(args.t[2]), int(args.t[2]))
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
 
     if args.rm == 'hyhoh':

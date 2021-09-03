@@ -5,7 +5,7 @@
 ;----------------------------------------------------
 ; RUN CONTROL
 ;----------------------------------------------------
-define       = -DPOSRES100      ; 10
+define       = -DPOSRES100      ; 100
 integrator   = md            ; stochastic leap-frog integrator
 nsteps       = 1000000        ; 2 * 1000 ps = 2000 ps = 2ns
 dt           = 0.002         ; 2 fs
