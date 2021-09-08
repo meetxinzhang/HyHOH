@@ -22,7 +22,7 @@ mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 # generate weak constrain which used in constraining MD.
 1. divide the processed.gro into chain.gro by chains manually
 2. run:
-echo -e 4 \n | gmx genrestr -fc 100 100 100 -f chain.gro -o posre100_chain_ID
+echo -e 4 \n | gmx genrestr -fc 100 100 100 -f renum_X.pdb -o posre100_chain_X
 
 # 1. Copy posre_Protein_chain_X.itp and rename > posre100_chain_X.
 # 2. Modify all force values from 1000 to 100 carefully, pay attention to 1000th atom if you use [change all] by text editor like VScode.
@@ -82,9 +82,9 @@ gmx mdrun -deffnm npt -update gpu -gpu_id $gpu_id
 
 ################ MD with posres ###############
 
-# gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
+# gmx grompp -f /media/xin/WinData/ACS/github/BioUtil/gmx/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
 
-# gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu
+# gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu -npme 1 -pin on -ntmpi 3 -ntomp 6
 
 ################## MD ########################
 gmx grompp -f $mdp_dir/mdp/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr
