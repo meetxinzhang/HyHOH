@@ -65,7 +65,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    # df = df.iloc[10:-6, :]
+    # df = df.iloc[1:, :]
     x = df.index.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())

@@ -72,14 +72,18 @@ if __name__ == '__main__':
         cs.log('calculating most frames...', style=f'green')
         gmx.rms(s=args.tpr, f=fit_xtc, o=rmsd_xvg, input=('Backbone', 'Backbone'))
         mf_df = get_mostfreq_df(rmsd_xvg)
-        mf_sub_rd = mf_df.sample(n=40).sort_index()
+        # mf_sub_rd = mf_df.sample(n=50).sort_index()
+        # frame_times = mf_sub_rd.index.tolist()
+        inner = len(mf_df) / 50
+        frame_times = mf_df.index.tolist()[::int(inner)]
+
         cs.print('most frequency frames:\n', mf_df)
-        cs.print('Select by random for calculating:\n', mf_sub_rd)
-        cs.print('\nTotal ', len(mf_sub_rd), ' frames selected by random for calculation')
+        cs.print('Select by random for calculating:\n', frame_times)
+        cs.print('\nTotal ', len(frame_times), ' frames selected by random for calculation')
         with open(main_log, 'w') as f:
             f.write('most frequency frames:\n' + mf_df.to_string())
-            f.writelines('\nselected by random for calculation:\n' + mf_sub_rd.to_string())
-        frame_times = mf_sub_rd.index.tolist()
+            # f.writelines('\nselected by random for calculation:\n' + mf_sub_rd.to_string())
+            f.writelines('\nselected by random for calculation:\n' + ''.join(str(e) for e in frame_times))
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
     elif args.fm == 'average':
         # TODO command here
