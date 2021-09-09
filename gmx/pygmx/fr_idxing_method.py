@@ -34,8 +34,8 @@ def mostfreq_boundaries(df, columns):
     copy[columns] = copy[columns].apply(lambda x: float(int(x*100)/100))
     freq = copy.apply(pd.value_counts).sort_index()
     # extract mostFre frames
-    # sum_forward_3 = freq.rolling(window=3).sum()
-    rmsd_max = freq.idxmax()
+    sum_forward_3 = freq.rolling(window=3).sum()  # 3 atom per HOH molecular
+    rmsd_max = sum_forward_3.idxmax()
     return float(rmsd_max - 0.02), float(rmsd_max)
 
 

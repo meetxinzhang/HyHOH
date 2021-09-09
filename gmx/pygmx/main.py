@@ -43,13 +43,13 @@ main_log = 'main.log'
 
 if __name__ == '__main__':
     "preprocess pbc at extra dir"
+    args = parser.parse_args()
     os.system('mkdir -p ../analysis')
     whole_xtc = '../analysis/whole.xtc'
     nojump_xtc = '../analysis/nojump.xtc'
     mol_xtc = '../analysis/mol_center.xtc'
-    fit_xtc = '../analysis/fit.xtc'
-    rmsd_xvg = '../analysis/rmsd.xvg'
-    args = parser.parse_args()
+    fit_xtc = '../analysis/fit_'+str(args.xtc).split('/')[-1]
+    rmsd_xvg = '../analysis/rmsd_'+str(args.xtc).split('/')[-1].replace('.xtc', '')+'.xvg'
 
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '
@@ -74,11 +74,11 @@ if __name__ == '__main__':
         mf_df = get_mostfreq_df(rmsd_xvg)
         # mf_sub_rd = mf_df.sample(n=50).sort_index()
         # frame_times = mf_sub_rd.index.tolist()
-        inner = len(mf_df) / 50
+        inner = len(mf_df) / 20
         frame_times = mf_df.index.tolist()[::int(inner)]
 
         cs.print('most frequency frames:\n', mf_df)
-        cs.print('Select by random for calculating:\n', frame_times)
+        cs.print('Subsample for calculating:\n', frame_times)
         cs.print('\nTotal ', len(frame_times), ' frames selected by random for calculation')
         with open(main_log, 'w') as f:
             f.write('most frequency frames:\n' + mf_df.to_string())
