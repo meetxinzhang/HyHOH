@@ -78,25 +78,26 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm_pro)
+    entropy = entropy_cal(mm)
     # y = mm + pb + sa + entropy
-    mm_pro = [e / 10 for e in mm_pro]
-    pb = [e / 10 for e in pb]
+    mm_pro_small = [e / 10 for e in mm_pro]
+    pb_small = [e / 10 for e in pb]
     "HOH"
     rHOH_num = np.repeat(rHOH_num, 3)
     lHOH_num = np.repeat(lHOH_num, 3)
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
-    print('\n', entropy)
+    # print('\n', entropy)
     print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
+    print('MM=', mm.mean(), 'MM_Pro=', mm_pro.mean(), 'MM_SOL=', mm_sol.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
     ax1.plot(x, y, label='dG', color='tab:red')
-    ax1.plot(x, mm_pro, label='MM_pro/10', color='tab:cyan')
+    ax1.plot(x, mm_pro_small, label='MM_pro/10', color='tab:cyan')
     ax1.plot(x, mm_sol, label='MM_sol', color='tab:blue')
-    ax1.plot(x, pb, label='PB/10', color='tab:green')
+    ax1.plot(x, pb_small, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:pink')
     ax1.plot(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('time (ps)')
