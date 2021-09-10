@@ -13,9 +13,6 @@
 import os
 import random
 import sys
-
-from pandas import DataFrame
-
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from fr_idxing_method import get_mostfreq_df
 from short_time_hoh import apply_windows
@@ -83,7 +80,7 @@ if __name__ == '__main__':
         with open(main_log, 'w') as f:
             f.write('most frequency frames:\n' + mf_df.to_string())
             # f.writelines('\nselected by random for calculation:\n' + mf_sub_rd.to_string())
-            f.writelines('\nselected by random for calculation:\n' + ''.join(str(e) for e in frame_times))
+            f.writelines('\nselected by random for calculation:\n' + '\n'.join(str(e) for e in frame_times))
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
     elif args.fm == 'average':
         # TODO command here

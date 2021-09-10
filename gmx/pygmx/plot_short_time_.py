@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 matplotlib.rcParams['font.size'] = 10
+from rich.console import Console
+cs = Console()
 
 
 def read_mmpbsa_dat(file_path):
@@ -88,8 +90,9 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
     # print('\n', entropy)
-    print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
-    print('MM=', mm.mean(), 'MM_Pro=', mm_pro.mean(), 'MM_SOL=', mm_sol.mean())
+    cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1], style=f'red')
+    print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
+    print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     "plot mmpbsa"

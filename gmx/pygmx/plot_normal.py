@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 matplotlib.rcParams['font.size'] = 10
+from rich.console import Console
+cs = Console()
 
 
 def read_mmpbsa_dat(file_path):
@@ -65,7 +67,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    # df = df.iloc[1:, :]
+    # df = df.iloc[:-6, :]
     x = df.index.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
@@ -74,14 +76,14 @@ def plot_mmpbsa_curves(df):
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
     entropy = entropy_cal(mm)
     # y = mm + pb + sa + entropy
-    mm = [e / 10 for e in mm]
-    pb = [e / 10 for e in pb]
+    mm_small = [e / 10 for e in mm]
+    pb_small = [e / 10 for e in pb]
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
     ax1.plot(x, y, label='dG', color='tab:red')
-    ax1.plot(x, mm, label='MM/10', color='tab:cyan')
-    ax1.plot(x, pb, label='PB/10', color='tab:green')
+    ax1.plot(x, mm_small, label='MM/10', color='tab:cyan')
+    ax1.plot(x, pb_small, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:pink')
     ax1.plot(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('time (ps)')
@@ -93,8 +95,9 @@ def plot_mmpbsa_curves(df):
 
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
-    print('\n', entropy)
-    print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1])
+    # print('\n', entropy)
+    cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1], style=f'red')
+    print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     plt.xticks(rotation=70)
