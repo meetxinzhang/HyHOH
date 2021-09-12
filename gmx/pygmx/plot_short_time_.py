@@ -16,7 +16,7 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        # frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -27,7 +27,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    # frame = line.split()[0]
+                    frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -38,8 +38,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        # index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
-        index.append(frame)
+        index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
+        # index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -73,15 +73,15 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     # df = df.iloc[10:50, :]
     # x = df.idxmax.values.tolist()
     x = df.index.tolist()
-    y = np.squeeze(df[['Binding_DH']].values.tolist())
+    # y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
     mm_sol = np.squeeze(df[['MM_DH_SOL']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm)
-    # y = mm + pb + sa + entropy
+    entropy = entropy_cal(mm_pro)
+    y = mm_pro + mm_sol + pb + sa
     mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
     "HOH"
@@ -97,7 +97,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
-    ax1.plot(x, y, label='dG', color='tab:red')
+    ax1.plot(x, y+entropy[-1], label='dG', color='tab:red')
     ax1.plot(x, mm_pro_small, label='MM_pro/10', color='tab:cyan')
     ax1.plot(x, mm_sol, label='MM_sol', color='tab:blue')
     ax1.plot(x, pb_small, label='PB/10', color='tab:green')

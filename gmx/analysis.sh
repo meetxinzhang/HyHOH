@@ -71,19 +71,19 @@ gmx trjconv -f md_0_fit.xtc -o mostFre.xtc -drop rmsd.xvg -dropunder $rd_min -dr
 # lines(density(rd), col="gray", lwd=3)
 
 ################# RMSD refers to average.pdb 
-# gmx rmsf -f md_0_nojump.xtc -s ../npt.gro -o rmsf-perdue.xvg -ox average.pdb  -b 1000 -res
-# # Selects backbone for root mean qsuare calculatuion.
+gmx rmsf -f md_0_nojump.xtc -s ../npt.gro -o rmsf-perdue.xvg -ox average.pdb  -b 1000 -res
+# Selects backbone for root mean square calculation.
 
-# gmx rms -f md_0_nojump.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
-# # Selects backbone 
+gmx rms -f md_0_nojump.xtc -s average.pdb -o rmsd-all-atom-vs-avg.xvg
+# Selects backbone 
 
-# xmgrace -nxy rmsd-all-atom-vs-avg.xvg
+xmgrace -nxy rmsd-all-atom-vs-avg.xvg
 
-# python ../../../../xvgReorder.py rmsd-all-atom-vs-avg.xvg
+python ../../../../xvgReorder.py rmsd-all-atom-vs-avg.xvg
 
-# xmgrace -nxy rmsd-all-atom-vs-avg-reorder.xvg
+xmgrace -nxy rmsd-all-atom-vs-avg-reorder.xvg
 
-# gmx trjconv -f md_0_nojump.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -dropunder 2.80 -dropover 2.82
+gmx trjconv -f md_0_nojump.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -dropunder 2.80 -dropover 2.82
 
 ################ MMPBSA
 # $code_dir/gmx_mmpbsa_normal.sh -f ../analysis/md_1_fit.xtc -s ../md_1.tpr -n ../index.ndx -com Protein -pro receptor -lig ligand -cou dh -ts ie -b 1000 -e 2000 -i 100 -dir ./

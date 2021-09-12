@@ -217,4 +217,4 @@ if __name__ == '__main__':
     L_idx = [int(l_b), int(l_e)]  # RBD
 
     apply_windows(xtc, tpr, R_idx, L_idx, frames_idx,
-                  win_params=[2000, 5000, 100, 100], num_hyHOH=100, thr=0.4, bond_d=3.3)
+                  win_params=[2000, 5000, 100, 100], num_hyHOH=70, thr=0.4, bond_d=3.3)
