@@ -94,6 +94,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
     print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
+    print(y[0], mm_pro[0], mm_sol[0], pb[0], sa[0])
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
@@ -145,9 +146,9 @@ def plot_heatmap(df, selection='AA'):
     elif selection == 'LHOH':
         df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
 
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-        print(df_plot.T)
-        print(df_plot.T.min(axis=1))
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        # print(df_plot.T)
+        # print(df_plot.T.min(axis=1))
     fig, ax = plt.subplots(figsize=(3, 10))
     sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
                 center=0, square=False)
@@ -198,4 +199,4 @@ if __name__ == '__main__':
 
     "call plot function"
     plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    # plot_heatmap(res_mm_df, selection='LHOH')
+    # plot_heatmap(res_mm_df, selection='RHOH')
