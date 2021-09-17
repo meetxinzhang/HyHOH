@@ -32,11 +32,11 @@ def sort(df, columns):
 def mostfreq_boundaries(df, columns):
     copy = df
     copy[columns] = copy[columns].apply(lambda x: float(int(x*100)/100))
-    freq = copy.apply(pd.value_counts).sort_index()
+    freq = copy.apply(pd.value_counts).sort_index()  # RMSD_Values, frequency
     # extract mostFre frames
-    sum_forward_3 = freq.rolling(window=3).sum()  # 3 domain last 0.02nm
-    rmsd_max = sum_forward_3.idxmax()
-    return float(rmsd_max - 0.02), float(rmsd_max)
+    # sum_forward_3 = freq.rolling(window=3).sum()  # 3 domain last 0.02nm
+    rmsd_max = freq.idxmax()
+    return float(rmsd_max), float(rmsd_max + 0.01)
 
 
 def rmsd_drop(df, rd_min, rd_max):

@@ -80,7 +80,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm_pro)
+    entropy = entropy_cal(mm)
     y = mm_pro + mm_sol + pb + sa
     mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
