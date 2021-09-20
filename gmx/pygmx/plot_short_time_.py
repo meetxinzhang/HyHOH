@@ -70,7 +70,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    # df = df.iloc[10:50, :]
+    # df = df.iloc[150:, :]
     # x = df.idxmax.values.tolist()
     x = df.index.tolist()
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -80,7 +80,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm)
+    entropy = entropy_cal(mm_sol)
     y = mm_pro + mm_sol + pb + sa
     mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
@@ -90,11 +90,10 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
     # print('\n', entropy)
-    cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1], style=f'red')
-    print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
-    print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean())
+    cs.print('---------\n-TdS=', entropy[-1], ' dE=', y.mean(), ' dG=', y.mean()+entropy[-1], style=f'red')
+    cs.print('\nmm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean(), style=f'yellow')
+    cs.print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean(), style=f'yellow')
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
-    print(y[0], mm_pro[0], mm_sol[0], pb[0], sa[0])
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
