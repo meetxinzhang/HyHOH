@@ -67,7 +67,7 @@ if __name__ == '__main__':
     if args.fm == 'most':
         "most frequency"
         cs.log('calculating most frames...', style=f'green')
-        gmx.rms(s=args.tpr, f=fit_xtc, o=rmsd_xvg, input=('Backbone', 'Backbone'))
+        gmx.rms(s=args.tpr, f=fit_xtc, o=rmsd_xvg, input=('Protein', 'Protein'))
         mf_df = get_mostfreq_df(rmsd_xvg)
         # mf_sub_rd = mf_df.sample(n=50).sort_index()
         # frame_times = mf_sub_rd.index.tolist()
@@ -79,7 +79,6 @@ if __name__ == '__main__':
         cs.print('\nTotal ', len(frame_times), ' frames selected by random for calculation')
         with open(main_log, 'w') as f:
             f.write('most frequency frames:\n' + mf_df.to_string())
-            # f.writelines('\nselected by random for calculation:\n' + mf_sub_rd.to_string())
             f.writelines('\nselected by random for calculation:\n' + '\n'.join(str(e) for e in frame_times))
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
     elif args.fm == 'average':
