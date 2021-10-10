@@ -67,7 +67,7 @@ if __name__ == '__main__':
     if args.fm == 'most':
         "most frequency"
         cs.log('calculating most frames...', style=f'green')
-        gmx.rms(s=args.tpr, f=fit_xtc, o=rmsd_xvg, input=('Protein', 'Protein'))
+        gmx.rms(s=args.tpr, f=fit_xtc, b=args.t[0], o=rmsd_xvg, input=('Protein', 'Protein'))
         mf_df = get_mostfreq_df(rmsd_xvg)
         # mf_sub_rd = mf_df.sample(n=50).sort_index()
         # frame_times = mf_sub_rd.index.tolist()

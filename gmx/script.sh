@@ -4,7 +4,7 @@
 # >chmod a+x script.sh
 # >./script.sh
 
-gpu_id=1
+gpu_id=012
 mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx
 
 ################### Pre Process ##################
@@ -82,14 +82,14 @@ gmx mdrun -deffnm npt -update gpu -gpu_id $gpu_id
 
 ################ MD with posres ###############
 
-gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
+# gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
 
-gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
+# gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
 
 ################## MD ########################
 gmx grompp -f $mdp_dir/mdp/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr
 
-gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
+gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu -pin on -npme 1 -ntmpi 3 -ntomp 12
 
 ################ extend MD #################
 # gmx convert-tpr -s md_0.tpr -extend 13000 -o md_0.tpr
