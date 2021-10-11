@@ -36,7 +36,7 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(float(text[i].split()[0]))  # L P R
+        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -67,7 +67,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    df = df.iloc[20:, :]
+    df = df.iloc[:-11, :]
     x = df.index.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
@@ -147,18 +147,18 @@ if __name__ == '__main__':
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
                 mmpbsa_df.append(dat)
 
-            # if filename == '_pid~resMM_DH.dat':
-            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
-            #     res_mm_df.append(dat)
-            #
-            # if filename == '_pid~res_MMPBSA_DH.dat':
-            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
-            #     res_dg_df.append(dat)
+            if filename == '_pid~resMM_DH.dat':
+                dat = read_mmpbsa_dat(os.path.join(path, filename))
+                res_mm_df.append(dat)
+
+            if filename == '_pid~res_MMPBSA_DH.dat':
+                dat = read_mmpbsa_dat(os.path.join(path, filename))
+                res_dg_df.append(dat)
 
     mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
-    # res_mm_df = pd.concat(res_mm_df).sort_index()
-    # res_dg_df = pd.concat(res_dg_df).sort_index()
+    res_mm_df = pd.concat(res_mm_df).sort_index()
+    res_dg_df = pd.concat(res_dg_df).sort_index()
 
     "call plot function"
-    plot_mmpbsa_curves(mmpbsa_df)
-    # plot_heatmap(res_mm_df, selection='LHOH')
+    # plot_mmpbsa_curves(mmpbsa_df)
+    plot_heatmap(res_dg_df, selection='RAA')

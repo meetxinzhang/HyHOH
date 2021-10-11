@@ -82,9 +82,9 @@ gmx mdrun -deffnm npt -update gpu -gpu_id $gpu_id
 
 ################ MD with posres ###############
 
-# gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
+gmx grompp -f $mdp_dir/mdp/prod_posres.mdp -c npt.gro -t npt.cpt -p topol.top -o md_1.tpr -r npt.gro
 
-# gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
+gmx mdrun -deffnm md_1 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
 
 ################## MD ########################
 gmx grompp -f $mdp_dir/mdp/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr

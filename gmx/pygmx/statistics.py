@@ -14,7 +14,7 @@ import math
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 # results
-from results import affinity, relax10_200, relax10_1000, restrain, most_restr, most_restr_2, relax_most, relax_most_20
+from results import affinity, relax10_200, relax10_1000, restrain, most_restr, most_restr_2, relax_most, relax_most_20, relax_use_10ie
 
 
 def log_list(arr):
@@ -43,7 +43,7 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax10_200)
+    aff, free = alignment(affinity, relax_use_10ie)
     print(aff, '\n', free)
     aff2kcal = log_list(aff)
 
