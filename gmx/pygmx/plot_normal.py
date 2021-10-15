@@ -67,7 +67,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    df = df.iloc[:-11, :]
+    # df = df.iloc[18:, :]
     x = df.index.tolist()
     y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
@@ -117,9 +117,9 @@ def plot_heatmap(df, selection='AA'):
     elif selection == 'LAA':
         df_plot = df.loc[:, r_exist ^ True]
 
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-        print(df_plot.T)
-        print(df_plot.T.min(axis=1))
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    #     print(df_plot.T)
+    #     print(df_plot.T.min(axis=1))
     fig, ax = plt.subplots(figsize=(3, 10))
     sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
                 center=0, square=False)
@@ -160,5 +160,5 @@ if __name__ == '__main__':
     res_dg_df = pd.concat(res_dg_df).sort_index()
 
     "call plot function"
-    # plot_mmpbsa_curves(mmpbsa_df)
-    plot_heatmap(res_dg_df, selection='RAA')
+    plot_mmpbsa_curves(mmpbsa_df)
+    # plot_heatmap(res_mm_df, selection='LAA')

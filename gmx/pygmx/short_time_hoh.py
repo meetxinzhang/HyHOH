@@ -183,7 +183,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm -v ' + temp_ndx)
-        os.system('rm -v ' + temp_ave_pdb)
+        # os.system('rm -v ' + temp_ave_pdb)
         os.system('rm -v rmsf.xvg')
         os.system('rm -v \#*')  # delete all # starting files
 
