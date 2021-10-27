@@ -14,7 +14,8 @@ import math
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 # results
-from results import affinity, relax10_200, relax10_1000, restrain, most_restr, most_restr_2, relax_most, relax_most_20, relax_use_10ie
+from results import affinity, relax10_200, relax10_1000, restrain, most_restr, most_restr_2, relax_most,\
+    relax_most_20, relax_use_10ie, relax10_hyhoh, relax10_hyhoh_10IE, relax10_hyhoh_most, relax10_hyhoh_most_10ie
 
 
 def log_list(arr):
