@@ -44,7 +44,7 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax_most)
+    aff, free = alignment(affinity, relax10_hyhoh)
     print(aff, '\n', free)
     aff2kcal = log_list(aff)
 

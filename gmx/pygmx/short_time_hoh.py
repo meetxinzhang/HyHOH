@@ -31,8 +31,8 @@ def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
 
     xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
     xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
-    if len(xy_interest) <= 1:
-        raise ExceptionPassing('!!! WARNING: len(xy_interest) < 1')
+    if len(xy_interest) <= 8:
+        raise ExceptionPassing('!!! WARNING IN HYHOH IDXING: len(xy_interest) < 8')
     # x = [xy[0] for xy in xy_lines[:50]]
     x = np.array(xy_interest[:num_hyHOH], dtype=int)[:, :1].squeeze().tolist()
     x.sort()  # if not then gmx make_ndx raise error: One of your groups is not ascending
@@ -58,7 +58,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
                     d2L = d
         if d2R > bond_d and d2L > bond_d:  # far away from protein_atoms
             continue
-        if d2R + d2L > 2*bond_d+1:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
+        if d2R + d2L > 2*bond_d+0.96:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
             continue
         if d2R < d2L:  #
             RHOHs.append(w.res_seq)
@@ -125,7 +125,11 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         cs.print('R_HOHs:\n', np.array(RHOHs))
         cs.print('L_HOHs:\n', np.array(LHOHs))
         if len(RHOHs) == 0 and len(LHOHs) == 0:
-            cs.print('\nContinue op occurred!!!!!!!', style=f"red")
+            cs.print('\nWARNING IN ASSIGNMENT1!!!!!!!', style=f"red")
+            os.system('rm -v ' + str(start) + '_' + str(end) + '*')
+            continue
+        if len(RHOHs) + len(LHOHs) < 8:
+            cs.print('\nWARNING IN ASSIGNMENT2!!!!!!!', style=f"red")
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
 
