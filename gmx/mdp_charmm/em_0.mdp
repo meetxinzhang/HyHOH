@@ -1,0 +1,49 @@
+;====================================================
+; Energy minimization for initiate struct water
+;====================================================
+
+;----------------------------------------------------
+; RUN CONTROL & MINIMIZATION
+;----------------------------------------------------
+integrator             = steep
+nsteps                 = 10000         ; maximum number of steps to integrate or minimize, -1 is no maximum
+emtol                  = 900       ;  [kJ mol-1 nm-1] the minimization is converged when the maximum force is smaller than this value
+emstep                 = 0.01       ; (0.01) [nm] initial step-size
+nstcomm                = 100        ; （100）[steps]重心运动消除的频率
+
+;----------------------------------------------------
+; NEIGHBOR SEARCHING
+;----------------------------------------------------
+cutoff-scheme          = Verlet
+ns-type                = grid
+nstlist                = 40        ; Frequency to update the neighbor list. With parallel simulations and/or non-bonded force calculation on the GPU, a value of 20 or 40 often gives the best performance.
+rlist                  = 1.0
+pbc                    = xyz       ; Periodic Boundary Conditions
+
+;----------------------------------------------------
+; BONDS
+;----------------------------------------------------
+constraints            = none
+
+;----------------------------------------------------
+; ELECTROSTATICS
+;----------------------------------------------------
+coulombtype            = PME
+rcoulomb               = 1.0
+pme-order              = 4 
+fourierspacing         = 0.12
+; ewald-rtol             = 1e-5
+
+;----------------------------------------------------
+; VDW
+;----------------------------------------------------
+vdwtype                 = cutoff
+rvdw                    = 1.0
+DispCorr                = EnerPres            ; no for charmm36 对能量和压力进行远距离色散校正
+
+;----------------------------------------------------
+; TEMPERATURE & PRESSURE COUPL
+;----------------------------------------------------
+Tcoupl              = no
+Pcoupl              = no
+gen-vel             = no

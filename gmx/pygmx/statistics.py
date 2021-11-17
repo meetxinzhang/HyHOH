@@ -44,7 +44,7 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax10_hyhoh)
+    aff, free = alignment(affinity, relax_most)
     print(aff, '\n', free)
     aff2kcal = log_list(aff)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     para = np.polyfit(aff2kcal, free, 1)
     func = np.poly1d(para)
     print('\nfitting func: ', func)
-    aff_plot = np.arange(-5, 5, 0.1)
+    aff_plot = np.arange(-2, 5, 0.1)
     curve = plt.plot(aff_plot, func(aff_plot), 'r', label='polyfit values')
 
     # # plot points ----------------------------------------------

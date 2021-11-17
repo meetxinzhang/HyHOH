@@ -31,8 +31,8 @@ def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
 
     xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
     xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
-    if len(xy_interest) <= 8:
-        raise ExceptionPassing('!!! WARNING IN HYHOH IDXING: len(xy_interest) < 8')
+    if len(xy_interest) <= 1:
+        raise ExceptionPassing('!!! WARNING IN HYHOH IDXING: len(xy_interest) < 1')
     # x = [xy[0] for xy in xy_lines[:50]]
     x = np.array(xy_interest[:num_hyHOH], dtype=int)[:, :1].squeeze().tolist()
     x.sort()  # if not then gmx make_ndx raise error: One of your groups is not ascending
@@ -128,10 +128,10 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
             cs.print('\nWARNING IN ASSIGNMENT1!!!!!!!', style=f"red")
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
-        if len(RHOHs) + len(LHOHs) < 8:
-            cs.print('\nWARNING IN ASSIGNMENT2!!!!!!!', style=f"red")
-            os.system('rm -v ' + str(start) + '_' + str(end) + '*')
-            continue
+        # if len(RHOHs) + len(LHOHs) < 5:
+        #     cs.print('\nWARNING IN ASSIGNMENT2!!!!!!!', style=f"red")
+        #     os.system('rm -v ' + str(start) + '_' + str(end) + '*')
+        #     continue
 
         "run gmx-make_ndx to address (Protein + hydration HOH)"
         hyHOH_list = RHOHs + LHOHs
@@ -187,7 +187,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm -v ' + temp_ndx)
-        # os.system('rm -v ' + temp_ave_pdb)
+        os.system('rm -v ' + temp_ave_pdb)
         os.system('rm -v rmsf.xvg')
         os.system('rm -v \#*')  # delete all # starting files
 

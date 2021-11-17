@@ -1,0 +1,88 @@
+;====================================================
+; Production simulation
+;====================================================
+
+;----------------------------------------------------
+; RUN CONTROL
+;----------------------------------------------------
+define       = -DPOSRES100      ; 100
+integrator   = md            ; stochastic leap-frog integrator
+nsteps       = 1000000        ; 2 * 1000 ps = 2000 ps = 2ns
+dt           = 0.002         ; 2 fs
+comm-mode    = Linear        ; remove center of mass translation
+nstcomm      = 100            ; frequency for center of mass motion removal
+
+;----------------------------------------------------
+; OUTPUT CONTROL
+;----------------------------------------------------
+nstxout                = 0          ; don't save coordinates to .trr
+nstvout                = 0          ; don't save velocities to .trr
+nstfout                = 0          ; don't save forces to .trr
+nstxout-compressed     = 500       ; xtc compressed trajectory output every 500 steps (1 ps)  500frames per 1ns
+; compressed-x-precision = 1000       ; precision with which to write to the compressed trajectory file
+nstlog                 = 500       ; update log file every 2 ps
+nstenergy              = 500       ; save energies every 2 ps
+; nstcalcenergy          = 100        ; calculate energies every 100 steps
+; energygrps             =  receptor ligand
+
+;----------------------------------------------------
+; BONDS
+;----------------------------------------------------
+constraint-algorithm   = lincs      ; holonomic constraints 
+constraints            = h-bonds    ; hydrogens only are constrained
+lincs-iter             = 1          ; accuracy of LINCS (1 is default)
+lincs-order            = 4          ; also related to accuracy (4 is default)
+lincs-warnangle        = 30         ; maximum angle that a bond can rotate before LINCS will complain (30 is default)
+continuation           = yes        ; Restarting after NPT 
+
+;----------------------------------------------------
+; NEIGHBOR SEARCHING
+;----------------------------------------------------
+cutoff-scheme   = Verlet
+ns-type         = grid   ; search neighboring grid cells
+nstlist         = 40     ; (default is 10)
+rlist           = 1.0    ; short-range neighborlist cutoff (in nm)
+pbc             = xyz    ; 3D PBC
+
+;----------------------------------------------------
+; ELECTROSTATICS
+;----------------------------------------------------
+coulombtype      = PME      ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb         = 1.0      ; short-range electrostatic cutoff (in nm)
+ewald-geometry   = 3d       ; Ewald sum is performed in all three dimensions
+pme-order        = 4        ; interpolation order for PME (default is 4)
+fourierspacing   = 0.12     ; grid spacing for FFT
+; ewald-rtol       = 1e-5     ; relative strength of the Ewald-shifted direct potential at rcoulomb
+
+;----------------------------------------------------
+; VDW
+;----------------------------------------------------
+vdwtype                 = cutoff         ; 用于VdW交互的快速平滑的粒子网格Ewald（SPME）。网格尺寸的控制fourierspacing方式与静电相同，插值顺序的控制方式为pme-order。直接/倒数空间的相对精度由来控制ewald-rtol-lj，并且使用来设置倒数例程要使用的特定组合规则lj-pme-comb-rule。
+rvdw                    = 1.0
+; rvdw-switch             = 1.0            ; charmm36
+; vdw-modifier            = force-switch   ;force-switch for charmm36 ;Potential-Shift 将范德华电势移动一个常数，以使其在截止时为零。这使势能成为力的一部分
+; ewald-rtol-lj           = 1e-3               ; （1e-3）在进行VdW相互作用的PMEewald-rtol-lj时rvdw，与ewald-rtol控制静电电位的方法相同，用于控制分散电位的相对强度
+; lj-pme-comb-rule        = Geometric          ; （几何）用于在LJ-PME的倒数部分中组合VdW参数的组合规则。几何规则比洛伦兹-贝特洛（Lorentz-Berthelot）更快，通常是推荐的选择，即使其余力场使用洛伦兹-贝特洛（Lorentz-Berthelot）规则也是如此。
+DispCorr                = EnerPres             ; no for charmm36 对能量和压力进行远距离色散校正
+
+;----------------------------------------------------
+; TEMPERATURE & PRESSURE COUPL
+;----------------------------------------------------
+tcoupl           = V-rescale            ; modified Berendsen thermostat
+tc-grps          =  Protein Non-Protein   ; Protein   Non-Protein  two coupling groups - more accurate
+tau-t            =  0.2    0.2                ; time constant, in ps
+ref-t            =  298    298            ; reference temperature, one for each group, in K
+
+pcoupl           = Berendsen            ; Pressure coupling on in NPT, also weak coupling
+pcoupltype       = isotropic            ; uniform scaling of x-y-z box vectors
+tau-p            = 2.0                  ; time constant (ps)
+ref-p            = 1.013                ; reference pressure (bar)
+compressibility  = 4.5e-5               ; isothermal compressibility of water (bar^-1)
+refcoord-scaling = com
+
+;----------------------------------------------------
+; VELOCITY GENERATION
+;----------------------------------------------------
+gen-vel      = no       ; Velocity generation is off (if gen_vel is 'yes', continuation should be 'no')
+; gen-seed     = -1       ; Use random seed
+gen-temp     = 298
