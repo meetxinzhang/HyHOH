@@ -38,6 +38,9 @@ So, line[0:2] == 'AT'
 """
 from collections import defaultdict as ddict
 from PDB.io.atom import Atom
+from PDB.io.residue import Residue
+from PDB.io.sol import SOL
+import numpy as np
 
 aa_codes = {
     'ALA': 'A', 'CYS': 'C', 'ASP': 'D', 'GLU': 'E',  # Amino acid
@@ -73,8 +76,8 @@ def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2
     :param filepath
     :param options: atom names
     """
-    atoms = []
-    waters = []
+    p_atoms = []
+    w_atoms = []
     res_base = 0
     times_pass_9999 = 0
 
@@ -108,11 +111,24 @@ def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2
                                 x=x, y=y, z=z, element=element)
 
                     if res_name == 'HOH' or res_name == 'SOL':
-                        waters.append(atom)
+                        w_atoms.append(atom)
                     else:
-                        atoms.append(atom)
+                        p_atoms.append(atom)
 
-    return atoms, waters
+    return p_atoms, water_assemble(w_atoms)
+
+
+def water_assemble(atoms):
+    waters = []
+    for i in np.arange(0, len(atoms), 3):
+        OW = atoms[i]
+        HW1 = atoms[i+1]
+        HW2 = atoms[i+2]
+
+        assert OW.name == 'OW' and HW1.name == 'HW1' and HW2.name == 'HW2'
+        waters.append(SOL(aa_name='SOL', res_seq=OW.res_seq, OW=OW, HW1=HW1, HW2=HW2))
+
+    return waters
 
 
 if __name__ == '__main__':

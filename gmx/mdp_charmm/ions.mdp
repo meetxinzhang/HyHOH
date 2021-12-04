@@ -3,6 +3,7 @@
 ;----------------------------------------------------
 ; RUN CONTROL & MINIMIZATION
 ;----------------------------------------------------
+define = -DUSE_OLD_C36
 
 integrator  = steep     ; Algorithm (steep = steepest descent minimization)
 emtol       = 1000.0    ; Stop minimization when the maximum force < 1000.0 kJ/mol/nm
@@ -15,14 +16,14 @@ nsteps      = 500000    ; Maximum number of (minimization) steps to perform
 cutoff-scheme          = Verlet
 ns-type                = grid
 nstlist                = 40
-rlist                  = 1.0
+rlist                  = 1.2
 pbc                    = xyz       ; Periodic Boundary Conditions
 
 ;----------------------------------------------------
 ; ELECTROSTATICS
 ;----------------------------------------------------
 coulombtype            = PME
-rcoulomb               = 1.0
+rcoulomb               = 1.2
 pme-order              = 4 
 fourierspacing         = 0.12
 
@@ -30,6 +31,8 @@ fourierspacing         = 0.12
 ; VDW
 ;----------------------------------------------------
 vdwtype                 = cutoff
-rvdw                    = 1.0
-DispCorr                = EnerPres            ; no for charmm36 对能量和压力进行远距离色散校正
+rvdw                    = 1.2
+DispCorr                = no            ; no for charmm36 对能量和压力进行远距离色散校正
+vdw-modifier            = force-switch
+rvdw-switch             = 1.0
 

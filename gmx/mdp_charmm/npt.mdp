@@ -5,6 +5,7 @@
 ;----------------------------------------------------
 ; RUN CONTROL
 ;----------------------------------------------------
+define = -DUSE_OLD_C36
 define       = -DPOSRES
 integrator   = md            ; stochastic leap-frog integrator
 nsteps       = 50000         ; 2 * 50  = 100 ps
@@ -40,14 +41,14 @@ continuation           = yes         ; Restarting after NVT
 cutoff-scheme   = Verlet
 ns-type         = grid   ; search neighboring grid cells
 nstlist         = 40     ; default is 10)
-rlist           = 1.0    ; short-range neighborlist cutoff (in nm)
+rlist           = 1.2    ; short-range neighborlist cutoff (in nm)
 pbc             = xyz    ; 3D PBC
 
 ;----------------------------------------------------
 ; ELECTROSTATICS
 ;----------------------------------------------------
 coulombtype      = PME      ; Particle Mesh Ewald for long-range electrostatics
-rcoulomb         = 1.0      ; short-range electrostatic cutoff (in nm)
+rcoulomb         = 1.2      ; short-range electrostatic cutoff (in nm)
 ewald-geometry   = 3d       ; Ewald sum is performed in all three dimensions
 pme-order        = 4        ; interpolation order for PME (default is 4)
 fourierspacing   = 0.12     ; grid spacing for FFT
@@ -57,12 +58,12 @@ fourierspacing   = 0.12     ; grid spacing for FFT
 ; VDW
 ;----------------------------------------------------
 vdwtype                 = cutoff       ; Particle Mesh Ewald for long-range electrostatics
-rvdw                    = 1.0
-; rvdw-switch             = 1.0   ; charmm36
-; vdw-modifier            = force-switch  ;force-switch for charmm36 ;Potential-Shift 将范德华电势移动一个常数，以使其在截止时为零。这使势能成为力的一部分
+rvdw                    = 1.2
+rvdw-switch             = 1.0           ; charmm36
+vdw-modifier            = force-switch  ;force-switch for charmm36 ;Potential-Shift 将范德华电势移动一个常数，以使其在截止时为零。这使势能成为力的一部分
 ; ewald-rtol-lj           = 1e-3
 ; lj-pme-comb-rule        = Geometric
-DispCorr                = EnerPres           ; no for charmm36 对能量和压力进行远距离色散校正
+DispCorr                = no           ; no for charmm36 对能量和压力进行远距离色散校正
 
 ;----------------------------------------------------
 ; TEMPERATURE & PRESSURE COUPL

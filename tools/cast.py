@@ -20,7 +20,7 @@ def kd2kcal(kd):
     return 0.6*math.log(kd*1E-9)
 
 
-print(kd2kcal(27))
+print(kd2kcal(2))
 
 # import time
 # from rich.progress import track, Progress

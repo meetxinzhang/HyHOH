@@ -9,8 +9,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
+
 matplotlib.rcParams['font.size'] = 10
 from rich.console import Console
+
 cs = Console()
 
 
@@ -38,8 +40,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
-        # index.append(frame)
+        # index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
+        index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -55,22 +57,22 @@ def read_mmpbsa_dat(file_path):
 
 
 def entropy_cal(mm):
-    KT = 0.001985875*298.15
+    KT = 0.001985875 * 298.15
     # RT2KJ = 8.314462618*298.15/1E3
     fm = []
     entropy_list = []
     for e in mm:
         fm.append(e)
         mean = np.mean(fm)
-        internal = np.mean([np.exp((e-mean)/KT) for e in fm])
-        entropy = KT*np.log(internal)
+        internal = np.mean([np.exp((e - mean) / KT) for e in fm])
+        entropy = KT * np.log(internal)
         entropy_list.append(entropy)
     return entropy_list
 
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    # df = df.iloc[:-5, :]
+    df = df.iloc[:-2, :]
     # x = df.idxmax.values.tolist()
     x = df.index.tolist()
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -80,8 +82,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm_pro)
-    entropy_hoh = entropy_cal(mm_sol)
+    # entropy = entropy_cal(mm_pro)
+    # entropy_hoh = entropy_cal(mm_sol)
     y = mm_pro + mm_sol + pb + sa
     mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
@@ -91,26 +93,26 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
     # print('\n', entropy)
-    cs.print('---------\n-TdS=', entropy[-1], ' -TdS_hoh=', entropy_hoh[-1],
-             ' dE=', y.mean(), ' dG=', y.mean()+entropy[-1], style=f'red')
+    # cs.print('---------\n-TdS=', entropy[-1], ' -TdS_hoh=', entropy_hoh[-1],
+    #          ' dE=', y.mean(), ' dG=', y.mean()+entropy[-1], style=f'red')
     cs.print('\nmm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean(), style=f'yellow')
     cs.print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean(), style=f'yellow')
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
-    ax1.plot(x, y+entropy[-1], label='dG', color='tab:red')
-    ax1.plot(x, mm_pro_small, label='MM_pro/10', color='tab:cyan')
-    ax1.plot(x, mm_sol, label='MM_sol', color='tab:blue')
+    ax1.plot(x, y, label='SUM', color='tab:red')
+    ax1.plot(x, mm_pro_small, label='MM_Pro/10', color='tab:cyan')
+    ax1.plot(x, mm_sol, label='MM_SOL', color='tab:blue')
     ax1.plot(x, pb_small, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:pink')
-    ax1.plot(x, entropy, label='-TdS', color='tab:orange')
-    ax1.set_xlabel('time (ps)')
-    ax1.set_ylabel('energy (kcal/mol)')
-    ax1.set_title('mmpbsa items')
+    # ax1.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax1.set_xlabel('Time (ps)')
+    ax1.set_ylabel('Energy (kcal/mol)')
+    ax1.set_title('MMPBSA with interfacial waters')
     xmin, xmax = ax1.get_xlim()
     ax1.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
-    ax1.legend(loc='lower left')
+    ax1.legend(loc='lower right')
 
     "plot HOH"
     # ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
@@ -144,19 +146,30 @@ def plot_heatmap(df, selection='AA'):
         df_plot = AA_df.loc[:, r_exist_inAA ^ True]
     elif selection == 'RHOH':
         df_plot = HOH_df.loc[:, r_exist_inHOH]
+        for name, columns in df_plot.iteritems():
+            df_plot.rename(columns={name: int(name.replace('R~', '').replace('SOL', ''))}, inplace=True)
     elif selection == 'LHOH':
         df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
+        for name, columns in df_plot.iteritems():
+            df_plot.rename(columns={name: int(name.replace('L~', '').replace('SOL', ''))}, inplace=True)
 
-    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-        # print(df_plot.T)
-        # print(df_plot.T.min(axis=1))
-    fig, ax = plt.subplots(figsize=(3, 10))
-    sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
-                center=0, square=False)
+    df_plot = df_plot.sort_index(axis=1)
+    # with pd.option_context('display.max_rows', 5, 'display.max_columns', None):
+    #     print(df_plot.T)
+    #     print(df_plot.T.min(axis=1)
 
-    ax.set_xlabel('time (ns)')
-    ax.set_ylabel('index')
-    ax.set_title('MM energy decomposition')
+    fig, ax = plt.subplots(figsize=(4, 6))
+    plot = sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
+                       center=0, square=True)
+    for ind, label in enumerate(plot.get_yticklabels()):
+        if ind % 2 == 0:
+            label.set_visible(True)
+        else:
+            label.set_visible(False)
+
+    ax.set_xlabel('Time (ns)')
+    ax.set_ylabel('Water index')
+    ax.set_title('MM energy of Receptor waters')
     plt.xticks(rotation=70)
     plt.show()
 
@@ -199,5 +212,5 @@ if __name__ == '__main__':
     res_dg_df = pd.concat(res_dg_df).sort_index()
 
     "call plot function"
-    plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    # plot_heatmap(res_mm_df, selection='RHOH')
+    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    plot_heatmap(res_mm_df, selection='RHOH')

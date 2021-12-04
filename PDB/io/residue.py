@@ -15,8 +15,8 @@ class Residue(object):
 
         self._atom_list = atoms
         self._is_standard_20_amino_acid = False
-        if self._check():
-            self._is_standard_20_amino_acid = True
+        # if self._check():
+        #     self._is_standard_20_amino_acid = True
 
         self._n = len(self._atom_list)
         self._i = 0
@@ -40,13 +40,13 @@ class Residue(object):
     def index(self):
         return self._aa_idx
 
-    def _check(self):
-        force_field = open('PDB/aminoacid.rtp')
-        lines = force_field.readlines()
-        for idx, line in zip(range(len(lines)), lines):
-            if line == '[ '+self._aa_name+' ]':
-                pass
-        return False
+    # def _check(self):
+    #     force_field = open('PDB/aminoacid.rtp')
+    #     lines = force_field.readlines()
+    #     for idx, line in zip(range(len(lines)), lines):
+    #         if line == '[ '+self._aa_name+' ]':
+    #             pass
+    #     return False
 
     def _add_atom(self, atom):
         pass

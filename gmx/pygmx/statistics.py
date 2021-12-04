@@ -44,7 +44,7 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax_most)
+    aff, free = alignment(affinity, relax10_200)
     print(aff, '\n', free)
     aff2kcal = log_list(aff)
 
@@ -55,15 +55,15 @@ if __name__ == '__main__':
     para = np.polyfit(aff2kcal, free, 1)
     func = np.poly1d(para)
     print('\nfitting func: ', func)
-    aff_plot = np.arange(-2, 5, 0.1)
-    curve = plt.plot(aff_plot, func(aff_plot), 'r', label='polyfit values')
+    aff_plot = np.arange(-1, 5, 0.1)
+    curve = plt.plot(aff_plot, func(aff_plot), 'r', label='Polyfit')
 
     # # plot points ----------------------------------------------
-    plot1 = plt.plot(aff2kcal, free, '.', color='b', label='original values')
+    plot1 = plt.plot(aff2kcal, free, '.', color='b', label='Original')
     # plot2 = plt.plot(aff2kcal, free_r, '*', color='k', label='restrain')
 
-    plt.xlabel('affinity ln (nM)')
-    plt.ylabel('binding free energy (kcal/mol)')
+    plt.xlabel('Affinity ln (nM)')
+    plt.ylabel('Binding free energy (kcal/mol)')
     plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
-    plt.title('polyfitting')
+    plt.title('Polyfitting results')
     plt.show()

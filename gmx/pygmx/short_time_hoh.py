@@ -42,23 +42,52 @@ def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
 def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3):
     RHOHs = []
     LHOHs = []
+
+    # 1st checking
+    potential_aa_idx = []
+    potential_sol_idx = []
     for w in waters:
-        d2R = 6  # distance to Receptor
-        d2L = 6  # distance to Ligand
         # TODO: handle exception manually
         # if w.res_seq == 794:
         #     continue
-        for a in protein_atoms:
-            d = np.sqrt(np.sum(np.square(np.array(w.coordinates) - np.array(a.coordinates))))
-            if R_idx[0] <= a.res_seq <= R_idx[1]:  # belongs to receptor chain
-                if d < d2R:
-                    d2R = d
-            elif L_idx[0] <= a.res_seq <= L_idx[1]:  # belongs to ligand chain
-                if d < d2L:
-                    d2L = d
+        d2R = 10.5  # distance of 7 c-c bond distance to to Receptor, 7*1.5=10.5
+        d2L = 10.5  # distance of 7 c-c bond distance to Ligand, 7*1.5=10.5
+        for p_a1 in protein_atoms:
+            if p_a1.name == 'C':
+                d1 = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a1.coordinates))))
+                if R_idx[0] <= p_a1.res_seq <= R_idx[1]:  # belongs to receptor chain
+                    if d1 < d2R:
+                        d2R = d1
+                elif L_idx[0] <= p_a1.res_seq <= L_idx[1]:  # belongs to ligand chain
+                    if d1 < d2L:
+                        d2L = d1
+
+                if d2R + d2L > 21:  # exceeding 7 c-c bond distance, 7*1.5=10.5
+                    continue
+                else:
+                    potential_aa_idx.append(p_a1.res_seq)
+                    potential_sol_idx.append(w.res_seq)
+
+    cs.print('potential_aa_idx:\n', np.array(potential_aa_idx))
+    cs.print('potential_sol_idx:\n', np.array(potential_sol_idx))
+
+    # 2nd calculating
+    for w in [w for w in waters if w.res_seq in potential_sol_idx]:
+        d2R = 6  # distance to Receptor
+        d2L = 6  # distance to Ligand
+        for w_a in w:
+            for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+                d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
+                if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+                    if d < d2R:
+                        d2R = d
+                elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+                    if d < d2L:
+                        d2L = d
+
         if d2R > bond_d and d2L > bond_d:  # far away from protein_atoms
             continue
-        if d2R + d2L > 2*bond_d+0.96:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
+        if d2R + d2L > 2*bond_d:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
             continue
         if d2R < d2L:  #
             RHOHs.append(w.res_seq)
@@ -84,7 +113,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
-        # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
+        short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         "Determines whether to perform this window"
         fr_idx = []
@@ -115,7 +144,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
-        protein_atoms, waters = structure_reader(temp_ave_pdb, ['N', 'C', 'O'])
+        protein_atoms, waters = structure_reader(temp_ave_pdb, ['N', 'C', 'O', 'H'])
         "get ice object"
         ices = [ice for ice in waters if ice.res_seq in ice_idx]
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
@@ -145,7 +174,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
-        # gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
+        gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
         "make new index for short_tpr and short_xtc"
         # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
