@@ -14,7 +14,7 @@ import os
 import random
 import sys
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
-from fr_idxing_method import get_mostfreq_df
+from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from run_mmpbsa import mmpbsa
 import argparse

@@ -9,7 +9,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-matplotlib.rcParams['font.size'] = 10
+from brokenaxes import brokenaxes
+matplotlib.rcParams['font.size'] = 15
+matplotlib.rcParams['font.family'] = 'Times New Roman'
+plt.style.use('science')
 from rich.console import Console
 cs = Console()
 
@@ -52,15 +55,15 @@ def read_mmpbsa_dat(file_path):
 
 
 def entropy_cal(mm):
-    KT = 0.001985875*298.15
+    KT = 0.001985875 * 298.15
     # RT2KJ = 8.314462618*298.15/1E3
     fm = []
     entropy_list = []
     for e in mm:
         fm.append(e)
         mean = np.mean(fm)
-        internal = np.mean([np.exp((e-mean)/KT) for e in fm])
-        entropy = KT*np.log(internal)
+        internal = np.mean([np.exp((e - mean) / KT) for e in fm])
+        entropy = KT * np.log(internal)
         entropy_list.append(entropy)
     return entropy_list
 
@@ -76,27 +79,35 @@ def plot_mmpbsa_curves(df):
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
     entropy = entropy_cal(mm)
     y = mm + pb + sa
-    mm_small = [e / 10 for e in mm]
-    pb_small = [e / 10 for e in pb]
+    mm_small = [e for e in mm]
+    pb_small = [e for e in pb]
 
     "plot mmpbsa"
-    fig, ax1 = plt.subplots()
-    ax1.plot(x, y, label='SUM', color='tab:red')
-    ax1.plot(x, mm_small, label='MM/10', color='tab:cyan')
-    ax1.plot(x, pb_small, label='PB/10', color='tab:green')
-    ax1.plot(x, sa, label='SA', color='tab:pink')
-    # ax1.plot(x, entropy, label='-TdS', color='tab:orange')
-    ax1.set_xlabel('Time (ps)')
-    ax1.set_ylabel('Energy (kcal/mol)')
-    ax1.set_title('Normal MMPBSA')
-    xmin, xmax = ax1.get_xlim()
-    ax1.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
-    ax1.legend(loc='lower right')
+    fig, ax = plt.subplots()
+    ax.plot(x, y, label='SUM', color='tab:red')
+    ax.plot(x, mm_small, label='MM/10', color='tab:cyan')
+    ax.plot(x, pb_small, label='PB/10', color='tab:green')
+    ax.plot(x, sa, label='SA', color='tab:pink')
+    ax.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax.set_xlabel('Time (ps)')
+    ax.set_ylabel('Energy (kcal/mol)')
+    ax.set_title('Normally MMPBSA')
+    xmin, xmax = ax.get_xlim()
+    ax.set_xticks(np.round(np.linspace(xmin, xmax, 10), 2))
+    # ax.legend(loc='lower right')
+    # ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+    #            fancybox=True, shadow=True, ncol=5)
+
+    # Shrink current axis by 20%
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    # Put a legend to the right of the current axis
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
-    # print('\n', entropy)
-    cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean()+entropy[-1], style=f'red')
+    print('\n', entropy)
+    cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean() + entropy[-1], style=f'red')
     print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
 
@@ -162,3 +173,6 @@ if __name__ == '__main__':
     "call plot function"
     plot_mmpbsa_curves(mmpbsa_df)
     # plot_heatmap(res_mm_df, selection='LAA')
+
+    "save to excel"
+    mmpbsa_df.to_excel('6zer_entropy'+'.xlsx')

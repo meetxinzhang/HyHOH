@@ -4,7 +4,7 @@ import pandas as pd
 from collections import Counter
 """
 usage in shell
-output=$(python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/fr_idxing_method.py rmsd.xvg)
+output=$(python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/most_frequency.py rmsd.xvg)
 boundaries=($output)
 rd_min=${boundaries[0]}
 rd_max=${boundaries[1]}
