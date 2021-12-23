@@ -175,4 +175,4 @@ if __name__ == '__main__':
     # plot_heatmap(res_mm_df, selection='LAA')
 
     "save to excel"
-    mmpbsa_df.to_excel('6zer_entropy'+'.xlsx')
+    mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')

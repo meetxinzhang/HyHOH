@@ -13,6 +13,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
+from tools.cast import kd2kcal
 # results
 from results import affinity, relax10_200, relax10_1000, restrain, most_restr, most_restr_2, relax_most,\
     relax_most_20, relax_use_10ie, relax10_hyhoh, relax10_hyhoh_10IE, relax10_hyhoh_most, relax10_hyhoh_most_10ie
@@ -44,9 +45,9 @@ def alignment(affinity, free_energy):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax10_200)
-    print(aff, '\n', free)
+    aff, free = alignment(affinity, relax_most)
     aff2kcal = log_list(aff)
+    print(aff, '\n', free, '\n', aff2kcal)
 
     # correlation coefficient --------------------------------
     print('---------\n', pearsonr(aff2kcal, free))

@@ -9,8 +9,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-
 matplotlib.rcParams['font.size'] = 10
+matplotlib.rcParams['font.family'] = 'Times New Roman'
+# plt.style.use('nature')
 from rich.console import Console
 
 cs = Console()
@@ -158,8 +159,11 @@ def plot_heatmap(df, selection='AA'):
     #     print(df_plot.T)
     #     print(df_plot.T.min(axis=1)
 
-    fig, ax = plt.subplots(figsize=(4, 6))
-    plot = sns.heatmap(df_plot.T, linewidth=0.1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
+    # df_plot.T.to_excel('6zer_hoh_res' + '.xlsx')
+
+    fig, ax = plt.subplots(figsize=(6, 3))
+    fig.set_tight_layout(True)
+    plot = sns.heatmap(df_plot, linewidth=0.5, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
                        center=0, square=True)
     for ind, label in enumerate(plot.get_yticklabels()):
         if ind % 2 == 0:
@@ -169,7 +173,8 @@ def plot_heatmap(df, selection='AA'):
 
     ax.set_xlabel('Time (ns)')
     ax.set_ylabel('Water index')
-    ax.set_title('MM energy of Receptor waters')
+    ax.set_title('MM energy of Ligand waters')
+    # ax.spines['left'].set_visible(True)
     plt.xticks(rotation=70)
     plt.show()
 
@@ -213,4 +218,9 @@ if __name__ == '__main__':
 
     "call plot function"
     # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    plot_heatmap(res_mm_df, selection='RHOH')
+    plot_heatmap(res_mm_df, selection='LHOH')
+
+    "save to excel"
+    # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
+
+    print(matplotlib.font_manager.get_cachedir())
