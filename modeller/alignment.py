@@ -10,15 +10,15 @@ import sys
 
 
 def align(filepath1, filepath2):
-    id1 = 'receptor'
-    id2 = '7kkl'
+    id1 = filepath1.split('/')[0].replace('.pdb', '')
+    id2 = filepath2.split('/')[0].replace('.pdb', '')
     # log.verbose()
     env = environ()
     # env.io.atom_files_directory = './'
     aln = alignment(env)
 
     mdl1 = model(env, file=id1, model_segment=('FIRST:A', 'LAST:A'))
-    mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:F'))
+    mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:E'))
 
     aln.append_model(mdl1, atom_files=filepath1, align_codes=id1)
     aln.append_model(mdl2, atom_files=filepath2, align_codes=id2)
@@ -40,7 +40,7 @@ def align(filepath1, filepath2):
                    write_whole_pdb=whole, output='ALIGNMENT QUALITY')
 
     # 输出结构多个文件
-    aln.write(file='complex.pap', alignment_format='PAP')
+    # aln.write(file='complex.pap', alignment_format='PAP')
     aln.write(file='complex.ali', alignment_format='PIR')
 
     # 执行对齐
