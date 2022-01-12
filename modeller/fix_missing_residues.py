@@ -42,3 +42,5 @@ a.ending_model = 3
 # a.use_parallel_job(j)
 a.make()
 
+if __name__ == '__main__':
+    pass

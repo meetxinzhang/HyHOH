@@ -37,38 +37,38 @@ echo -e 4 \n | gmx genrestr -fc 100 100 100 -f renum_X.pdb -o posre100_chain_X
 define = -DPOSRES100  
 """
 
-# gmx editconf -f processed.gro -o newbox.gro -center 14 12.5 15 -box 24 24 45
-gmx editconf -f processed.gro -o newbox.gro -c -d 1.5 -bt cubic
+# # gmx editconf -f processed.gro -o newbox.gro -center 14 12.5 15 -box 24 24 45
+# gmx editconf -f processed.gro -o newbox.gro -c -d 1.5 -bt cubic
 
 
-#################### EM 0 ######################
-gmx grompp -f $mdp_dir/em_0.mdp -c newbox.gro -p topol.top -o em_0.tpr -maxwarn 1
+# #################### EM 0 ######################
+# gmx grompp -f $mdp_dir/em_0.mdp -c newbox.gro -p topol.top -o em_0.tpr -maxwarn 1
 
-gmx mdrun -v -deffnm em_0
-
-
-# ################## solvate ####################
-# gmx solvate -cp newbox.gro -cs spc216.gro -o solv.gro -p topol.top
-gmx solvate -cp em_0.gro -cs spc216.gro -o solv.gro -p topol.top
-
-gmx grompp -f $mdp_dir/ions.mdp -c solv.gro -p topol.top -o ions.tpr -maxwarn 1
-
-echo -e 13 \n | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
-# # 13 for SOL
+# gmx mdrun -v -deffnm em_0
 
 
-#################  EM 1-3 ####################
-gmx grompp -f $mdp_dir/em_1.mdp -c solv_ions.gro -p topol.top -o em_1.tpr -r solv_ions.gro
+# # ################## solvate ####################
+# # gmx solvate -cp newbox.gro -cs spc216.gro -o solv.gro -p topol.top
+# gmx solvate -cp em_0.gro -cs spc216.gro -o solv.gro -p topol.top
 
-gmx mdrun -v -deffnm em_1
+# gmx grompp -f $mdp_dir/ions.mdp -c solv.gro -p topol.top -o ions.tpr -maxwarn 1
 
-gmx grompp -f $mdp_dir/em_2.mdp -c em_1.gro -p topol.top -o em_2.tpr 
+# echo -e 13 \n | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
+# # # 13 for SOL
 
-gmx mdrun -v -deffnm em_2
 
-gmx grompp -f $mdp_dir/em_3.mdp -c em_2.gro -p topol.top -o em_3.tpr 
+# #################  EM 1-3 ####################
+# gmx grompp -f $mdp_dir/em_1.mdp -c solv_ions.gro -p topol.top -o em_1.tpr -r solv_ions.gro
 
-gmx mdrun -v -deffnm em_3
+# gmx mdrun -v -deffnm em_1
+
+# gmx grompp -f $mdp_dir/em_2.mdp -c em_1.gro -p topol.top -o em_2.tpr 
+
+# gmx mdrun -v -deffnm em_2
+
+# gmx grompp -f $mdp_dir/em_3.mdp -c em_2.gro -p topol.top -o em_3.tpr 
+
+# gmx mdrun -v -deffnm em_3
 
 
 ################# Balance ####################

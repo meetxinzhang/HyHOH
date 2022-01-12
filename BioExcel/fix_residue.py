@@ -14,15 +14,7 @@ from biobb_structure_checking import structure_checking
 from biobb_model.model.fix_backbone import FixBackbone
 
 
-def fix(pdb_file):
-    # Create and launch bb
-    # print('fixing backbone -----------------')
-    # prop = {'restart': False}
-    # FixBackbone(input_pdb_path=atom_dir + origin_pdb,
-    #             input_fasta_canonical_sequence_path=atom_dir + 'rcsb_pdb_7KGK.fasta',
-    #             output_pdb_path=outputs_dir + pdbCode + '_backbone_fixed.pdb',
-    #             properties=prop).launch()
-
+def fix_side_chain(pdb_file):
     print('fixing side chain -----------------')
     # FixSideChain(input_pdb_path=outputs_dir + pdbCode + '_backbone_fixed.pdb',
     #              output_pdb_path=outputs_dir + pdbCode + '_side_fixed.pdb').launch()
@@ -30,6 +22,17 @@ def fix(pdb_file):
                  output_pdb_path='_side_fixed.pdb').launch()
 
 
+def fix_backbone(pdb_file, seq_fasta):
+    # Create and launch bb
+    print('fixing backbone -----------------')
+    prop = {'restart': False}
+    FixBackbone(input_pdb_path=pdb_file,
+                input_fasta_canonical_sequence_path=seq_fasta,
+                output_pdb_path='_backbone_fixed.pdb',
+                properties=prop).launch()
+
+
 if __name__ == '__main__':
     pdb_file = sys.argv[1]
-    fix(pdb_file)
+    seq_fasta = sys.argv[2]
+    fix_backbone(pdb_file, seq_fasta)

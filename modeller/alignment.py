@@ -17,8 +17,8 @@ def align(filepath1, filepath2):
     # env.io.atom_files_directory = './'
     aln = alignment(env)
 
-    mdl1 = model(env, file=id1, model_segment=('FIRST:A', 'LAST:A'))
-    mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:E'))
+    mdl1 = model(env, file=id1, model_segment=('FIRST:A', 'LAST:E'))
+    mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:A'))
 
     aln.append_model(mdl1, atom_files=filepath1, align_codes=id1)
     aln.append_model(mdl2, atom_files=filepath2, align_codes=id2)
