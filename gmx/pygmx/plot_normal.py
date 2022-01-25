@@ -9,10 +9,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-from brokenaxes import brokenaxes
+# from brokenaxes import brokenaxes
 matplotlib.rcParams['font.size'] = 15
 matplotlib.rcParams['font.family'] = 'Times New Roman'
-plt.style.use('science')
+# plt.style.use('science')
 from rich.console import Console
 cs = Console()
 

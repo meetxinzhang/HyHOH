@@ -8,6 +8,7 @@ if __name__ == '__main__':
     alnfile = sys.argv[1]
     id1 = sys.argv[2]
     id2 = sys.argv[3]
+    # id3 = sys.argv[4]
     seq_id = sys.argv[4]
     # num_parallel = 20  # 使用cpu的多线程处理
     # j = job(modeller_path=os.path.join('/home/zhangxin/anaconda3/envs/Bio/lib/modeller-9.25', "bin/modslave.py"))

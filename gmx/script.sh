@@ -4,7 +4,7 @@
 # >chmod a+x script.sh
 # >./script.sh
 
-gpu_id=0
+gpu_id=1
 mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx/mdp
 
 ################### Pre Process ##################
@@ -37,38 +37,38 @@ echo -e 4 \n | gmx genrestr -fc 100 100 100 -f renum_X.pdb -o posre100_chain_X
 define = -DPOSRES100  
 """
 
-# # gmx editconf -f processed.gro -o newbox.gro -center 14 12.5 15 -box 24 24 45
-# gmx editconf -f processed.gro -o newbox.gro -c -d 1.5 -bt cubic
+# gmx editconf -f processed.gro -o newbox.gro -center 14 12.5 15 -box 24 24 45
+gmx editconf -f processed.gro -o newbox.gro -c -d 1.5 -bt cubic
 
 
-# #################### EM 0 ######################
-# gmx grompp -f $mdp_dir/em_0.mdp -c newbox.gro -p topol.top -o em_0.tpr -maxwarn 1
+#################### EM 0 ######################
+gmx grompp -f $mdp_dir/em_0.mdp -c newbox.gro -p topol.top -o em_0.tpr -maxwarn 1
 
-# gmx mdrun -v -deffnm em_0
-
-
-# # ################## solvate ####################
-# # gmx solvate -cp newbox.gro -cs spc216.gro -o solv.gro -p topol.top
-# gmx solvate -cp em_0.gro -cs spc216.gro -o solv.gro -p topol.top
-
-# gmx grompp -f $mdp_dir/ions.mdp -c solv.gro -p topol.top -o ions.tpr -maxwarn 1
-
-# echo -e 13 \n | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
-# # # 13 for SOL
+gmx mdrun -v -deffnm em_0
 
 
-# #################  EM 1-3 ####################
-# gmx grompp -f $mdp_dir/em_1.mdp -c solv_ions.gro -p topol.top -o em_1.tpr -r solv_ions.gro
+# ################## solvate ####################
+# gmx solvate -cp newbox.gro -cs spc216.gro -o solv.gro -p topol.top
+gmx solvate -cp em_0.gro -cs spc216.gro -o solv.gro -p topol.top
 
-# gmx mdrun -v -deffnm em_1
+gmx grompp -f $mdp_dir/ions.mdp -c solv.gro -p topol.top -o ions.tpr -maxwarn 1
 
-# gmx grompp -f $mdp_dir/em_2.mdp -c em_1.gro -p topol.top -o em_2.tpr 
+echo -e 13 \n | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
+# # 13 for SOL
 
-# gmx mdrun -v -deffnm em_2
 
-# gmx grompp -f $mdp_dir/em_3.mdp -c em_2.gro -p topol.top -o em_3.tpr 
+#################  EM 1-3 ####################
+gmx grompp -f $mdp_dir/em_1.mdp -c solv_ions.gro -p topol.top -o em_1.tpr -r solv_ions.gro
 
-# gmx mdrun -v -deffnm em_3
+gmx mdrun -v -deffnm em_1
+
+gmx grompp -f $mdp_dir/em_2.mdp -c em_1.gro -p topol.top -o em_2.tpr 
+
+gmx mdrun -v -deffnm em_2
+
+gmx grompp -f $mdp_dir/em_3.mdp -c em_2.gro -p topol.top -o em_3.tpr 
+
+gmx mdrun -v -deffnm em_3
 
 
 ################# Balance ####################
@@ -92,9 +92,9 @@ gmx grompp -f $mdp_dir/prod.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0.tpr
 gmx mdrun -deffnm md_0 -gpu_id $gpu_id -pme gpu -update gpu -bonded gpu #-pin on -npme 1 -ntmpi 3 -ntomp 12
 
 ################ extend MD #################
-# gmx convert-tpr -s md_0.tpr -extend 13000 -o md_0.tpr
+# gmx convert-tpr -s md_0.tpr -extend 13000 -o md_1.tpr
 
-# gmx mdrun -v -deffnm md_0 -cpi md_0.cpt -pin on -ntmpi 3 -ntomp 12 -gpu_id 012 -pme gpu -npme 1 -update gpu -bonded gpu
+# gmx mdrun -v -deffnm md_1 -cpi md_1.cpt -pin on -ntmpi 3 -ntomp 12 -gpu_id 012 -pme gpu -npme 1 -update gpu -bonded gpu
 
 ##################### umbrella ######################
 # ./umbrella.sh
