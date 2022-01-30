@@ -28,7 +28,7 @@ if __name__ == '__main__':
     a = automodel(env, alnfile=alnfile,
                   knowns=(id1, id2), sequence=seq_id)
     a.starting_model = 1
-    a.ending_model = 10
+    a.ending_model = 3
 
     # a.loop.starting_model = 1
     # a.loop.ending_model = 3
