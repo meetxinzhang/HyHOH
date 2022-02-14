@@ -9,9 +9,9 @@ from modeller import *
 import sys
 
 
-def align(filepath1, filepath2, filepath3=None):
+def align(filepath1, filepath2=None, filepath3=None):
     id1 = filepath1.split('/')[0].replace('.pdb', '')
-    id2 = filepath2.split('/')[0].replace('.pdb', '')
+    # id2 = filepath2.split('/')[0].replace('.pdb', '')
     # id3 = filepath3.split('/')[0].replace('.pdb', '')
 
     # log.verbose()
@@ -19,12 +19,12 @@ def align(filepath1, filepath2, filepath3=None):
     # env.io.atom_files_directory = './'
     aln = alignment(env)
 
-    mdl1 = model(env, file=id1, model_segment=('FIRST:A', 'LAST:C'))
-    mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:C'))
+    mdl1 = model(env, file=id1, model_segment=('FIRST:X', 'LAST:Z'))
+    # mdl2 = model(env, file=id2, model_segment=('FIRST:A', 'LAST:E'))
     # mdl3 = model(env, file=id3, model_segment=('FIRST:A', 'LAST:L'))
 
     aln.append_model(mdl1, atom_files=filepath1, align_codes=id1)
-    aln.append_model(mdl2, atom_files=filepath2, align_codes=id2)
+    # aln.append_model(mdl2, atom_files=filepath2, align_codes=id2)
     # aln.append_model(mdl3, atom_files=filepath3, align_codes=id3)
 
     for (weights, write_fit, whole) in (((1., 0., 0., 0., 1., 0.), False, True),
@@ -57,27 +57,27 @@ def align(filepath1, filepath2, filepath3=None):
                write_whole_pdb=False, output='QUALITY')
 
     ########################################
-    aln_block = len(aln)
-    # Read aligned sequence(s) #####################################################
-    aln.append(file='target.ali', align_codes='target')  # 目标序列文件
-
-    # Structure sensitive variable gap penalty sequence-sequence alignment:
-    aln.salign(output='', max_gap_length=20,
-               gap_function=True,  # to use structure-dependent gap penalty
-               alignment_type='PAIRWISE', align_block=aln_block,
-               feature_weights=(1., 0., 0., 0., 0., 0.), overhang=0,
-               gap_penalties_1d=(-450, 0),
-               gap_penalties_2d=(0.35, 1.2, 0.9, 1.2, 0.6, 8.6, 1.2, 0., 0.),
-               similarity_flag=True)
-
-    aln.write(file='ali-mult.ali', alignment_format='PIR')
-    # aln.write(file='ali-mult.pap', alignment_format='PAP')
+    # aln_block = len(aln)
+    # # Read aligned sequence(s) #####################################################
+    # aln.append(file='target.ali', align_codes='target')  # 目标序列文件
+    #
+    # # Structure sensitive variable gap penalty sequence-sequence alignment:
+    # aln.salign(output='', max_gap_length=20,
+    #            gap_function=True,  # to use structure-dependent gap penalty
+    #            alignment_type='PAIRWISE', align_block=aln_block,
+    #            feature_weights=(1., 0., 0., 0., 0., 0.), overhang=0,
+    #            gap_penalties_1d=(-450, 0),
+    #            gap_penalties_2d=(0.35, 1.2, 0.9, 1.2, 0.6, 8.6, 1.2, 0., 0.),
+    #            similarity_flag=True)
+    #
+    # aln.write(file='ali-mult.ali', alignment_format='PIR')
+    # # aln.write(file='ali-mult.pap', alignment_format='PAP')
 
 
 if __name__ == "__main__":
     filepath1 = sys.argv[1]
-    filepath2 = sys.argv[2]
+    # filepath2 = sys.argv[2]
     # filepath3 = sys.argv[3]
 
-    align(filepath1, filepath2)
+    align(filepath1)
 
