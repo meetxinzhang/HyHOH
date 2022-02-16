@@ -102,6 +102,4 @@ gmx trjconv -f md_0_nojump.xtc -o cloestAve.xtc -drop rmsd-all-atom-vs-avg.xvg -
 
 # gmx anaeig -s ../md_0.tpr -f ../analysis/md_0_nojump.xtc -v eigenvectors.trr -eig eigenvalues.xvg -entropy yes
 
-python D:\ACS\github\BioUtil\gmx\pygmx\main.py -tpr md_0.tpr -xtc md_0.xtc -ri 433 504 -li 1 432 -fm normal -rm hyhoh -t 1000 10000 200
-
-
+python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr md_0.tpr -xtc md_0.xtc -ri 433 504 -li 1 432 -fm normal -rm hyhoh -t 1000 10000 200

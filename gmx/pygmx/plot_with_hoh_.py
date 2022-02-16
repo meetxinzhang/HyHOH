@@ -83,8 +83,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    # entropy = entropy_cal(mm_pro)
-    # entropy_hoh = entropy_cal(mm_sol)
+    entropy = entropy_cal(mm_pro)
+    entropy_hoh = entropy_cal(mm_sol)
     y = mm_pro + mm_sol + pb + sa
     mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
@@ -94,8 +94,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
     # print('\n', entropy)
-    # cs.print('---------\n-TdS=', entropy[-1], ' -TdS_hoh=', entropy_hoh[-1],
-    #          ' dE=', y.mean(), ' dG=', y.mean()+entropy[-1], style=f'red')
+    cs.print('---------\n-TdS=', entropy[-1], ' -TdS_hoh=', entropy_hoh[-1],
+             ' dE=', y.mean(), ' dG=', y.mean()+entropy[-1], style=f'red')
     cs.print('\nmm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean(), style=f'yellow')
     cs.print('mm_pro=', mm_pro.mean(), 'mm_sol=', mm_sol.mean(), style=f'yellow')
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
@@ -217,10 +217,10 @@ if __name__ == '__main__':
     res_dg_df = pd.concat(res_dg_df).sort_index()
 
     "call plot function"
-    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
-    plot_heatmap(res_mm_df, selection='LHOH')
+    plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    # plot_heatmap(res_mm_df, selection='LHOH')
 
     "save to excel"
     # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
 
-    print(matplotlib.font_manager.get_cachedir())
+    # print(matplotlib.font_manager.get_cachedir())
