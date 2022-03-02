@@ -79,8 +79,8 @@ def plot_mmpbsa_curves(df):
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
     entropy = entropy_cal(mm)
     y = mm + pb + sa
-    mm_small = [e for e in mm]
-    pb_small = [e for e in pb]
+    mm_small = [e/10 for e in mm]
+    pb_small = [e/10 for e in pb]
 
     "plot mmpbsa"
     fig, ax = plt.subplots()

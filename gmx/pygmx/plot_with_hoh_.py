@@ -73,7 +73,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    # df = df.iloc[:-2, :]
+    df = df.iloc[19:, :]
     # x = df.idxmax.values.tolist()
     x = df.index.tolist()
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -107,7 +107,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     ax1.plot(x, mm_sol, label='MM_SOL', color='tab:blue')
     ax1.plot(x, pb_small, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:pink')
-    # ax1.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax1.plot(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('Time (ps)')
     ax1.set_ylabel('Energy (kcal/mol)')
     ax1.set_title('MMPBSA with interfacial waters')
