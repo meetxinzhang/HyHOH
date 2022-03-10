@@ -73,7 +73,7 @@ def entropy_cal(mm):
 
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    df = df.iloc[19:, :]
+    df = df.iloc[47:, :]
     # x = df.idxmax.values.tolist()
     x = df.index.tolist()
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -86,7 +86,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     entropy = entropy_cal(mm_pro)
     entropy_hoh = entropy_cal(mm_sol)
     y = mm_pro + mm_sol + pb + sa
-    mm_pro_small = [e / 10 for e in mm_pro]
+    mm_pro_small = [e / 5 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
     "HOH"
     rHOH_num = np.repeat(rHOH_num, 3)
@@ -103,7 +103,7 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
     ax1.plot(x, y, label='SUM', color='tab:red')
-    ax1.plot(x, mm_pro_small, label='MM_Pro/10', color='tab:cyan')
+    ax1.plot(x, mm_pro_small, label='MM_Pro/5', color='tab:cyan')
     ax1.plot(x, mm_sol, label='MM_SOL', color='tab:blue')
     ax1.plot(x, pb_small, label='PB/10', color='tab:green')
     ax1.plot(x, sa, label='SA', color='tab:pink')
