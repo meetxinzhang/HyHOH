@@ -106,7 +106,7 @@ def plot_mmpbsa_curves(df):
 
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
-    print('\n', entropy)
+    # print('\n', entropy)
     cs.print('---------\ndE=', y.mean(), ' -TdS=', entropy[-1], ' dG=', y.mean() + entropy[-1], style=f'red')
     print('mm=', mm.mean(), ' pb=', pb.mean(), ' sa=', sa.mean())
     # print('---------\npearson R=', spearmanr([float(e) for e in mm], [float(e) for e in lhoh_num]))
@@ -175,4 +175,4 @@ if __name__ == '__main__':
     # plot_heatmap(res_mm_df, selection='LAA')
 
     "save to excel"
-    mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')
+    # mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')

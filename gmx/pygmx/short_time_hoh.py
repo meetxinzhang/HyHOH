@@ -39,7 +39,7 @@ def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
     return x
 
 
-def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.8):
+def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     RHOHs = []
     LHOHs = []
 
@@ -87,7 +87,9 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.8):
 
         if d2R > bond_d and d2L > bond_d:  # far away from protein_atoms
             continue
-        if d2R + d2L > 2*bond_d+1.52:  # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
+        # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
+        # sin(52)*0.96*2=1.497
+        if d2R + d2L > 2*bond_d+1.497:
             continue
         if d2R < d2L:  #
             RHOHs.append(w.res_seq)
