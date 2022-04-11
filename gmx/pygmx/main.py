@@ -11,7 +11,6 @@
   -ri 195 636 -li 1 194 -t 1000 10000 500
 """
 import os
-import random
 import sys
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from most_frequency import get_mostfreq_df

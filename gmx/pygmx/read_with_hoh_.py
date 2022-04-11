@@ -19,7 +19,7 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        # frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -30,7 +30,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    # frame = line.split()[0]
+                    frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -41,8 +41,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        # index.append(text[i].split()[0].replace('_pid~', '').replace('ns', ''))  # L P R
-        index.append(frame)
+        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+        # index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -71,11 +71,50 @@ def entropy_cal(mm):
     return entropy_list
 
 
+def cal_in_time_hoh(df):
+    """mmpbsa"""
+    data = []
+    index = []
+    # print(df.index.tolist())
+
+    for t in range(1, 10, 1):
+        d1 = df[df.index < t+1]
+        d2 = d1[d1.index >= t]
+
+        y = np.squeeze(d2[['Binding_DH']].values.tolist())
+        mm_pro = np.squeeze(d2[['MM_DH_Pro']].values.tolist())
+        # mm_sol = np.squeeze(df[['MM_DH_SOL']].values.tolist())
+        # pb = np.squeeze(df[['PB']].values.tolist())
+        # sa = np.squeeze(df[['SA']].values.tolist())
+        if len(y) < 1:
+            continue
+        else:
+            index.append(t)
+        if len(mm_pro) < 2:
+            entropy = 0
+        else:
+            entropy = entropy_cal(mm_pro)[-1]
+        # entropy_hoh = entropy_cal(mm_sol)
+        dE = y.mean()
+        data.append([entropy, dE, entropy+dE])
+
+    aa = pd.DataFrame(data=data, index=index, columns=['-TdS', 'dE', 'dG'])
+    # print(aa)
+    # print(aa.loc[2, 'dG'])
+    return aa
+
+
 def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     """mmpbsa"""
-    # df = df.iloc[47:, :]
+    # df = df.iloc[0:50, :]
     # x = df.idxmax.values.tolist()
-    x = df.index.tolist()
+    x_origin = df.index.tolist()
+    # x = x_origin[x_origin < 2]
+    x = []
+    for i in x_origin:
+        if 1.5 < float(i) < 1.96:
+            x.append(i)
+    df = df.loc[x]
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
@@ -179,9 +218,7 @@ def plot_heatmap(df, selection='AA'):
     plt.show()
 
 
-if __name__ == '__main__':
-    work_dir = sys.argv[1]
-
+def get_dataframe(work_dir):
     mmpbsa_df = []
     rHOH_num = []
     lHOH_num = []
@@ -195,32 +232,39 @@ if __name__ == '__main__':
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
                 mmpbsa_df.append(dat)
 
-            if filename == 'apply_windows.log':
-                with open(os.path.join(path, filename)) as f:
-                    for line in f:
-                        if line.startswith(' '):
-                            pass
-                        else:
-                            rHOH_num.append(line.split()[1].replace(',', ''))
-                            lHOH_num.append(line.split()[2])
-
-            if filename == '_pid~resMM_DH.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
-                res_mm_df.append(dat)
-
-            if filename == '_pid~res_MMPBSA_DH.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
-                res_dg_df.append(dat)
+            # if filename == 'apply_windows.log':
+            #     with open(os.path.join(path, filename)) as f:
+            #         for line in f:
+            #             if line.startswith(' '):
+            #                 pass
+            #             else:
+            #                 rHOH_num.append(line.split()[1].replace(',', ''))
+            #                 lHOH_num.append(line.split()[2])
+            #
+            # if filename == '_pid~resMM_DH.dat':
+            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
+            #     res_mm_df.append(dat)
+            #
+            # if filename == '_pid~res_MMPBSA_DH.dat':
+            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
+            #     res_dg_df.append(dat)
 
     mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
-    res_mm_df = pd.concat(res_mm_df).sort_index()
-    res_dg_df = pd.concat(res_dg_df).sort_index()
+    # res_mm_df = pd.concat(res_mm_df).sort_index()
+    # res_dg_df = pd.concat(res_dg_df).sort_index()
+    return mmpbsa_df
+
+
+if __name__ == '__main__':
+    work_dir = sys.argv[1]
+    mmpbsa_df = get_dataframe(work_dir)
 
     "call plot function"
-    plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
     # plot_heatmap(res_mm_df, selection='LHOH')
 
     "save to excel"
     # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
 
-    # print(matplotlib.font_manager.get_cachedir())
+    cal_in_time_hoh(mmpbsa_df)
+

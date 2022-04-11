@@ -2,13 +2,13 @@
 # fork from Lewisbase's script
 # Date: 2021.03.26
 
-import os
 import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
+from read_with_hoh_ import get_dataframe, entropy_cal
 # from brokenaxes import brokenaxes
 matplotlib.rcParams['font.size'] = 15
 matplotlib.rcParams['font.family'] = 'Times New Roman'
@@ -54,23 +54,40 @@ def read_mmpbsa_dat(file_path):
     return dataframe.sort_index()
 
 
-def entropy_cal(mm):
-    KT = 0.001985875 * 298.15
-    # RT2KJ = 8.314462618*298.15/1E3
-    fm = []
-    entropy_list = []
-    for e in mm:
-        fm.append(e)
-        mean = np.mean(fm)
-        internal = np.mean([np.exp((e - mean) / KT) for e in fm])
-        entropy = KT * np.log(internal)
-        entropy_list.append(entropy)
-    return entropy_list
+def cal_in_time(df):
+    """mmpbsa"""
+    data = []
+    index = []
+    # print(df.index.tolist())
+
+    for t in range(1, 10, 1):
+        d1 = df[df.index < t+1]
+        d2 = d1[d1.index >= t]
+
+        y = np.squeeze(d2[['Binding_DH']].values.tolist())
+        mm = np.squeeze(d2[['MM_DH']].values.tolist())
+        # mm_sol = np.squeeze(df[['MM_DH_SOL']].values.tolist())
+        # pb = np.squeeze(df[['PB']].values.tolist())
+        # sa = np.squeeze(df[['SA']].values.tolist())
+        if len(y) < 1:
+            continue
+        else:
+            index.append(t)
+        if len(mm) < 2:
+            entropy = 0
+        else:
+            entropy = entropy_cal(mm)[-1]
+        # entropy_hoh = entropy_cal(mm_sol)
+        dE = y.mean()
+        data.append([entropy, dE, entropy+dE])
+
+    # print(pd.DataFrame(data=data, index=index, columns=['-TdS', 'dE', 'dG']))
+    return pd.DataFrame(data=data, index=index, columns=['-TdS', 'dE', 'dG'])
 
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    # df = df.iloc[20:, :]
+    # df = df.iloc[0:50, :]
     x = df.index.tolist()
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
@@ -88,7 +105,7 @@ def plot_mmpbsa_curves(df):
     ax.plot(x, mm_small, label='MM/10', color='tab:cyan')
     ax.plot(x, pb_small, label='PB/10', color='tab:green')
     ax.plot(x, sa, label='SA', color='tab:pink')
-    ax.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax.plot(x, entropy, label='-TdS', read_with_hoh_color='tab:orange')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Energy (kcal/mol)')
     ax.set_title('Normally MMPBSA')
@@ -144,35 +161,14 @@ def plot_heatmap(df, selection='AA'):
 
 if __name__ == '__main__':
     work_dir = sys.argv[1]
-
-    mmpbsa_df = []
-    rHOH_num = []
-    lHOH_num = []
-    res_mm_df = []
-    res_dg_df = []
-
-    for path, dir_list, file_list in os.walk(work_dir, topdown=True):
-
-        for filename in file_list:
-            if filename == '_pid~MMPBSA.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
-                mmpbsa_df.append(dat)
-
-            if filename == '_pid~resMM_DH.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
-                res_mm_df.append(dat)
-
-            if filename == '_pid~res_MMPBSA_DH.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
-                res_dg_df.append(dat)
-
-    mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
-    res_mm_df = pd.concat(res_mm_df).sort_index()
-    res_dg_df = pd.concat(res_dg_df).sort_index()
+    mmpbsa_df = get_dataframe(work_dir)
 
     "call plot function"
-    plot_mmpbsa_curves(mmpbsa_df)
+    # plot_mmpbsa_curves(mmpbsa_df)
     # plot_heatmap(res_mm_df, selection='LAA')
 
     "save to excel"
     # mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')
+
+    cal_in_time(mmpbsa_df)
+
