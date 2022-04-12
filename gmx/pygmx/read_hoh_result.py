@@ -53,7 +53,7 @@ def read_mmpbsa_dat(file_path):
                     print(text[i].split()[j])
                     print(file_path, i, j)
     column_names = text[0].split()[1:]  # name of columns
-    dataframe = pd.DataFrame(data=data, index=index, columns=column_names)
+    dataframe = pd.DataFrame(data=data, index=index, columns=column_names).sort_index()
     return dataframe
 
 
@@ -71,7 +71,7 @@ def entropy_cal(mm):
     return entropy_list
 
 
-def cal_in_time_hoh(df):
+def organize_in_time_hoh(df):
     """mmpbsa"""
     data = []
     index = []
@@ -266,5 +266,5 @@ if __name__ == '__main__':
     "save to excel"
     # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
 
-    cal_in_time_hoh(mmpbsa_df)
+    organize_in_time_hoh(mmpbsa_df)
 

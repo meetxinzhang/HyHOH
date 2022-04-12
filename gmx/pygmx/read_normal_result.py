@@ -8,7 +8,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-from read_with_hoh_ import get_dataframe, entropy_cal
+
+from gmx.pygmx.run_mmpbsa import mmpbsa
+from read_hoh_result import get_dataframe, entropy_cal
 # from brokenaxes import brokenaxes
 matplotlib.rcParams['font.size'] = 15
 matplotlib.rcParams['font.family'] = 'Times New Roman'
@@ -17,45 +19,43 @@ from rich.console import Console
 cs = Console()
 
 
-def read_mmpbsa_dat(file_path):
-    with open(file_path) as file:
-        # TODO: control time manually
-        # if frame > 5:
-        #     return
-        if file_path.endswith('_pid~MMPBSA.dat'):
-            lines = file.readlines()
-            entropy = float(lines[-3].split()[2])
-            text = [lines[0].replace('\n', '') + '   |  -TdS \n']
+# def read_mmpbsa_dat(file_path):
+#     with open(file_path) as file:
+#         # TODO: control time manually
+#         # if frame > 5:
+#         #     return
+#         if file_path.endswith('_pid~MMPBSA.dat'):
+#             lines = file.readlines()
+#             entropy = float(lines[-3].split()[2])
+#             text = [lines[0].replace('\n', '') + '   |  -TdS \n']
+#
+#             for line in lines:
+#                 if line.startswith('_pid~'):
+#                     frame = line.split()[0].replace('_pid~', '').replace('ns', '')
+#                     binding = float(line.split()[1])  # + entropy
+#                     binding_DH = float(line.split()[2])  # + entropy
+#                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
+#                     text.append(new_line.replace('\n', '') + '   |  ' + str(entropy) + '\n')
+#         else:
+#             text = file.readlines()
+#     index = []
+#     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
+#     for i in range(1, len(text)):  # start with 2nd line
+#         index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+#         for j in range(1, len(text[i].split())):  # start with 2nd elem
+#             if text[i].split()[j] == '|':
+#                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
+#             else:
+#                 try:
+#                     data[i - 1][j - 1] = float(text[i].split()[j]) / 4.184  # caste to kcal/mol
+#                 except ValueError:
+#                     print(text[i].split()[j])
+#                     print(file_path, i, j)
+#     column_names = text[0].split()[1:]  # name of columns
+#     dataframe = pd.DataFrame(data=data, index=index, columns=column_names).sort_index()
+#     return dataframe.sort_index()
 
-            for line in lines:
-                if line.startswith('_pid~'):
-                    frame = line.split()[0].replace('_pid~', '').replace('ns', '')
-                    binding = float(line.split()[1])  # + entropy
-                    binding_DH = float(line.split()[2])  # + entropy
-                    new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
-                    text.append(new_line.replace('\n', '') + '   |  ' + str(entropy) + '\n')
-        else:
-            text = file.readlines()
-    index = []
-    data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
-    for i in range(1, len(text)):  # start with 2nd line
-        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
-        for j in range(1, len(text[i].split())):  # start with 2nd elem
-            if text[i].split()[j] == '|':
-                data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
-            else:
-                try:
-                    data[i - 1][j - 1] = float(text[i].split()[j]) / 4.184  # caste to kcal/mol
-                except ValueError:
-                    print(text[i].split()[j])
-                    print(file_path, i, j)
-    column_names = text[0].split()[1:]  # name of columns
-    dataframe = pd.DataFrame(data=data, index=index, columns=column_names).sort_index()
-    return dataframe.sort_index()
-
-
-def cal_in_time(df):
-    """mmpbsa"""
+def organize_in_time(df):
     data = []
     index = []
     # print(df.index.tolist())
@@ -162,7 +162,6 @@ def plot_heatmap(df, selection='AA'):
 if __name__ == '__main__':
     work_dir = sys.argv[1]
     mmpbsa_df = get_dataframe(work_dir)
-
     "call plot function"
     # plot_mmpbsa_curves(mmpbsa_df)
     # plot_heatmap(res_mm_df, selection='LAA')
@@ -170,5 +169,5 @@ if __name__ == '__main__':
     "save to excel"
     # mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')
 
-    cal_in_time(mmpbsa_df)
+    organize_in_time(mmpbsa_df)
 
