@@ -65,6 +65,6 @@ if __name__ == '__main__':
 
     plt.xlabel('Affinity ln (nM)')
     plt.ylabel('Binding free energy (kcal/mol)')
-    plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
+    plt.legend(loc=4)  # 指定legend的位置
     plt.title('Polyfitting results')
     plt.show()
