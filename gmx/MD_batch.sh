@@ -19,7 +19,7 @@ cd MD
 
 
 # 循环跑5次
-for i in $(seq 1 1)
+for i in $(seq 2 5)
 do 
 mkdir -p $i
 cd $i
