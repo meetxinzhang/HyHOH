@@ -43,7 +43,7 @@ def alignment(affinity, free_energy):
 # plt.legend()
 # plt.title("K-line of (restrained dG) - (relaxed dG)")
 
-
+# TODO: contact with statistics
 if __name__ == '__main__':
     aff, free = alignment(affinity, for1_5_20)
     aff2kcal = log_list(aff)
