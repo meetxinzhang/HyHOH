@@ -33,7 +33,11 @@ def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
         # + ' 2>>gmx_calculate.log >> gmx_calculate.log'
     cs.log(command, end='\n')
     os.system(command)
-    os.system('rm -rf '+dir+'/'+'_pid~\d+\.?\d*')
+    os.system('rm -rf ' + dir + '/*out')
+    os.system('rm -rf ' + dir + '/*pqr')
+    os.system('rm -rf ' + dir + '/*apbs')
+    os.system('rm -rf ' + dir + '/*pdb')
+    os.system('rm -rf ' + dir + '/*xtc')
 
 
 def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):

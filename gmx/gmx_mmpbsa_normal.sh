@@ -906,3 +906,4 @@ fi
 ################################################################################
 #rm -f $trjwho.xtc $trjcnt.xtc $trjcls.xtc
 #rm -f io.mc _$pid.pdb $scr $qrv \#_$pid*\#
+cd ..
