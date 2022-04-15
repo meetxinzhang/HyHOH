@@ -9,9 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 
-from gmx.pygmx.run_mmpbsa import mmpbsa
 from read_hoh_result import get_dataframe, entropy_cal
-# from brokenaxes import brokenaxes
 matplotlib.rcParams['font.size'] = 15
 matplotlib.rcParams['font.family'] = 'Times New Roman'
 # plt.style.use('science')
