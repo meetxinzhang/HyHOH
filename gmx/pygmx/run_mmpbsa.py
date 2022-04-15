@@ -19,9 +19,10 @@ cs = Console()
 
 
 def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
+    print('!!!!!!!!!!!!!! path:', os.path, '\n')
     command = '/media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_normal.sh' \
               + ' -dir ' + dir \
-              + ' -s ../' + tpr \
+              + ' -s ' + tpr \
               + ' -f ../' + xtc \
               + ' -n ../' + ndx \
               + ' -com ' + com \
@@ -50,4 +51,4 @@ def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):
     cs.log('gmx-trjconv by frames idx list...')
     gmx.trjconv(f=xtc, o=indexed_xtc, fr=frames_idx, n=index, input='1')
     os.system('mkdir -p '+str(fr_idx[0])+'_'+str(fr_idx[-1]))
-    run_api('normal', tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
+    run_api(str(fr_idx[0])+'_'+str(fr_idx[-1]), tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
