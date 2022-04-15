@@ -26,8 +26,9 @@ do
         cd $this_dir
         mkdir -p mmpbsa
         cd mmpbsa
+        # 100 200 10, and 5 frames per ps
         python $script_dir/main.py -tpr $this_dir/md_0.tpr -xtc $this_dir/md_0.xtc -ri \
-        ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm normal -t 100 200 10
+        ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm normal -t 500 1000 50
     done
     cnt=$cnt+1
 done
