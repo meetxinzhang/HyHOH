@@ -225,8 +225,7 @@ def get_dataframe(work_dir):
     res_mm_df = []
     res_dg_df = []
 
-    for path, dir_list, file_list in os.walk(work_dir, topdown=True):
-
+    for path, dir_list, file_list in os.walk(work_dir, topdown=False):
         for filename in file_list:
             if filename == '_pid~MMPBSA.dat':
                 dat = read_mmpbsa_dat(os.path.join(path, filename))
@@ -248,7 +247,8 @@ def get_dataframe(work_dir):
             # if filename == '_pid~res_MMPBSA_DH.dat':
             #     dat = read_mmpbsa_dat(os.path.join(path, filename))
             #     res_dg_df.append(dat)
-
+    if len(mmpbsa_df) == 0:
+        print('length=1: ', work_dir)
     mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
     # res_mm_df = pd.concat(res_mm_df).sort_index()
     # res_dg_df = pd.concat(res_dg_df).sort_index()
