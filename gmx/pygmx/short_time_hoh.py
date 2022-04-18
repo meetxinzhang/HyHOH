@@ -98,12 +98,12 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr=0.4, bond_d=3.3):
+def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, thr=0.4, bond_d=3.3):
     [begin, final, win_len, win_stride] = win_params
 
     for start in range(begin, final, win_stride):
         end = start + win_len
-        cs.rule('Processing window: '+str(start)+'-'+str(end))
+        cs.rule('Processing window: '+str(start)+'-'+str(end)+' ps, '+str(start*fr_per_ps)+'-'+str(end*fr_per_ps)+' f')
         # TODO: rerun control
         # if start <= 8000:
         #     continue
@@ -115,12 +115,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
-        short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
+        # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         "Determines whether to perform this window"
         fr_idx = []
         for idx in frames_idx:
-            if start <= float(idx) < end:
+            if start <= float(idx)/fr_per_ps < end:
                 fr_idx.append(float(idx))
         if len(fr_idx) == 0:
             cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
@@ -176,7 +176,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
         gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
         "generate short-term average pdb for show and check, can be deleted"
-        gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
+        # gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
         "make new index for short_tpr and short_xtc"
         # grp_RHOHs = 'r_' + '_'.join(str(hoh) for hoh in RHOHs)
@@ -215,6 +215,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
         "deal with log and temp intermediate files 1"
         with open(log_file, 'a', encoding='utf-8') as fw:
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
+                          '\n'.join([str(e) for e in fr_idx]) + '\n' +
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm -v ' + temp_ndx)
@@ -224,8 +225,14 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, thr
 
         "run MMPBSA script"
         os.system('mkdir -p -v '+str(start)+'_'+str(end))
-        run_api(dir=str(start)+'_'+str(end), tpr=short_tpr, xtc=short_xtc, ndx=short_ndx,
+        run_api(dir=str(start)+'_'+str(end), tpr='../'+short_tpr, xtc=short_xtc, ndx=short_ndx,
                 com='com', rec='receptor', lig='ligand', b=start, e=end, i=1)
+
+        os.system('rm ' + short_xtc)
+        os.system('rm ' + short_ndx)
+        os.system('rm ' + short_tpr)
+        os.system('rm ' + short_frame_idx)
+        os.system('rm ' + short_rmsf_xvg)
 
     "deal with log"
     with open(log_file, 'a', encoding='utf-8') as fw:

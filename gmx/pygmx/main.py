@@ -27,8 +27,9 @@ parser.add_argument('-tpr', required=True)
 parser.add_argument('-xtc', required=True)
 parser.add_argument('-ri', nargs='+', required=True, type=int, help='receptor index like -ri 1 195')  #
 parser.add_argument('-li', nargs='+', required=True, type=int, help='ligand index like -li 196 632')  #
-parser.add_argument('-t', nargs='+', default=[0, 10000, 1], type=int, help='time controlling, can be \
-                                                ignored if frames indexing list was assigned in code')
+parser.add_argument('-t', nargs='+', default=[0, 10000, 1, 1], type=int,
+                    help='sampling frequency controlling: [begin, end, dt, frames_per_ps] in ps, can be ignored if '
+                         'frames indexing list was assigned in code')
 
 cs = Console()
 flags = gmx.environment.flags
@@ -86,11 +87,11 @@ if __name__ == '__main__':
         pass
     elif args.fm == 'normal':
         frame_times = range(int(args.t[0]), int(args.t[1])+int(args.t[2]), int(args.t[2]))
-        frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
+        frame_idx = [float(i)*args.t[3] + 1 for i in frame_times]  # time start with 0 while frame start with 1
 
     if args.rm == 'hyhoh':
-        apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx,
-                      win_params=[int(args.t[0]), int(args.t[1]), 50, 50], num_hyHOH=70, thr=0.3, bond_d=3.03)
+        apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx, fr_per_ps=args.t[3],
+                      win_params=[int(args.t[0])-5, int(args.t[1])-5, 10, 10], num_hyHOH=70, thr=0.3, bond_d=3.03)
     elif args.rm == 'normal':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)
 

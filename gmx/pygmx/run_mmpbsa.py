@@ -42,7 +42,7 @@ def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
 
 def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):
     frames_idx = 'frames_idx.ndx'
-    index = 'index.ndx'
+    index = 'index.ndx'  # indicates the R/L
     indexed_xtc = 'final.xtc'
     with open(frames_idx, 'w') as f:
         f.writelines('[ frames ]\n')

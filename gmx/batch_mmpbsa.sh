@@ -24,11 +24,14 @@ do
     do 
         this_dir=$work_dir/$anti/MD/$i
         cd $this_dir
-        mkdir -p mmpbsa
-        cd mmpbsa
-        # 100 200 10, and 5 frames per ps
+        mkdir -p hyhoh
+        cd hyhoh
+        ############## 100 200 10, and 5 frames per ps
+        # python $script_dir/main.py -tpr $this_dir/md_0.tpr -xtc $this_dir/md_0.xtc -ri \
+        # ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm normal -t 100 200 10 5
+        ############## 100 200 10 hyhoh, 5 frames per ps, windows=
         python $script_dir/main.py -tpr $this_dir/md_0.tpr -xtc $this_dir/md_0.xtc -ri \
-        ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm normal -t 500 1000 50
+        ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm hyhoh -t 100 200 10 5
     done
     cnt=$cnt+1
 done
