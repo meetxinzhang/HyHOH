@@ -7,6 +7,7 @@
 """
 import numpy as np
 import pandas as pd
+import os
 from scipy.stats import pearsonr
 from results import affinity
 from statistic_plot import log_list
@@ -62,6 +63,26 @@ def statistic_all():
     return results
 
 
+def statistic_multi_MD():
+    results = []
+    from read_hoh_result import read_mmpbsa_dat, entropy_cal
+    for ab in antibodies:
+        result = []
+        work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' + ab + '/MD/'
+        for path, dir_list, file_list in os.walk(work_dir, topdown=False):
+            for filename in file_list:
+                if filename == '_pid~MMPBSA.dat' and 'mmpbsa' in path:
+                    mmpbsa_df = read_mmpbsa_dat(os.path.join(path, filename))
+                    y = np.squeeze(mmpbsa_df[['Binding_DH']].values.tolist())
+                    mm = np.squeeze(mmpbsa_df[['MM_DH']].values.tolist())
+                    entropy = entropy_cal(mm)[-1]
+                    dE = y.mean()
+                    dG = dE + entropy
+                    result.append(dG)
+        results.append(np.mean(result))
+    return results
+
+
 def statistic_in_sec():
     data = []
     from read_hoh_result import organize_in_time_hoh, get_dataframe
@@ -103,5 +124,6 @@ if __name__ == '__main__':
     # df = statistic_in_sec()
     # print(df)
     # print(calc_pearson(np.squeeze(df[1].values.tolist())))
-    results_list = statistic_all()
+    # results_list = statistic_all()
+    results_list = statistic_multi_MD()
     print(calc_pearson(results_list))
