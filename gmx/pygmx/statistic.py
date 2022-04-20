@@ -71,13 +71,13 @@ def statistic_multi_MD():
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' + ab + '/MD/'
         for path, dir_list, file_list in os.walk(work_dir, topdown=False):
             for filename in file_list:
-                if filename == '_pid~MMPBSA.dat' and 'mmpbsa' in path:
+                if filename == '_pid~MMPBSA.dat' and 'hyhoh' in path:
                     mmpbsa_df = read_mmpbsa_dat(os.path.join(path, filename))
                     y = np.squeeze(mmpbsa_df[['Binding_DH']].values.tolist())
                     mm = np.squeeze(mmpbsa_df[['MM_DH']].values.tolist())
-                    entropy = entropy_cal(mm)[-1]
+                    # entropy = entropy_cal(mm)[-1]
                     dE = y.mean()
-                    dG = dE + entropy
+                    dG = dE + 0
                     result.append(dG)
         results.append(np.mean(result))
     return results

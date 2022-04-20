@@ -5,7 +5,14 @@
 # >./script.sh
 
 gpu_id=012
-mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx/mdp
+mdp_dir="/media/xin/WinData/ACS/github/BioUtil/gmx/mdp"
+
+#从第一个参数获取抗体所在目录
+thispath=$1
+cd $thispath
+mkdir -p MD_10ns
+cd MD_10ns
+
 
 ################### Pre Process ##################
 # cd interaction/ding/7KFY
@@ -13,7 +20,7 @@ mdp_dir=/media/xin/WinData/ACS/github/BioUtil/gmx/mdp
 # grep -v HOH 7jw0.BL00010001.pdb > clean.pdb 
 
 # water: spce tip3p. select force field 2. count of atom*2 due to H
-# echo -e 2 \n | gmx pdb2gmx -f renum.pdb -o processed.gro -water tip3p
+echo -e 2 \n | gmx pdb2gmx -f $thispath/renum.pdb -o processed.gro -water tip3p
 
 """
 # make index 

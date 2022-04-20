@@ -19,8 +19,8 @@ cs = Console()
 
 
 def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
-    print('!!!!!!!!!!!!!! path:', os.path, '\n')
-    command = '/media/xin/WinData/ACS/github/BioUtil/gmx/gmx_mmpbsa_normal.sh' \
+    print('Workspace now: ', os.path, '\n')
+    command = '/media/xin/WinData/ACS/github/BioUtil/gmx/mmpbsa/gmx_mmpbsa_normal.sh' \
               + ' -dir ' + dir \
               + ' -s ' + tpr \
               + ' -f ../' + xtc \
