@@ -50,10 +50,10 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
         # TODO: handle exception manually
         # if w.res_seq == 794:
         #     continue
-        d2R = 10.5  # distance of 7 c-c bond distance to to Receptor, 7*1.5=10.5
-        d2L = 10.5  # distance of 7 c-c bond distance to Ligand, 7*1.5=10.5
+        d2R = 10.5  # distance of 6 c-c bond distance to to Receptor CA, 6*1.27=7.62,  7.62+(3.03-0.96)=9.69
+        d2L = 10.5  # C-C bond d=1.54, angle=111.17, 1.54*[sin(55.5d)=0.824]*=1.27
         for p_a1 in protein_atoms:
-            if p_a1.name == 'C':
+            if p_a1.name == 'CA':
                 d1 = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a1.coordinates))))
                 if R_idx[0] <= p_a1.res_seq <= R_idx[1]:  # belongs to receptor chain
                     if d1 < d2R:
@@ -85,12 +85,12 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
                     if d < d2L:
                         d2L = d
 
-        if d2R > bond_d and d2L > bond_d:  # far away from protein_atoms
+        if d2R > 4.04 and d2L > 4.04:  # far away from protein_atoms
             continue
         # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
         # sin(52)*0.96*2=1.497
-        if d2R + d2L > 2*bond_d+1.497:
-            continue
+        # if d2R + d2L > 2*bond_d+1.497:
+        #     continue
         if d2R < d2L:  #
             RHOHs.append(w.res_seq)
         else:

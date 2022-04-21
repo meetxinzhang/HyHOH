@@ -45,7 +45,7 @@ def alignment(affinity, free_energy):
 
 # TODO: contact with statistics
 if __name__ == '__main__':
-    aff, free = alignment(affinity, for1_5_20)
+    aff, free = alignment(affinity, for1_10_20_hy)
     aff2kcal = log_list(aff)
     print(aff, '\n', free, '\n', aff2kcal)
 
