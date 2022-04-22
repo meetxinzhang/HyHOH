@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     if args.rm == 'hyhoh':
         apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx, fr_per_ps=args.t[3],
-                      win_params=[int(args.t[0])-5, int(args.t[1])-5, 10, 10], num_hyHOH=70, thr=0.3, bond_d=3.03)
+                      win_params=[int(args.t[0])-5, int(args.t[1])-5, 50, 50], num_hyHOH=70, thr=0.35, bond_d=2.07)
     elif args.rm == 'normal':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)
 

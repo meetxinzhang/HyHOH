@@ -19,7 +19,7 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        # frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -30,7 +30,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    frame = line.split()[0]
+                    # frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -41,8 +41,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
-        # index.append(frame)
+        # index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+        index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -104,17 +104,13 @@ def organize_in_time_hoh(df):
     return aa
 
 
-def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
+def plot_mmpbsa_curves(df):
     """mmpbsa"""
     # df = df.iloc[0:50, :]
     # x = df.idxmax.values.tolist()
-    x_origin = df.index.tolist()
-    # x = x_origin[x_origin < 2]
-    x = []
-    for i in x_origin:
-        if 1.5 < float(i) < 1.96:
-            x.append(i)
-    df = df.loc[x]
+    df = df[df.index <= 2]
+    x = df.index.tolist()
+
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     mm_pro = np.squeeze(df[['MM_DH_Pro']].values.tolist())
@@ -128,8 +124,8 @@ def plot_mmpbsa_curves(df, rHOH_num, lHOH_num):
     mm_pro_small = [e / 5 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
     "HOH"
-    rHOH_num = np.repeat(rHOH_num, 3)
-    lHOH_num = np.repeat(lHOH_num, 3)
+    # rHOH_num = np.repeat(rHOH_num, 3)
+    # lHOH_num = np.repeat(lHOH_num, 3)
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     print(df.iloc[:, 0:11])
     # print('\n', entropy)
@@ -260,11 +256,11 @@ if __name__ == '__main__':
     mmpbsa_df = get_dataframe(work_dir)
 
     "call plot function"
-    # plot_mmpbsa_curves(mmpbsa_df, rHOH_num, lHOH_num)
+    plot_mmpbsa_curves(mmpbsa_df)
     # plot_heatmap(res_mm_df, selection='LHOH')
 
     "save to excel"
     # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
 
-    organize_in_time_hoh(mmpbsa_df)
+    # organize_in_time_hoh(mmpbsa_df)
 

@@ -23,7 +23,7 @@ flags['capture_output_filename'] = 'gmx_wrapper.log'
 log_file = 'apply_windows.log'
 
 
-def idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr=0.4):
+def idx_hyhoh_by_RMSF(short_rmsf_xvg, num_hyHOH, thr=0.3):
     xy_lines = []
     for line in open(short_rmsf_xvg, 'r', encoding='utf-8'):
         if (not line.strip().startswith("#")) and (not line.strip().startswith("@")):
@@ -43,15 +43,15 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     RHOHs = []
     LHOHs = []
 
-    # 1st checking
+    # 1st screening
     potential_aa_idx = []
     potential_sol_idx = []
     for w in waters:
         # TODO: handle exception manually
         # if w.res_seq == 794:
         #     continue
-        d2R = 10.5  # distance of 6 c-c bond distance to to Receptor CA, 6*1.27=7.62,  7.62+(3.03-0.96)=9.69
-        d2L = 10.5  # C-C bond d=1.54, angle=111.17, 1.54*[sin(55.5d)=0.824]*=1.27
+        d2R = 9.69  # distance of 6 c-c bond distance to to Receptor CA, 6*1.27=7.62,  7.62+(3.03-0.96)=9.69
+        d2L = 9.69  # C-C bond d=1.54, angle=111.17, 1.54*[sin(55.5d)=0.824]*=1.27
         for p_a1 in protein_atoms:
             if p_a1.name == 'CA':
                 d1 = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a1.coordinates))))
@@ -62,7 +62,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
                     if d1 < d2L:
                         d2L = d1
 
-                if d2R + d2L > 21:  # exceeding 7 c-c bond distance, 7*1.5=10.5
+                if d2R + d2L > 19.38 or (d2R > 9.69 and d2L > 9.69):  # exceeding 7 c-c bond distance, 7*1.5=10.5
                     continue
                 else:
                     potential_aa_idx.append(p_a1.res_seq)
@@ -71,26 +71,43 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     cs.print('potential_aa_idx:\n', np.array(potential_aa_idx))
     cs.print('potential_sol_idx:\n', np.array(potential_sol_idx))
 
-    # 2nd calculating
+    # 2nd checking
     for w in [w for w in waters if w.res_seq in potential_sol_idx]:
-        d2R = 6  # distance to Receptor
-        d2L = 6  # distance to Ligand
-        for w_a in w:
-            for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
-                d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
-                if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
-                    if d < d2R:
-                        d2R = d
-                elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
-                    if d < d2L:
-                        d2L = d
+        d2R = 5  # distance to Receptor
+        d2L = 5  # distance to Ligand
+        # for w_a in w:
+        #     for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+        #         d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
+        #         if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+        #             if d < d2R:
+        #                 d2R = d
+        #         elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+        #             if d < d2L:
+        #                 d2L = d
+        for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+            dO, dH1, dH2 = 5, 5, 5
+            if p_a.name[0] == 'H':
+                dO = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a.coordinates))))
+            elif p_a.name[0] == 'O' or p_a.name[0] == 'N':
+                dH1 = np.sqrt(np.sum(np.square(np.array(w.HW1.coordinates) - np.array(p_a.coordinates))))
+                dH2 = np.sqrt(np.sum(np.square(np.array(w.HW2.coordinates) - np.array(p_a.coordinates))))
+            else:
+                continue
+            d = min(dO, dH1, dH2)
 
-        if d2R > 4.04 and d2L > 4.04:  # far away from protein_atoms
+            if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+                if d < d2R:
+                    d2R = d
+            elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+                if d < d2L:
+                    d2L = d
+
+        if d2R > bond_d and d2L > bond_d:  # beyond the length of H-bond. (OH-O: 2.07A, OH-N:?)
             continue
         # only consider binding sites HOH, and length of O-H is about 0.96 angstroms
         # sin(52)*0.96*2=1.497
-        # if d2R + d2L > 2*bond_d+1.497:
-        #     continue
+        if d2R + d2L > 2*bond_d:
+            continue
         if d2R < d2L:  #
             RHOHs.append(w.res_seq)
         else:
@@ -140,7 +157,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
 
         cs.log('Searching Hy-HOHs ...', style=f'blue')
         try:
-            ice_idx = idx_hyhoh_by_RMSD(short_rmsf_xvg, num_hyHOH, thr)
+            ice_idx = idx_hyhoh_by_RMSF(short_rmsf_xvg, num_hyHOH, thr)
         except ExceptionPassing as e:
             cs.print(e.message, style=f"red")
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
@@ -156,7 +173,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         cs.print('R_HOHs:\n', np.array(RHOHs))
         cs.print('L_HOHs:\n', np.array(LHOHs))
         if len(RHOHs) == 0 and len(LHOHs) == 0:
-            cs.print('\nWARNING IN ASSIGNMENT1!!!!!!!', style=f"red")
+            cs.print('\nWARNING IN ASSIGNMENT1: No hyhoh found!', style=f"red")
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
         # if len(RHOHs) + len(LHOHs) < 5:
