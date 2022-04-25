@@ -9,10 +9,9 @@ import os
 import sys
 import time
 from rich.console import Console
-from rich.progress import track
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from run_mmpbsa import run_api
-from PDB.io.reader import structure_reader
+from PDB.io.reader import structure_serialize
 from exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
@@ -75,32 +74,34 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     for w in [w for w in waters if w.res_seq in potential_sol_idx]:
         d2R = 5  # distance to Receptor
         d2L = 5  # distance to Ligand
-        # for w_a in w:
-        #     for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
-        #         d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
-        #         if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
-        #             if d < d2R:
-        #                 d2R = d
-        #         elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
-        #             if d < d2L:
-        #                 d2L = d
-        for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
-            dO, dH1, dH2 = 5, 5, 5
-            if p_a.name[0] == 'H':
-                dO = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a.coordinates))))
-            elif p_a.name[0] == 'O' or p_a.name[0] == 'N':
-                dH1 = np.sqrt(np.sum(np.square(np.array(w.HW1.coordinates) - np.array(p_a.coordinates))))
-                dH2 = np.sqrt(np.sum(np.square(np.array(w.HW2.coordinates) - np.array(p_a.coordinates))))
-            else:
-                continue
-            d = min(dO, dH1, dH2)
-
-            if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
-                if d < d2R:
-                    d2R = d
-            elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
-                if d < d2L:
-                    d2L = d
+        # ----------------- approximate searching without H atom --------------------
+        for w_a in w:
+            for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+                d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
+                if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+                    if d < d2R:
+                        d2R = d
+                elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+                    if d < d2L:
+                        d2L = d
+        # ----------------- exact searching with H atom ----------------------------
+        # for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+        #     dO, dH1, dH2 = 5, 5, 5
+        #     if p_a.name[0] == 'H':
+        #         dO = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a.coordinates))))
+        #     elif p_a.name[0] == 'O' or p_a.name[0] == 'N':
+        #         dH1 = np.sqrt(np.sum(np.square(np.array(w.HW1.coordinates) - np.array(p_a.coordinates))))
+        #         dH2 = np.sqrt(np.sum(np.square(np.array(w.HW2.coordinates) - np.array(p_a.coordinates))))
+        #     else:
+        #         continue
+        #     d = min(dO, dH1, dH2)
+        #
+        #     if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+        #         if d < d2R:
+        #             d2R = d
+        #     elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+        #         if d < d2L:
+        #             d2L = d
 
         if d2R > bond_d and d2L > bond_d:  # beyond the length of H-bond. (OH-O: 2.07A, OH-N:?)
             continue
@@ -163,11 +164,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
-        protein_atoms, waters = structure_reader(temp_ave_pdb, ['N', 'C', 'O', 'H'])
+        protein_atoms, waters = structure_serialize(temp_ave_pdb, ['N', 'C', 'O', 'H'])
         "get ice object"
         ices = [ice for ice in waters if ice.res_seq in ice_idx]
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
         RHOHs, LHOHs = assign_hyhoh(protein_atoms, ices, R_idx, L_idx, bond_d)
+        del ices, protein_atoms, waters  # garbage collection
 
         cs.print('\nNum of R/L HOH: ', len(RHOHs), len(LHOHs))
         cs.print('R_HOHs:\n', np.array(RHOHs))

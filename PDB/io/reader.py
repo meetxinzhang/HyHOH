@@ -70,8 +70,8 @@ def header_reader(filepath):
                 mdl_id = columns[-1].replace(';', '')
 
 
-def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2/2den.pdb',
-                     options=None):
+def structure_serialize(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2/2den.pdb',
+                        options=None):
     """
     :param filepath
     :param options: atom names
@@ -114,22 +114,36 @@ def structure_reader(filepath='/media/zhangxin/Raid0/dataset/PP/single_complex/2
                         w_atoms.append(atom)
                     else:
                         p_atoms.append(atom)
+    # if 'H' in options:
+    #     waters = water_assemble(w_atoms)
+    #     del w_atoms
+    #     return p_atoms, waters
+    # else:
+    #     return p_atoms, w_atoms
+    return p_atoms, water_assemble(w_atoms, options)
 
-    return p_atoms, water_assemble(w_atoms)
 
-
-def water_assemble(atoms):
+def water_assemble(atoms, options):
     waters = []
-    for i in np.arange(0, len(atoms), 3):
-        OW = atoms[i]
-        HW1 = atoms[i+1]
-        HW2 = atoms[i+2]
+    if 'H' in options:
+        for i in np.arange(0, len(atoms), 3):
+            OW = atoms[i]
+            HW1 = atoms[i + 1]
+            HW2 = atoms[i + 2]
 
-        assert OW.name == 'OW' and HW1.name == 'HW1' and HW2.name == 'HW2'
-        waters.append(SOL(aa_name='SOL', res_seq=OW.res_seq, OW=OW, HW1=HW1, HW2=HW2))
+            assert OW.name == 'OW' and HW1.name == 'HW1' and HW2.name == 'HW2'
+            waters.append(SOL(aa_name='SOL', res_seq=OW.res_seq, OW=OW, HW1=HW1, HW2=HW2))
+    else:
+        for a in atoms:
+            assert a.name == 'OW'
+            waters.append(SOL(aa_name='SOL', res_seq=a.res_seq, OW=a, HW1=None, HW2=None))
 
     return waters
 
 
+def amino_acid_assemble(atoms):
+    pass
+
+
 if __name__ == '__main__':
-    structure_reader('/media/xin/WinData/ACS/github/BioUtil/PDB/process/_0_100.pdb', ['N', 'C', 'O'])
+    structure_serialize('/media/xin/WinData/ACS/github/BioUtil/PDB/process/_0_100.pdb', ['N', 'C', 'O'])
