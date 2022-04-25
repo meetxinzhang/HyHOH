@@ -24,7 +24,7 @@ flags['capture_output_filename'] = 'gmx_wrapper.log'
 log_file = 'apply_distance.log'
 
 
-def apply_distance(xtc, tpr, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
+def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
     for i in times_idx:
         cs.rule('Processing frame: ' + str(i) + ' ps, ' + str(i * fr_per_ps) + ' f')
         # TODO: rerun control
@@ -154,4 +154,4 @@ if __name__ == '__main__':
     R_idx = [int(r_b), int(r_e)]  # Antibody
     L_idx = [int(l_b), int(l_e)]  # RBD
 
-    apply_distance(xtc, tpr, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.03)
+    apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.03)

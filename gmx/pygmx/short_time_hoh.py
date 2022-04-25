@@ -38,7 +38,7 @@ def idx_hyhoh_by_RMSF(short_rmsf_xvg, num_hyHOH, thr=0.3):
     return x
 
 
-def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
+def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.07):
     RHOHs = []
     LHOHs = []
 
@@ -116,7 +116,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=3.03):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, thr=0.4, bond_d=3.3):
+def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, thr=0.4, bond_d=2.07):
     [begin, final, win_len, win_stride] = win_params
 
     for start in range(begin, final, win_stride):

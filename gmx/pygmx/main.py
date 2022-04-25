@@ -15,6 +15,7 @@ import sys
 sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
+from distance_hoh import apply_distance
 from run_mmpbsa import mmpbsa
 import argparse
 from rich.console import Console
@@ -22,7 +23,7 @@ import gromacs as gmx
 
 parser = argparse.ArgumentParser(description='main method to run mmpbsa.')
 parser.add_argument('-fm', default='normal', choices=['normal', 'most', 'average'])
-parser.add_argument('-rm', default='normal', choices=['normal', 'hyhoh'])
+parser.add_argument('-rm', default='normal', choices=['normal', 'hyhoh', 'dsthoh'])
 parser.add_argument('-tpr', required=True)
 parser.add_argument('-xtc', required=True)
 parser.add_argument('-ri', nargs='+', required=True, type=int, help='receptor index like -ri 1 195')  #
@@ -83,6 +84,7 @@ if __name__ == '__main__':
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
     elif args.fm == 'average':
         # TODO command here
+        frame_times = []
         frame_idx = []
         pass
     elif args.fm == 'normal':
@@ -92,6 +94,10 @@ if __name__ == '__main__':
     if args.rm == 'hyhoh':
         apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx, fr_per_ps=args.t[3],
                       win_params=[int(args.t[0])-5, int(args.t[1])-5, 50, 50], num_hyHOH=70, thr=0.35, bond_d=2.07)
+
     elif args.rm == 'normal':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)
+
+    elif args.rm == 'dsthoh':
+        apply_distance(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, times_idx=frame_times, bond_d=3.03)
 
