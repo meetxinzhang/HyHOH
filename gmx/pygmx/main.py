@@ -42,12 +42,12 @@ main_log = 'main.log'
 if __name__ == '__main__':
     "preprocess pbc at extra dir"
     args = parser.parse_args()
-    os.system('mkdir -p ../analysis')
-    whole_xtc = '../analysis/whole.xtc'
-    nojump_xtc = '../analysis/nojump.xtc'
-    mol_xtc = '../analysis/mol_center.xtc'
-    fit_xtc = '../analysis/fit_'+str(args.xtc).split('/')[-1]
-    rmsd_xvg = '../analysis/rmsd_'+str(args.xtc).split('/')[-1].replace('.xtc', '')+'.xvg'
+    os.system('mkdir -p ../analysis_new10ns')
+    whole_xtc = '../analysis_new10ns/whole.xtc'
+    nojump_xtc = '../analysis_new10ns/nojump.xtc'
+    mol_xtc = '../analysis_new10ns/mol_center.xtc'
+    fit_xtc = '../analysis_new10ns/fit_'+str(args.xtc).split('/')[-1]
+    rmsd_xvg = '../analysis_new10ns/rmsd_'+str(args.xtc).split('/')[-1].replace('.xtc', '')+'.xvg'
 
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '

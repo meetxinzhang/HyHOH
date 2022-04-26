@@ -75,15 +75,25 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.07):
         d2R = 5  # distance to Receptor
         d2L = 5  # distance to Ligand
         # ----------------- approximate searching without H atom --------------------
-        for w_a in w:
-            for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
-                d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
-                if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
-                    if d < d2R:
-                        d2R = d
-                elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
-                    if d < d2L:
-                        d2L = d
+        # for w_a in w:
+        #     for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+        #         d = np.sqrt(np.sum(np.square(np.array(w_a.coordinates) - np.array(p_a.coordinates))))
+        #         if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+        #             if d < d2R:
+        #                 d2R = d
+        #         elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+        #             if d < d2L:
+        #                 d2L = d
+
+        for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
+            d = np.sqrt(np.sum(np.square(np.array(w.OW.coordinates) - np.array(p_a.coordinates))))
+            if R_idx[0] <= p_a.res_seq <= R_idx[1]:  # belongs to receptor chain
+                if d < d2R:
+                    d2R = d
+            elif L_idx[0] <= p_a.res_seq <= L_idx[1]:  # belongs to ligand chain
+                if d < d2L:
+                    d2L = d
+
         # ----------------- exact searching with H atom ----------------------------
         # for p_a in [p_a for p_a in protein_atoms if p_a.res_seq in potential_aa_idx]:
         #     dO, dH1, dH2 = 5, 5, 5
