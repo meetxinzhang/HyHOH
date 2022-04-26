@@ -35,6 +35,9 @@ do
     # done
     # cnt=$cnt+1
     this_dir=$work_dir/$anti/MD_10ns
+    cd $this_dir
+    mkdir -p dsthoh
+    cd dsthoh
     python $script_dir/main.py -tpr $this_dir/md_0.tpr -xtc $this_dir/md_0.xtc -ri \
     ${ri_left[$cnt]} ${ri_right[$cnt]} -li ${li_left[$cnt]} ${li_right[$cnt]} -fm normal -rm dsthoh -t 1000 5000 20 1
 done

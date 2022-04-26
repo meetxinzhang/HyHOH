@@ -198,7 +198,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         hyHOH_list.sort()
         gmx.make_ndx(f=tpr, n=temp_ndx, o=temp_ndx, input=('r ' + ' '.join(str(hoh) for hoh in hyHOH_list),
                                                            'name 19 hyHOH',
-                                                           '1 | 19',
+                                                           '1 | 19',   # or indicates union set
                                                            'name 20 com', 'q'))  # 19
         cs.log("generate short-term xtc and sub-group tpr for mmpbsa", style=f'blue')
         # gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
