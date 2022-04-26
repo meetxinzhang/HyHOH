@@ -99,5 +99,5 @@ if __name__ == '__main__':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)
 
     elif args.rm == 'dsthoh':
-        apply_distance(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, times_idx=frame_times, bond_d=3.03)
+        apply_distance(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, times_idx=frame_times, bond_d=4.0)
 
