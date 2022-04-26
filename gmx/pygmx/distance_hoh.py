@@ -31,25 +31,23 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         # TODO: rerun control
         # if start <= 8000:
         #     continue
-        # temp_ave_pdb = str(start) + '_' + str(end) + '_tmp.pdb'
-        temp_ndx = str(i) + 'ps_tmp.ndx'
 
+        temp_ndx = str(i) + 'ps_tmp.ndx'
+        frame_sys_pdb = str(i) + 'ps_sys.pdb'
         dsthoh_idx = str(i) + 'ps_dsthoh.ndx'
+
         rec_lig_ndx = str(i) + '.ndx'
         frame_pdb = str(i) + 'ps.pdb'
         frame_xtc = str(i) + 'ps.xtc'
         frame_tpr = str(i) + 'ps.tpr'
-        # short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
-        # short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
-        # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
-        gmx.trjconv(f=xtc, s=tpr, o=frame_pdb, b=i, e=i, input='System')
+        gmx.trjconv(f=xtc, s=tpr, o=frame_sys_pdb, b=i, e=i, input='System')
 
         ####################################################################
         "make new index for R and L"
         select_R_cmd = 'ri ' + str(R_idx[0]) + '-' + str(R_idx[1])
         select_L_cmd = 'ri ' + str(L_idx[0]) + '-' + str(L_idx[1])
-        gmx.make_ndx(f=frame_pdb, o=temp_ndx, input=(select_R_cmd, select_L_cmd,  # 19 20
+        gmx.make_ndx(f=frame_sys_pdb, o=temp_ndx, input=(select_R_cmd, select_L_cmd,  # 19 20
                                                      'name 19 r_p', 'name 20 l_p', 'q'))
 
         gmx.select(f=xtc, n=temp_ndx, b=i, e=i, s=tpr, seltype='res_com',
@@ -59,12 +57,13 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
 
         #####################################################################
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
-        protein_atoms, waters = structure_serialize(frame_pdb, ['N', 'C', 'O'])
+        protein_atoms, waters = structure_serialize(frame_sys_pdb, ['N', 'C', 'O'])
         "get ice object"
         ices = [ice for ice in waters if ice.res_seq in dsthoh_list]
+        del waters  # garbage collection
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
         RHOHs, LHOHs = assign_hyhoh(protein_atoms, ices, R_idx, L_idx, bond_d)
-        del ices, protein_atoms, waters  # garbage collection
+        del ices, protein_atoms  # garbage collection
 
         cs.print('\nNum of R/L HOH: ', len(RHOHs), len(LHOHs))
         cs.print('R_HOHs:\n', np.array(RHOHs))
@@ -88,7 +87,7 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         gmx.convert_tpr(s=tpr, o=frame_tpr, n=temp_ndx, nsteps=-1, input='22')
 
         "generate short-term average pdb for show and check, can be deleted"
-        # gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='22')
+        gmx.trjconv(f=xtc, s=tpr, o='test.pdb', b=i, e=i, n=temp_ndx, input='22')
 
         "make new index for short_tpr and short_xtc"
         select_RH_cmd = 'r ' + ' '.join(str(hoh) for hoh in RHOHs)
@@ -122,6 +121,7 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm -v ' + temp_ndx)
+        os.system('rm -v ' + frame_sys_pdb)
         os.system('rm -v \#*')  # delete all # starting files
 
         "run MMPBSA script"
@@ -129,10 +129,10 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         run_api(dir=str(i), tpr='../' + frame_tpr, xtc=frame_xtc, ndx=rec_lig_ndx,
                 com='com', rec='receptor', lig='ligand', b=1, e=10001, i=1)
 
-        # os.system('rm ' + frame_tpr)
-        os.system('rm ' + frame_xtc)
-        os.system('rm ' + frame_pdb)
-        os.system('rm ' + rec_lig_ndx)
+        os.system('rm ' + frame_tpr)
+        os.system('rm -v ' + frame_xtc)
+        # os.system('rm -v ' + frame_pdb)
+        os.system('rm -v ' + rec_lig_ndx)
 
     "deal with log"
     with open(log_file, 'a', encoding='utf-8') as fw:
