@@ -12,7 +12,8 @@
 """
 import os
 import sys
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+
+sys.path.append('/home/wurp/PycharmProjects/BioUtil')  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from distance_hoh import apply_distance
@@ -46,8 +47,8 @@ if __name__ == '__main__':
     whole_xtc = '../analysis_new10ns/whole.xtc'
     nojump_xtc = '../analysis_new10ns/nojump.xtc'
     mol_xtc = '../analysis_new10ns/mol_center.xtc'
-    fit_xtc = '../analysis_new10ns/fit_'+str(args.xtc).split('/')[-1]
-    rmsd_xvg = '../analysis_new10ns/rmsd_'+str(args.xtc).split('/')[-1].replace('.xtc', '')+'.xvg'
+    fit_xtc = '../analysis_new10ns/fit_' + str(args.xtc).split('/')[-1]
+    rmsd_xvg = '../analysis_new10ns/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
 
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '
@@ -88,16 +89,15 @@ if __name__ == '__main__':
         frame_idx = []
         pass
     elif args.fm == 'normal':
-        frame_times = range(int(args.t[0]), int(args.t[1])+int(args.t[2]), int(args.t[2]))
-        frame_idx = [float(i)*args.t[3] + 1 for i in frame_times]  # time start with 0 while frame start with 1
+        frame_times = range(int(args.t[0]), int(args.t[1]) + int(args.t[2]), int(args.t[2]))
+        frame_idx = [float(i) * args.t[3] + 1 for i in frame_times]  # time start with 0 while frame start with 1
 
     if args.rm == 'hyhoh':
         apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx, fr_per_ps=args.t[3],
-                      win_params=[int(args.t[0])-5, int(args.t[1])-5, 50, 50], num_hyHOH=70, thr=0.35, bond_d=2.07)
+                      win_params=[int(args.t[0]) - 5, int(args.t[1]) - 5, 50, 50], num_hyHOH=70, thr=0.35, bond_d=2.07)
 
     elif args.rm == 'normal':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)
 
     elif args.rm == 'dsthoh':
         apply_distance(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, times_idx=frame_times, bond_d=4.0)
-

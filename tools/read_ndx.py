@@ -6,7 +6,6 @@
 @desc:
 """
 
-
 def read_gmx_selected_ndx(file_path):
     res_list = []
     with open(file_path) as f:

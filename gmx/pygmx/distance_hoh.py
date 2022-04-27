@@ -10,7 +10,7 @@ import sys
 import time
 from rich.console import Console
 
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+sys.path.append('/home/wurp/PycharmProjects/BioUtil/tools')  # add project path to environment
 from run_mmpbsa import run_api
 from PDB.io.reader import structure_serialize
 from short_time_hoh import assign_hyhoh
@@ -48,7 +48,7 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         select_R_cmd = 'ri ' + str(R_idx[0]) + '-' + str(R_idx[1])
         select_L_cmd = 'ri ' + str(L_idx[0]) + '-' + str(L_idx[1])
         gmx.make_ndx(f=frame_sys_pdb, o=temp_ndx, input=(select_R_cmd, select_L_cmd,  # 19 20
-                                                     'name 19 r_p', 'name 20 l_p', 'q'))
+                                                         'name 19 r_p', 'name 20 l_p', 'q'))
 
         gmx.select(f=xtc, n=temp_ndx, b=i, e=i, s=tpr, seltype='res_com',
                    select='group Water and within 0.4 of group r_p and within 0.4 of group l_p', on=dsthoh_idx)
