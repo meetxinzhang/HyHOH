@@ -10,13 +10,13 @@
 def read_gmx_selected_ndx(file_path):
     res_list = []
     with open(file_path) as f:
-        line = f.readline().strip()  # 丢掉第一行
+        _ = f.readline().strip()  # 丢掉第一行
         line = f.readline().strip()
         while line:
-            linestr = line.split(" ")
+            linestr = line.split()
             res_list += linestr
             line = f.readline().strip()
-    res_list = list(map(int, res_list))
+    res_list = list(map(lambda x: int(x.strip()), res_list))
     return res_list
 
 
