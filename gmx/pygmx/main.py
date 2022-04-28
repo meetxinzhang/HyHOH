@@ -12,9 +12,7 @@
 """
 import os
 import sys
-import tools.branch_control as branch_control
-
-sys.path.append(branch_control.project_path)  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from distance_hoh import apply_distance
@@ -51,7 +49,7 @@ if __name__ == '__main__':
     fit_xtc = '../analysis_new10ns/fit_' + str(args.xtc).split('/')[-1]
     rmsd_xvg = '../analysis_new10ns/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
 
-    cs.log('Processing [blue]'+str(args.xtc)+'[/green]'+'\n')
+    cs.log('Processing [red]'+str(args.xtc)+'[/red]'+'\n')
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '
                '(Some time needed, visit local file: [red]gmx_wrapper.log[/red] to monitor realtime progress)',
