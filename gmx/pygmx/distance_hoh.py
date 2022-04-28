@@ -9,9 +9,7 @@ import os
 import sys
 import time
 from rich.console import Console
-import tools.branch_control as branch_control
-
-sys.path.append(branch_control.project_path)  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from run_mmpbsa import run_api
 from PDB.io.reader import structure_serialize
 from short_time_hoh import assign_hyhoh

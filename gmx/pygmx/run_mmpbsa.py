@@ -9,7 +9,6 @@
 import os
 import numpy as np
 from rich.console import Console
-import tools.branch_control as branch_control
 import gromacs as gmx
 
 flags = gmx.environment.flags
@@ -21,7 +20,7 @@ cs = Console()
 
 def run_api(dir, tpr, xtc, ndx, com, rec, lig, b, e, i):
     print('Workspace now: ', os.path, '\n')
-    command = branch_control.project_path + '/gmx/mmpbsa/gmx_mmpbsa_normal.sh' \
+    command = '/media/xin/WinData/ACS/github/BioUtil/gmx/mmpbsa/gmx_mmpbsa_normal.sh' \
               + ' -dir ' + dir \
               + ' -s ' + tpr \
               + ' -f ../' + xtc \
@@ -55,6 +54,5 @@ def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):
                         'ri ' + str(L_idx[0]) + '-' + str(L_idx[1]), 'name 20 ligand', 'q'))  # 20
     cs.log('gmx-trjconv by frames idx list...')
     gmx.trjconv(f=xtc, o=indexed_xtc, fr=frames_idx, n=index, input='1')
-    os.system('mkdir -p ' + str(fr_idx[0]) + '_' + str(fr_idx[-1]))
-    run_api(str(fr_idx[0]) + '_' + str(fr_idx[-1]), tpr, indexed_xtc, index, com='Protein', rec='receptor',
-            lig='ligand', b=0, e=10000, i=1)
+    os.system('mkdir -p '+str(fr_idx[0])+'_'+str(fr_idx[-1]))
+    run_api(str(fr_idx[0])+'_'+str(fr_idx[-1]), tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)
