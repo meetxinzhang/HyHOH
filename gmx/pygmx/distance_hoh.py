@@ -87,7 +87,7 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         gmx.convert_tpr(s=tpr, o=frame_tpr, n=temp_ndx, nsteps=-1, input='22')
 
         "generate short-term average pdb for show and check, can be deleted"
-        gmx.trjconv(f=xtc, s=tpr, o='test.pdb', b=i, e=i, n=temp_ndx, input='22')
+        gmx.trjconv(f=xtc, s=tpr, o=frame_pdb, b=i, e=i, n=temp_ndx, input='22')
 
         "make new index for short_tpr and short_xtc"
         select_RH_cmd = 'r ' + ' '.join(str(hoh) for hoh in RHOHs)
@@ -133,6 +133,7 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         os.system('rm -v ' + frame_xtc)
         # os.system('rm -v ' + frame_pdb)
         os.system('rm -v ' + rec_lig_ndx)
+        os.system('rm -v ' + dsthoh_idx)
 
     "deal with log"
     with open(log_file, 'a', encoding='utf-8') as fw:
