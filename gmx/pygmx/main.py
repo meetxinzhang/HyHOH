@@ -12,8 +12,9 @@
 """
 import os
 import sys
+import tools.branch_control as branch_control
 
-sys.path.append('/home/wurp/PycharmProjects/BioUtil')  # add project path to environment
+sys.path.append(branch_control.project_path)  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from distance_hoh import apply_distance
