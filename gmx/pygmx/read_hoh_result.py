@@ -19,7 +19,7 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        frame = int(file_path.split('/')[-2]) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -108,7 +108,7 @@ def plot_mmpbsa_curves(df):
     """mmpbsa"""
     # df = df.iloc[0:50, :]
     # x = df.idxmax.values.tolist()
-    df = df[df.index <= 2]
+    df = df[df.index <= 5]
     x = df.index.tolist()
 
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
