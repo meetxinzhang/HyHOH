@@ -10,8 +10,8 @@ import matplotlib
 import seaborn as sns
 
 from read_hoh_result import get_dataframe, entropy_cal
-matplotlib.rcParams['font.size'] = 15
-matplotlib.rcParams['font.family'] = 'Times New Roman'
+# matplotlib.rcParams['font.size'] = 15
+# matplotlib.rcParams['font.family'] = 'Times New Roman'
 # plt.style.use('science')
 from rich.console import Console
 cs = Console()
@@ -67,7 +67,7 @@ def plot_mmpbsa_curves(df):
     ax.plot(x, mm_small, label='MM/10', color='tab:cyan')
     ax.plot(x, pb_small, label='PB/10', color='tab:green')
     ax.plot(x, sa, label='SA', color='tab:pink')
-    ax.plot(x, entropy, label='-TdS', read_with_hoh_color='tab:orange')
+    ax.plot(x, entropy, label='-TdS')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Energy (kcal/mol)')
     ax.set_title('Normally MMPBSA')
@@ -125,11 +125,11 @@ if __name__ == '__main__':
     work_dir = sys.argv[1]
     mmpbsa_df = get_dataframe(work_dir)
     "call plot function"
-    # plot_mmpbsa_curves(mmpbsa_df)
+    plot_mmpbsa_curves(mmpbsa_df)
     # plot_heatmap(res_mm_df, selection='LAA')
 
     "save to excel"
     # mmpbsa_df.to_excel('6zer_hoh'+'.xlsx')
 
-    organize_in_time(mmpbsa_df)
+    # organize_in_time(mmpbsa_df)
 
