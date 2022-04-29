@@ -84,7 +84,8 @@ def apply_distance(tpr, xtc, R_idx, L_idx, times_idx, fr_per_ps=1, bond_d=3.3):
         cs.log("generate short-term xtc and sub-group tpr for mmpbsa", style=f'blue')
         gmx.trjconv(f=xtc, o=frame_xtc, b=i, e=i, n=temp_ndx, input='22')
 
-        gmx.convert_tpr(s=tpr, o=frame_tpr, n=temp_ndx, nsteps=-1, input='22')
+        # gmx.convert_tpr(s=tpr, o=frame_tpr, n=temp_ndx, nsteps=-1, input='22')
+        gmx.convert_tpr(s=tpr, o=frame_tpr, n=temp_ndx, input='22')
 
         "generate short-term average pdb for show and check, can be deleted"
         gmx.trjconv(f=xtc, s=tpr, o='test.pdb', b=i, e=i, n=temp_ndx, input='22')

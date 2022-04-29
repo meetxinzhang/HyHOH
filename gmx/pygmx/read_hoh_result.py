@@ -19,7 +19,9 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(file_path.split('/')[-2].split('_')[1]) / 1000  # if frame is actually then delete this line.
+        print(file_path)
+        # frame = int(file_path.split('/')[-2]) / 1000  # if frame is actually then delete this line.
+        # frame=""
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -30,7 +32,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    # frame = line.split()[0]
+                    frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -108,7 +110,7 @@ def plot_mmpbsa_curves(df):
     """mmpbsa"""
     # df = df.iloc[0:50, :]
     # x = df.idxmax.values.tolist()
-    df = df[df.index <= 2]
+    df = df[df.index <= 5]
     x = df.index.tolist()
 
     # y = np.squeeze(df[['Binding_DH']].values.tolist())

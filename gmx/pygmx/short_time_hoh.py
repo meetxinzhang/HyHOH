@@ -203,7 +203,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         cs.log("generate short-term xtc and sub-group tpr for mmpbsa", style=f'blue')
         # gmx.trjconv(f=xtc, o=short_xtc, b=start, e=end, n=temp_ndx, input='20')
         gmx.trjconv(f=xtc, o=short_xtc, fr=short_frame_idx, n=temp_ndx, input='20')
-        gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
+        # gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, nsteps=-1, input='20')
+        gmx.convert_tpr(s=tpr, o=short_tpr, n=temp_ndx, input='20')
         "generate short-term average pdb for show and check, can be deleted"
         # gmx.rmsf(s=tpr, f=xtc, ox=short_ave_pdb, b=start, e=end, n=temp_ndx, input='20')
 
