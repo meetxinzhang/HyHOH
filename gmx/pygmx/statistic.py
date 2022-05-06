@@ -29,7 +29,7 @@ antibodies = [
     '14_7E23',
     '15_7JMO',
     # '16_7K8M',
-    '17_6W41',
+    # '17_6W41',
     '18_6YM0',
     '19_6ZER',
     '20_7C01',
@@ -44,7 +44,7 @@ def statistic_all():
     from read_hoh_result import get_dataframe, entropy_cal
     for ab in antibodies:
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                   + ab + '/MD/'
+                   + ab + '/MD_10ns/dsthoh/'
         mmpbsa_df = get_dataframe(work_dir)
         # mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
 
@@ -124,6 +124,6 @@ if __name__ == '__main__':
     # df = statistic_in_sec()
     # print(df)
     # print(calc_pearson(np.squeeze(df[1].values.tolist())))
-    # results_list = statistic_all()
-    results_list = statistic_multi_MD()
+    results_list = statistic_all()
+    # results_list = statistic_multi_MD()
     print(calc_pearson(results_list))
