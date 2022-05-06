@@ -19,7 +19,7 @@ cs = Console()
 
 def read_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(file_path.split('/')[-2]) / 1000  # if frame is actually then delete this line.
+        # frame = int(file_path.split('/')[-2]) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -30,7 +30,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    # frame = line.split()[0]
+                    frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -41,8 +41,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        # index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
-        index.append(frame)
+        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+        # index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
