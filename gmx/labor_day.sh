@@ -29,8 +29,8 @@ for anti in "${anti_list[@]}"
 do
     this_dir=$work_dir/$anti/MD_10ns
     cd "$this_dir"
-    # mkdir -p dsthoh
-    # cd dsthoh
+    # mkdir -p most
+    # cd most
     # python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
     # "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm most -rm normal -t 1000 5000 20 1
     mkdir -p 1-5-20
