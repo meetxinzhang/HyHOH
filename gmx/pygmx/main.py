@@ -75,7 +75,7 @@ if __name__ == '__main__':
         # frame_times = mf_sub_rd.index.tolist()
         # inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
         # frame_times = mf_df.index.tolist()[::int(inner)]
-        frame_times = mf_df.index.tolist()[::10]
+        frame_times = mf_df.index.tolist()[::20]
 
         cs.print('most frequency frames:\n', mf_df)
         cs.print('Subsample for calculating:\n', frame_times)
