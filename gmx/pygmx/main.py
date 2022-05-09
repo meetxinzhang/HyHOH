@@ -12,8 +12,7 @@
 """
 import os
 import sys
-
-sys.path.append('/home/wurp/PycharmProjects/BioUtil')  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from distance_hoh import apply_distance
@@ -51,6 +50,7 @@ if __name__ == '__main__':
     rmsd_xvg = '../analysis_new10ns/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
 
     cs.log('Processing [red]' + str(args.xtc) + '[/red]' + '\n')
+
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '
                '(Some time needed, visit local file: [red]gmx_wrapper.log[/red] to monitor realtime progress)',
@@ -74,8 +74,9 @@ if __name__ == '__main__':
         mf_df = get_mostfreq_df(rmsd_xvg)
         # mf_sub_rd = mf_df.sample(n=50).sort_index()
         # frame_times = mf_sub_rd.index.tolist()
-        inner = len(mf_df) / 50
-        frame_times = mf_df.index.tolist()[::int(inner)]
+        # inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
+        # frame_times = mf_df.index.tolist()[::int(inner)]
+        frame_times = mf_df.index.tolist()[::20]
 
         cs.print('most frequency frames:\n', mf_df)
         cs.print('Subsample for calculating:\n', frame_times)
