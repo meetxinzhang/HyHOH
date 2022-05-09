@@ -29,13 +29,13 @@ for anti in "${anti_list[@]}"
 do
     this_dir=$work_dir/$anti/MD_10ns
     cd "$this_dir"
-    # mkdir -p most
-    # cd most
-    # python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
-    # "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm most -rm normal -t 1000 5000 20 1
-    mkdir -p 1-5-20
-    cd 1-5-20
+    mkdir -p 1-10-most
+    cd 1-10-most
     python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
-    "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm normal -rm normal -t 1000 5000 20 1
+    "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm most -rm normal -t 1000 10000 20 1
+    # mkdir -p 1-5-20
+    # cd 1-5-20
+    # python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
+    # "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm normal -rm normal -t 1000 5000 20 1
     cnt=$cnt+1
 done
