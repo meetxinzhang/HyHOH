@@ -49,7 +49,8 @@ if __name__ == '__main__':
     fit_xtc = '../analysis_new10ns/fit_' + str(args.xtc).split('/')[-1]
     rmsd_xvg = '../analysis_new10ns/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
 
-    cs.log('Processing [red]'+str(args.xtc)+'[/red]'+'\n')
+    cs.log('Processing [red]' + str(args.xtc) + '[/red]' + '\n')
+
     if not os.path.exists(fit_xtc):
         cs.log('starting gmx-trjconv to deal with PBC ...\n '
                '(Some time needed, visit local file: [red]gmx_wrapper.log[/red] to monitor realtime progress)',
