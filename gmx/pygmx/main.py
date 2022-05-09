@@ -73,9 +73,9 @@ if __name__ == '__main__':
         mf_df = get_mostfreq_df(rmsd_xvg)
         # mf_sub_rd = mf_df.sample(n=50).sort_index()
         # frame_times = mf_sub_rd.index.tolist()
-        # inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
-        # frame_times = mf_df.index.tolist()[::int(inner)]
-        frame_times = mf_df.index.tolist()[::20]
+        inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
+        frame_times = mf_df.index.tolist()[::int(inner)]
+        # frame_times = mf_df.index.tolist()[::20]
 
         cs.print('most frequency frames:\n', mf_df)
         cs.print('Subsample for calculating:\n', frame_times)
