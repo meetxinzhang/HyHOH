@@ -44,9 +44,10 @@ def statistic_all():
     from read_hoh_result import get_dataframe, entropy_cal
     for ab in antibodies:
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                   + ab + '/MD_10ns/most/'
+                   + ab + '/MD_10ns/1-5-20/'
         mmpbsa_df = get_dataframe(work_dir)
-        # mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
+        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 2.0]
+        mmpbsa_df = mmpbsa_df[mmpbsa_df.index >= 1.0]
 
         # work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
         #                + ab + '/1-10-200-7.5-hy/'

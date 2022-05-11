@@ -42,12 +42,12 @@ main_log = 'main.log'
 if __name__ == '__main__':
     "preprocess pbc at extra dir"
     args = parser.parse_args()
-    os.system('mkdir -p ../analysis_new10ns')
-    whole_xtc = '../analysis_new10ns/whole.xtc'
-    nojump_xtc = '../analysis_new10ns/nojump.xtc'
-    mol_xtc = '../analysis_new10ns/mol_center.xtc'
-    fit_xtc = '../analysis_new10ns/fit_' + str(args.xtc).split('/')[-1]
-    rmsd_xvg = '../analysis_new10ns/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
+    os.system('mkdir -p ../analysis_1_10')
+    whole_xtc = '../analysis_1_10/whole.xtc'
+    nojump_xtc = '../analysis_1_10/nojump.xtc'
+    mol_xtc = '../analysis_1_10/mol_center.xtc'
+    fit_xtc = '../analysis_1_10/fit_' + str(args.xtc).split('/')[-1]
+    rmsd_xvg = '../analysis_1_10/rmsd_' + str(args.xtc).split('/')[-1].replace('.xtc', '') + '.xvg'
 
     cs.log('Processing [red]' + str(args.xtc) + '[/red]' + '\n')
 
