@@ -12,41 +12,42 @@ from scipy.stats import pearsonr
 from results import affinity
 from statistic_plot import log_list
 
-antibodies = [
-    # '7KFY',
-    # '7KFX',
-    # '7KFV',
-    # '7KFW',
-    # '7JVA',
-    # '7KGK',
-    # # '6LZG'
-    # '6YZ5',
-    # '6ZBP',
-    # '7B27',
-    # '7BWJ',
-    '12_7CH4',
-    '13_7CH5',
-    '14_7E23',
-    '15_7JMO',
-    # '16_7K8M',
-    # '17_6W41',
-    '18_6YM0',
-    '19_6ZER',
-    '20_7C01',
-    '21_7DEO',
-    '22_7MZF',
-    '23_7DPM'
-]
+# antibodies = [
+#     # '7KFY',
+#     # '7KFX',
+#     # '7KFV',
+#     # '7KFW',
+#     # '7JVA',
+#     # '7KGK',
+#     # # '6LZG'
+#     # '6YZ5',
+#     # '6ZBP',
+#     # '7B27',
+#     # '7BWJ',
+#     '12_7CH4',
+#     '13_7CH5',
+#     '14_7E23',
+#     '15_7JMO',
+#     # '16_7K8M',
+#     # '17_6W41',
+#     '18_6YM0',
+#     '19_6ZER',
+#     '20_7C01',
+#     '21_7DEO',
+#     '22_7MZF',
+#     '23_7DPM'
+# ]
+antibodies = ['1_7KFY', '2_7KFX', '3_7KFV', '4_7KFW', '5_7JVA', '6_7KGK', '7_6LZG', '8_6YZ5', '9_6ZBP', '10_7B27', '11_7BWJ']
 
 
 def statistic_all():
     results = []
     from read_hoh_result import get_dataframe, entropy_cal
     for ab in antibodies:
-        work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                   + ab + '/MD_10ns/most/'
+        work_dir = '/home/wurp/workspace/antibody/SARS-COV-2/' \
+                   + ab + '/MD_10ns/1-5-20/'
         mmpbsa_df = get_dataframe(work_dir)
-        # mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
+        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
 
         # work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
         #                + ab + '/1-10-200-7.5-hy/'
@@ -58,7 +59,7 @@ def statistic_all():
         entropy = entropy_cal(mm)[-1]
         dE = y.mean()
         dG = dE + entropy
-
+        print('[dE, -TdS, dG] = [%f  %f   %f]\n' % (dE, entropy, dG))
         results.append(dG)
     return results
 
