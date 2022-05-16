@@ -36,7 +36,7 @@ def mostfreq_boundaries(df, columns):
     # extract mostFre frames
     sum_forward_2 = freq.rolling(window=2).sum()  # roll forward, 2 domain last 0.02nm
     rmsd_max = sum_forward_2.idxmax()
-    return float(rmsd_max-0.02), float(rmsd_max)
+    return float(rmsd_max-0.01), float(rmsd_max+0.01)  # rmsd_max+0.01 because of round down
     # win=3, max-0.02, max
 
 

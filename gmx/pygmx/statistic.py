@@ -28,8 +28,8 @@ antibodies = [
     '13_7CH5',
     '14_7E23',
     '15_7JMO',
-    # '16_7K8M',
-    # '17_6W41',
+    '16_7K8M',
+    '17_6W41',
     '18_6YM0',
     '19_6ZER',
     '20_7C01',
@@ -44,9 +44,9 @@ def statistic_all():
     from read_hoh_result import get_dataframe, entropy_cal
     for ab in antibodies:
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                   + ab + '/MD_10ns/1-5-20/'
+                   + ab + '/MD_10ns/1-10-most/'
         mmpbsa_df = get_dataframe(work_dir)
-        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 2.0]
+        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
         mmpbsa_df = mmpbsa_df[mmpbsa_df.index >= 1.0]
 
         # work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
