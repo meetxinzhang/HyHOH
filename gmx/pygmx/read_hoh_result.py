@@ -138,12 +138,12 @@ def plot_mmpbsa_curves(df):
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
-    ax1.plot(x, y, label='SUM', color='tab:red')
-    ax1.plot(x, mm_pro_small, label='MM_Pro/5', color='tab:cyan')
-    ax1.plot(x, mm_sol, label='MM_SOL', color='tab:blue')
-    ax1.plot(x, pb_small, label='PB/10', color='tab:green')
-    ax1.plot(x, sa, label='SA', color='tab:pink')
-    ax1.plot(x, entropy, label='-TdS', color='tab:orange')
+    ax1.plot_curve(x, y, label='SUM', color='tab:red')
+    ax1.plot_curve(x, mm_pro_small, label='MM_Pro/5', color='tab:cyan')
+    ax1.plot_curve(x, mm_sol, label='MM_SOL', color='tab:blue')
+    ax1.plot_curve(x, pb_small, label='PB/10', color='tab:green')
+    ax1.plot_curve(x, sa, label='SA', color='tab:pink')
+    ax1.plot_curve(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('Time (ps)')
     ax1.set_ylabel('Energy (kcal/mol)')
     ax1.set_title('MMPBSA with interfacial waters')

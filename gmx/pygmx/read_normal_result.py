@@ -63,11 +63,11 @@ def plot_mmpbsa_curves(df):
 
     "plot mmpbsa"
     fig, ax = plt.subplots()
-    ax.plot(x, y, label='SUM', color='tab:red')
-    ax.plot(x, mm_small, label='MM/10', color='tab:cyan')
-    ax.plot(x, pb_small, label='PB/10', color='tab:green')
-    ax.plot(x, sa, label='SA', color='tab:pink')
-    ax.plot(x, entropy, label='-TdS')
+    ax.plot_curve(x, y, label='SUM', color='tab:red')
+    ax.plot_curve(x, mm_small, label='MM/10', color='tab:cyan')
+    ax.plot_curve(x, pb_small, label='PB/10', color='tab:green')
+    ax.plot_curve(x, sa, label='SA', color='tab:pink')
+    ax.plot_curve(x, entropy, label='-TdS')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Energy (kcal/mol)')
     ax.set_title('Normally MMPBSA')

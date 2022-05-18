@@ -44,23 +44,20 @@ def alignment(affinity, free_energy):
 # plt.title("K-line of (restrained dG) - (relaxed dG)")
 
 # TODO: contact with statistics
-if __name__ == '__main__':
-    aff, free = alignment(affinity, relax_most)
-    aff2kcal = log_list(aff)
-    print(aff, '\n', free, '\n', aff2kcal)
+def plot_curve(aff, free):
 
     # correlation coefficient --------------------------------
-    print('---------\n', pearsonr(aff2kcal, free))
+    print('---------\n', pearsonr(aff, free))
 
     # fitting-------------------------------------------------
-    para = np.polyfit(aff2kcal, free, 1)
+    para = np.polyfit(aff, free, 1)
     func = np.poly1d(para)
     print('\nfitting func: ', func)
     aff_plot = np.arange(-1, 5, 0.1)
     curve = plt.plot(aff_plot, func(aff_plot), 'r', label='Polyfit')
 
     # # plot points ----------------------------------------------
-    plot1 = plt.plot(aff2kcal, free, '.', color='b', label='Original')
+    plot1 = plt.plot(aff, free, '.', color='b', label='Original')
     # plot2 = plt.plot(aff2kcal, free_r, '*', color='k', label='restrain')
 
     plt.xlabel('Affinity ln (nM)')
@@ -68,3 +65,10 @@ if __name__ == '__main__':
     plt.legend(loc=4)  # 指定legend的位置
     plt.title('Polyfitting results')
     plt.show()
+
+
+if __name__ == '__main__':
+    aff, free = alignment(affinity, relax_most)
+    aff2kcal = log_list(aff)
+    print(aff, '\n', free, '\n', aff2kcal)
+    plot_curve(aff, free)

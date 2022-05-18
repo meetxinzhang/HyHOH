@@ -42,7 +42,7 @@ def plot_curves(PDB_ID, Y):
     # x_smooth = np.linspace(1000, 10000, num=100)  # 300 represents number of points to make between T.min and T.max
     # x_smooth = range(1000, 10000, 200)
     for (id, y) in zip(PDB_ID, Y):
-        ax.plot(time_std, y, label=id)
+        ax.plot_curve(time_std, y, label=id)
 
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Water Number')

@@ -79,4 +79,4 @@ def parser_reader(file_path):
     return np.asarray(primary), np.asarray(tertiary), length
 
 
-parser_reader(atom_files + "7c8d_fixed_L452R_E484Q.pdb")
+parser_reader("/home/xin/Downloads/4hkz.pdb")

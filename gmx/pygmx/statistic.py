@@ -10,7 +10,7 @@ import pandas as pd
 import os
 from scipy.stats import pearsonr
 from results import affinity
-from statistic_plot import log_list
+from statistic_plot import log_list, plot_curve
 
 antibodies = [
     # '7KFY',
@@ -29,12 +29,12 @@ antibodies = [
     '14_7E23',
     '15_7JMO',
     '16_7K8M',
-    '17_6W41',
+    # '17_6W41',
     '18_6YM0',
     '19_6ZER',
     '20_7C01',
     '21_7DEO',
-    '22_7MZF',
+    # '22_7MZF',
     '23_7DPM'
 ]
 
@@ -44,9 +44,9 @@ def statistic_all():
     from read_hoh_result import get_dataframe, entropy_cal
     for ab in antibodies:
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                   + ab + '/MD_10ns/1-10-most/'
+                   + ab + '/MD_10ns/1-10-most-final/'
         mmpbsa_df = get_dataframe(work_dir)
-        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 5.0]
+        mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 10.0]
         mmpbsa_df = mmpbsa_df[mmpbsa_df.index >= 1.0]
 
         # work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
@@ -56,7 +56,8 @@ def statistic_all():
 
         y = np.squeeze(mmpbsa_df[['Binding_DH']].values.tolist())
         mm = np.squeeze(mmpbsa_df[['MM_DH']].values.tolist())
-        entropy = entropy_cal(mm)[-1]
+        inner = len(mm)/10
+        entropy = entropy_cal(list(mm)[::int(inner)])[-1]
         dE = y.mean()
         dG = dE + entropy
 
@@ -127,4 +128,7 @@ if __name__ == '__main__':
     # print(calc_pearson(np.squeeze(df[1].values.tolist())))
     results_list = statistic_all()
     # results_list = statistic_multi_MD()
-    print(calc_pearson(results_list))
+    # print(calc_pearson(results_list))
+    plot_curve(log_list([affinity[str(ab).split('_')[1]] for ab in antibodies]), results_list)
+
+
