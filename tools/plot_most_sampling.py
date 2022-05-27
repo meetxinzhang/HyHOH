@@ -6,9 +6,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.rcParams['font.size'] = 20
+# matplotlib.rcParams['font.size'] = 22
 matplotlib.rcParams['font.family'] = 'Arial'
-# plt.style.use('science')
 
 
 def read_xvg(filepath):
@@ -49,35 +48,43 @@ def read_main_log(filepath):
     return most, most_intervaled
 
 
-def plot_curve_and_points(x, y, points):
+def plot_curve_and_points(line, points):
+    x = line.index.tolist()
+    y = np.squeeze(line[['RMSD(nm)']].values.tolist())
+    point_x = points.index.tolist()
+    point_y = np.squeeze(points[['Sampling']].values.tolist())
+
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    ax.plot(x, y, label='RMSD', color='tab:red')
+    ax.plot(x, y, label='RMSD', color='k', linewidth=0.5)
 
-    ax.plot(points, [0]*len(points), '.', color='b', label='Sampling index')
+    ax.plot(point_x, point_y, '.', color='r', label='Sampling', linewidth=0.001)
 
-    # ax.set_xlabel('Time (ps)', size=44)
-    # ax.set_ylabel('RMSD (nm)', size=44)
+    ax.set_xlabel('Time (ps)', size=18)
+    ax.set_ylabel('RMSD (nm)', size=18)
     plt.legend(loc=0)  # 指定legend的位置
-    ax.set_title('RMSD Curve of Omicron spike-S309-SOPP3')
+    # ax.set_title('RMSD Curve of Omicron spike-S309-SOPP3')
 
-    # plt.xticks(fontsize=33)
-    # plt.yticks(fontsize=33)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
 
 
 if __name__ == '__main__':
-    path_xvg = '/media/xin/Raid0/ACS/gmx/interaction/15_7JMO/MD_10ns/analysis_1_10/rmsd_md_0.xvg'
-    path_main_log = '/media/xin/Raid0/ACS/gmx/interaction/15_7JMO/MD_10ns/1-10-most/main.log'
+    path_xvg = '/media/xin/Raid0/ACS/gmx/interaction/19_6ZER/MD_10ns/analysis_1_10/rmsd_md_0.xvg'
+    path_main_log = '/media/xin/Raid0/ACS/gmx/interaction/19_6ZER/MD_10ns/1-10-most/main.log'
 
-    df = read_xvg(path_xvg)
-    x = df.index.tolist()
-    rmsd = np.squeeze(df[['RMSD(nm)']].values.tolist())
-    # "save to excel"
-    # df.to_excel('RMSD_Omicron+S309+SOPP3' + '.xlsx')
+    rmsd_df = read_xvg(path_xvg)
 
     most, _ = read_main_log(path_main_log)
+    y = [rmsd_df.loc[e, 'RMSD(nm)'] for e in most]
+    most_df = pd.DataFrame(data=y, index=most, columns=['Sampling'])
 
-    plot_curve_and_points(x=x, y=rmsd, points=most)
+    # "save to excel"
+    rmsd_df.to_excel('19_6ZER_rmsd_md_0' + '.xlsx')
+    most_df.to_excel('19_6ZER_most_sampling'+'.xlsx')
+    print(most_df)
+
+    plot_curve_and_points(line=rmsd_df, points=most_df)

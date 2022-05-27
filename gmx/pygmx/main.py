@@ -68,22 +68,25 @@ if __name__ == '__main__':
         os.system('rm -v ' + mol_xtc)
 
     if args.fm == 'most':
-        "most frequency"
-        cs.log('calculating most frames...', style=f'green')
-        gmx.rms(s=args.tpr, f=fit_xtc, b=args.t[0], o=rmsd_xvg, input=('Protein', 'Protein'))
-        mf_df = get_mostfreq_df(rmsd_xvg)
-        # mf_sub_rd = mf_df.sample(n=50).sort_index()
-        # frame_times = mf_sub_rd.index.tolist()
-        inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
-        frame_times = mf_df.index.tolist()[::int(inner)]
-        # frame_times = mf_df.index.tolist()[::20]
-
-        cs.print('most frequency frames:\n', mf_df)
-        cs.print('Subsample for calculating:\n', frame_times)
-        cs.print('\nTotal ', len(frame_times), ' frames selected by random for calculation')
-        with open(main_log, 'w') as f:
-            f.write('most frequency frames:\n' + mf_df.to_string())
-            f.writelines('\nselected by random for calculation:\n' + '\n'.join(str(e) for e in frame_times))
+        # "most frequency"
+        # cs.log('calculating most frames...', style=f'green')
+        # gmx.rms(s=args.tpr, f=fit_xtc, b=args.t[0], o=rmsd_xvg, input=('Protein', 'Protein'))
+        # mf_df = get_mostfreq_df(rmsd_xvg)
+        # # mf_sub_rd = mf_df.sample(n=50).sort_index()
+        # # frame_times = mf_sub_rd.index.tolist()
+        # inner = len(mf_df) / 50  # 50 indicates the total number of frames that will be calculated
+        # frame_times = mf_df.index.tolist()[::int(inner)]
+        # # frame_times = mf_df.index.tolist()[::20]
+        #
+        # cs.print('most frequency frames:\n', mf_df)
+        # cs.print('Subsample for calculating:\n', frame_times)
+        # cs.print('\nTotal ', len(frame_times), ' frames selected by random for calculation')
+        # with open(main_log, 'w') as f:
+        #     f.write('most frequency frames:\n' + mf_df.to_string())
+        #     f.writelines('\nselected by random for calculation:\n' + '\n'.join(str(e) for e in frame_times))
+        # --------------------- 20220527 most-hyhoh-50inner -----------------------------
+        from tools.plot_most_sampling import read_main_log
+        _, frame_times = read_main_log(str(args.tpr).replace('md_0.tpr', '1-10-most-final/main.log'))
         frame_idx = [float(i) + 1 for i in frame_times]  # time start with 0 while frame start with 1
     elif args.fm == 'average':
         # TODO command here
@@ -96,7 +99,7 @@ if __name__ == '__main__':
 
     if args.rm == 'hyhoh':
         apply_windows(fit_xtc, args.tpr, args.ri, args.li, frames_idx=frame_idx, fr_per_ps=args.t[3],
-                      win_params=[int(args.t[0]) - 5, int(args.t[1]) - 5, 50, 50], num_hyHOH=70, thr=0.35, bond_d=2.07)
+                      win_params=[int(args.t[0]) - 5, int(args.t[1]) - 5, 20, 20], num_hyHOH=70, thr=0.35, bond_d=3.03)
 
     elif args.rm == 'normal':
         mmpbsa(tpr=args.tpr, xtc=fit_xtc, R_idx=args.ri, L_idx=args.li, fr_idx=frame_idx)

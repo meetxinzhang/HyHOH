@@ -33,6 +33,10 @@ def mostfreq_boundaries(df, columns):
     copy = df
     copy[columns] = copy[columns].apply(lambda x: float(int(x*100)/100))  # get round down
     freq = copy.apply(pd.value_counts).sort_index()  # RMSD_Values, frequency
+
+    # "save to excel"
+    # freq.to_excel('19_6ZER_most_histogram' + '.xlsx')
+
     # extract mostFre frames
     sum_forward_2 = freq.rolling(window=2).sum()  # roll forward, 2 domain last 0.02nm
     rmsd_max = sum_forward_2.idxmax()
@@ -55,7 +59,7 @@ def get_mostfreq_df(xvg):
 
 
 if __name__ == "__main__":
-    xvg = sys.argv[1]
+    xvg = '/media/xin/Raid0/ACS/gmx/interaction/19_6ZER/MD_10ns/analysis_1_10/rmsd_md_0.xvg'
     dataframe = read_xvg(xvg)
 
     rd_min, rd_max = mostfreq_boundaries(dataframe, 'RMSD(nm)')

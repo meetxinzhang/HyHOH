@@ -129,8 +129,18 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.07):
 def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, thr=0.4, bond_d=2.07):
     [begin, final, win_len, win_stride] = win_params
 
-    for start in range(begin, final, win_stride):
+    # 20220527 windows expending at frame_idx
+    for idx in frames_idx:
+        start = float(idx)/fr_per_ps - int(win_len/2)
         end = start + win_len
+        if start < begin:
+            start = begin
+        if end > final:
+            end = final
+    # original conv
+    # for start in range(begin, final, win_stride):
+    #     end = start + win_len
+
         cs.rule('Processing window: '+str(start)+'-'+str(end)+' ps, '+str(start*fr_per_ps)+'-'+str(end*fr_per_ps)+' f')
         # TODO: rerun control
         # if start <= 8000:
@@ -145,20 +155,25 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
         # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
-        "Determines whether to perform this window"
-        fr_idx = []
-        for idx in frames_idx:
-            if start <= float(idx)/fr_per_ps < end:
-                fr_idx.append(float(idx))
-        if len(fr_idx) == 0:
-            cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
-            continue
-        else:
-            with open(short_frame_idx, 'w') as f:
-                f.writelines('[ frames ]\n')
-                f.writelines('\n'.join([str(e) for e in fr_idx]))
-                f.writelines('\n')
-                cs.print('Frames index for calculating:\n', np.array(fr_idx))
+        # "Determines whether to perform this window"
+        # fr_idx = []
+        # for idx in frames_idx:
+        #     if start <= float(idx)/fr_per_ps <= end:
+        #         fr_idx.append(float(idx))
+        # if len(fr_idx) == 0:
+        #     cs.print('No frames located in this window!!!!!, skip it.', style=f'red')
+        #     continue
+        # else:
+        #     with open(short_frame_idx, 'w') as f:
+        #         f.writelines('[ frames ]\n')
+        #         f.writelines('\n'.join([str(e) for e in fr_idx]))
+        #         f.writelines('\n')
+        #         cs.print('Frames index for calculating:\n', np.array(fr_idx))
+        with open(short_frame_idx, 'w') as f:
+            f.writelines('[ frames ]\n')
+            f.writelines(str(idx))
+            f.writelines('\n')
+            cs.print('Frames index for calculating:\n', idx)
 
         cs.log('Generate temp files ...', style=f'blue')
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
@@ -174,7 +189,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
             os.system('rm -v ' + str(start) + '_' + str(end) + '*')
             continue
         "get heavy Atom object of R, L and waters. See this_project/PDB.io.reader and Atom class for more details"
-        protein_atoms, waters = structure_serialize(temp_ave_pdb, ['N', 'C', 'O', 'H'])
+        protein_atoms, waters = structure_serialize(temp_ave_pdb, ['N', 'C', 'O'])
         "get ice object"
         ices = [ice for ice in waters if ice.res_seq in ice_idx]
         "assign hydration HOH to R, L according to calculated nearest distance from R, L to hyHOHs, respectively"
@@ -245,7 +260,8 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         "deal with log and temp intermediate files 1"
         with open(log_file, 'a', encoding='utf-8') as fw:
             fw.writelines(short_ndx + ': ' + str(len(RHOHs)) + ', ' + str(len(LHOHs)) + '\n' +
-                          '\n'.join([str(e) for e in fr_idx]) + '\n' +
+                          # '\n'.join([str(e) for e in fr_idx]) + '\n' +
+                          str(idx) + '\n' +
                           '  LHOHs: ' + select_LH_cmd + '\n' +
                           '  RHOHs: ' + select_RH_cmd + '\n')
         os.system('rm -v ' + temp_ndx)
