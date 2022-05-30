@@ -24,8 +24,8 @@ antibodies = [
     # '6ZBP',
     # '7B27',
     # '7BWJ',
-    '12_7CH4',
-    '13_7CH5',
+    # '12_7CH4',
+    # '13_7CH5',
     '14_7E23',
     '15_7JMO',
     '16_7K8M',
@@ -34,7 +34,7 @@ antibodies = [
     '19_6ZER',
     '20_7C01',
     '21_7DEO',
-    # '22_7MZF',
+    '22_7MZF',
     '23_7DPM'
 ]
 
@@ -49,12 +49,13 @@ def statistic_all():
         mmpbsa_df = mmpbsa_df[mmpbsa_df.index <= 10.0]
         mmpbsa_df = mmpbsa_df[mmpbsa_df.index >= 1.0]
 
-        # work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
-        #                + ab + '/1-10-200-7.5-hy/'
-        # mmpbsa_df_hoh = get_dataframe(work_dir_hoh)
-        # mmpbsa_df_hoh = mmpbsa_df_hoh[mmpbsa_df_hoh.index <= 5.0]
+        work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
+                       + ab + '/MD_10ns/1-5-20/'
+        mmpbsa_df_hoh = get_dataframe(work_dir_hoh)
+        mmpbsa_df_hoh = mmpbsa_df_hoh[mmpbsa_df_hoh.index <= 10.0]
+        mmpbsa_df_hoh = mmpbsa_df_hoh[mmpbsa_df_hoh.index >= 1.0]
 
-        y = np.squeeze(mmpbsa_df[['Binding_DH']].values.tolist())
+        y = np.squeeze(mmpbsa_df_hoh[['Binding_DH']].values.tolist())
         mm = np.squeeze(mmpbsa_df[['MM_DH']].values.tolist())
         inner = len(mm)/10
         entropy = entropy_cal(list(mm)[::int(inner)])[-1]
