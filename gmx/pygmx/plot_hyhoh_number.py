@@ -12,7 +12,6 @@ import pandas as pd
 import sys
 import os
 import seaborn as sns
-from scipy.interpolate import make_interp_spline
 matplotlib.rcParams['font.size'] = 20
 matplotlib.rcParams['font.family'] = 'Times New Roman'
 
@@ -26,8 +25,8 @@ def read_aw_log(filename):
     with open(filename) as f:
         lines = f.readlines()
         for i in range(len(lines) - 1):
-            if not lines[i].startswith(' '):
-                t = lines[i].split('_')[0]
+            if not lines[i].startswith(' ') and not lines[i].contains(':'):
+                t = lines[i].strip()
                 L_dict[t] = lines[i + 1].split()[2:]
                 R_dict[t] = lines[i + 2].split()[2:]
                 n_dict[t] = len(L_dict[t]) + len(R_dict[t])
