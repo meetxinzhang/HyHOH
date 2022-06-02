@@ -53,6 +53,6 @@ def mmpbsa(xtc, tpr, R_idx, L_idx, fr_idx):
                  input=('ri ' + str(R_idx[0]) + '-' + str(R_idx[1]), 'name 19 receptor',  # 19
                         'ri ' + str(L_idx[0]) + '-' + str(L_idx[1]), 'name 20 ligand', 'q'))  # 20
     cs.log('gmx-trjconv by frames idx list...')
-    gmx.trjconv(f=xtc, o=indexed_xtc, fr=frames_idx, n=index, input='1')
+    gmx.trjconv(f=xtc, o=indexed_xtc, fr=frames_idx, n=index, input='1')  # only protein
     os.system('mkdir -p '+str(fr_idx[0])+'_'+str(fr_idx[-1]))
     run_api(str(fr_idx[0])+'_'+str(fr_idx[-1]), tpr, indexed_xtc, index, com='Protein', rec='receptor', lig='ligand', b=0, e=10000, i=1)

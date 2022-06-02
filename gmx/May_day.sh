@@ -47,7 +47,7 @@ do
     # cd most-hyhoh-50inner
     # python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
     # "${ri_left[$cnt]}" "${ri_right[$cnt]}" -li "${li_left[$cnt]}" "${li_right[$cnt]}" -fm most -rm hyhoh -t 1000 10000 20 1
-    ############# 20200530
+    ############# 20200530 following rp 1-10-200 18-23
     mkdir -p 1-10-200-normal
     cd 1-10-200-normal
     python $script_dir/main.py -tpr "$this_dir"/md_0.tpr -xtc "$this_dir"/md_0.xtc -ri \
