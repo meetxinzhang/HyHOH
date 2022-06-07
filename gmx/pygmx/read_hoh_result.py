@@ -107,9 +107,10 @@ def organize_in_time_hoh(df):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    # df = df.iloc[0:50, :]
+    df = df.iloc[:, :]
     # x = df.idxmax.values.tolist()
-    df = df[df.index <= 5]
+    # df = df[df.index <= 10.0]
+    # df = df[df.index >= 1.0]
     x = df.index.tolist()
 
     # y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -122,7 +123,7 @@ def plot_mmpbsa_curves(df):
     entropy = entropy_cal(mm_pro)
     entropy_hoh = entropy_cal(mm_sol)
     y = mm_pro + mm_sol + pb + sa
-    mm_pro_small = [e / 5 for e in mm_pro]
+    mm_pro_small = [e / 10 for e in mm_pro]
     pb_small = [e / 10 for e in pb]
     "HOH"
     # rHOH_num = np.repeat(rHOH_num, 3)
@@ -138,12 +139,12 @@ def plot_mmpbsa_curves(df):
 
     "plot mmpbsa"
     fig, ax1 = plt.subplots()
-    ax1.plot_curve_and_points(x, y, label='SUM', color='tab:red')
-    ax1.plot_curve_and_points(x, mm_pro_small, label='MM_Pro/5', color='tab:cyan')
-    ax1.plot_curve_and_points(x, mm_sol, label='MM_SOL', color='tab:blue')
-    ax1.plot_curve_and_points(x, pb_small, label='PB/10', color='tab:green')
-    ax1.plot_curve_and_points(x, sa, label='SA', color='tab:pink')
-    ax1.plot_curve_and_points(x, entropy, label='-TdS', color='tab:orange')
+    ax1.plot(x, y, label='SUM', color='tab:red')
+    ax1.plot(x, mm_pro_small, label='MM_Pro/5', color='tab:cyan')
+    ax1.plot(x, mm_sol, label='MM_SOL', color='tab:blue')
+    ax1.plot(x, pb_small, label='PB/10', color='tab:green')
+    ax1.plot(x, sa, label='SA', color='tab:pink')
+    ax1.plot(x, entropy, label='-TdS', color='tab:orange')
     ax1.set_xlabel('Time (ps)')
     ax1.set_ylabel('Energy (kcal/mol)')
     ax1.set_title('MMPBSA with interfacial waters')

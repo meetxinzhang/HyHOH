@@ -49,15 +49,16 @@ def organize_in_time(df):
 
 def plot_mmpbsa_curves(df):
     """mmpbsa"""
-    # df = df.iloc[0:50, :]
+    # df = df[df.index >= 1.0]
+    # df = df.iloc[18:, :]
     x = df.index.tolist()
-    # y = np.squeeze(df[['Binding_DH']].values.tolist())
+    y = np.squeeze(df[['Binding_DH']].values.tolist())
     mm = np.squeeze(df[['MM_DH']].values.tolist())
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
     entropy = entropy_cal(mm)
-    y = mm + pb + sa
+    # y = mm + pb + sa
     mm_small = [e/10 for e in mm]
     pb_small = [e/10 for e in pb]
 
