@@ -12,8 +12,49 @@ import pandas as pd
 import sys
 import os
 import seaborn as sns
+
 matplotlib.rcParams['font.size'] = 20
 matplotlib.rcParams['font.family'] = 'Times New Roman'
+
+antibodies = [
+    '1_7KFY',
+    '2_7KFX',
+    '3_7KFV',
+    '4_7KFW',
+    '5_7JVA',
+    '6_7KGK',
+    # '7_6LZG'
+    '8_6YZ5',
+    '9_6ZBP',
+    '10_7B27',
+    '11_7BWJ',
+    '12_7CH4',
+    '13_7CH5',
+    '14_7E23',
+    '15_7JMO',
+    '16_7K8M',
+    '17_6W41',
+    '18_6YM0',
+    '19_6ZER',
+    '20_7C01',
+    '21_7DEO',
+    # '22_7MZF',
+    '23_7DPM'
+]
+
+antibodies_rp = [
+    '1_7KFY',
+    '2_7KFX',
+    '3_7KFV',
+    '4_7KFW',
+    '5_7JVA',
+    '6_7KGK',
+    # '7_6LZG'
+    '8_6YZ5',
+    '9_6ZBP',
+    '10_7B27',
+    '11_7BWJ',
+]
 
 
 def read_aw_log(filename):
@@ -25,11 +66,16 @@ def read_aw_log(filename):
     with open(filename) as f:
         lines = f.readlines()
         for i in range(len(lines) - 1):
-            if not lines[i].startswith(' ') and not lines[i].contains(':'):
-                t = lines[i].strip()
-                L_dict[t] = lines[i + 1].split()[2:]
-                R_dict[t] = lines[i + 2].split()[2:]
-                n_dict[t] = len(L_dict[t]) + len(R_dict[t])
+            if not lines[i].startswith(' ') and ':' in lines[i]:
+                t = int(float(lines[i].strip().split('_')[1][0:2]+'00'))
+                if lines[i+1].startswith(' '):
+                    L_dict[t] = lines[i + 1].split()[2:]
+                    R_dict[t] = lines[i + 2].split()[2:]
+                    n_dict[t] = len(L_dict[t]) + len(R_dict[t])
+                else:
+                    L_dict[t] = lines[i + 2].split()[2:]
+                    R_dict[t] = lines[i + 3].split()[2:]
+                    n_dict[t] = len(L_dict[t]) + len(R_dict[t])
 
                 x.append(int(t))
                 y.append(len(L_dict[t]) + len(R_dict[t]))
@@ -52,19 +98,19 @@ def plot_curves(PDB_ID, Y):
     plt.show()
 
 
-def plot_heatmap(df):
+def plot_heatmap(PDB_ID, Y_list, xticklabels):
     fig, ax = plt.subplots(figsize=(6, 3))
     fig.set_tight_layout(True)
-    plot = sns.heatmap(df, linewidth=0.5, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
-                       center=0.5, square=True, xticklabels=np.arange(1000, 10001, 200))
+    plot = sns.heatmap(Y_list, linewidth=0.5, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
+                       center=0.5, square=True, xticklabels=xticklabels, yticklabels=PDB_ID)
     for ind, label in enumerate(plot.get_xticklabels()):
         if ind % 2 == 0:
             label.set_visible(True)
         else:
             label.set_visible(False)
 
-    ax.set_xlabel('Time (ps)')
-    ax.set_ylabel('Antibody-RBD samples')
+    ax.set_xlabel('MD trajectory snapshot(ps)')
+    ax.set_ylabel('Antibody-RBD')
     ax.set_title('Heatmap of interfacial water number')
     # ax.spines['left'].set_visible(True)
     plt.xticks(rotation=50)
@@ -72,36 +118,32 @@ def plot_heatmap(df):
 
 
 if __name__ == '__main__':
-    work_dir = sys.argv[1]
     PDB_ID = []
     Y = []
-    time_std = np.arange(1000, 10001, 200)
+    time_std = np.arange(1000, 12000, 200)
 
-    for path, dir_list, file_list in os.walk(work_dir, topdown=True):
-        for filename in file_list:
+    for ab in antibodies:
+        apply_windows = '/media/xin/Raid0/ACS/gmx/interaction/' \
+                        + ab + '/1-10-hyhoh/apply_windows.log'
 
-            if filename == 'apply_windows.log':
-                _, _, n_dict = read_aw_log(os.path.join(path, filename))
-                id = path.split('/')[-2]
+        _, _, n_dict = read_aw_log(apply_windows)
+        y_std = []
+        # print(ab, n_dict)
+        for t in time_std:
+            try:
+                n = n_dict[t]
+            except KeyError:
+                n = 0
+            y_std.append(n)
 
-                y_std = []
-                for t in time_std:
-                    try:
-                        n = n_dict[str(t)]
-                    except KeyError:
-                        n = 0
-                    y_std.append(n)
-
-                PDB_ID.append(id)
-                # X.append(times)
-                Y.append(y_std)
+        print(ab, y_std)
+        PDB_ID.append(ab.split('_')[1])
+        # X.append(times)
+        Y.append(y_std)
 
     # plot_curves(PDB_ID, Y)
 
     # hyhoh_df = pd.DataFrame(data=Y, index=time_std)
-    plot_heatmap(Y)
+    # list transport: list(map(list, zip(*Y)))
+    plot_heatmap(PDB_ID=PDB_ID, Y_list=Y, xticklabels=time_std)
     # hyhoh_df.sort_index()
-
-
-
-

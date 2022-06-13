@@ -20,26 +20,17 @@ def kd2kcal(kd):
     return 0.6*math.log(kd*1E-9)
 
 
-print(kd2kcal(133.3))
-# print(math.log(133.3))
+def log_list(arr):
+    return [math.log(e) for e in arr]
 
-# import time
-# from rich.progress import track, Progress
-# from rich.console import Console
-# cs = Console()
-# from files import get_last_line
-#
-# with Progress() as progress:
-#     task = progress.add_task('[red]deal with pbc', total=10000)
-#
-#     while not progress.finished:
-#         last_line = get_last_line('/media/xin/WinData/ACS/gmx/ding/7CH4/1-10-1000/gmx_wrapper.log')
-#
-#         if last_line.startswith(' ->  frame'):
-#             realtime = float(last_line.split()[4])
-#             print(realtime, 'qqqqqqqqqqq')
-#             progress.update(task, advance=realtime)
-#         pass
+
+# print(kd2kcal(133.3))
+# print(math.log(40.6))
+
+if __name__ == '__main__':
+    from gmx.pygmx.results import affinity
+    for key, value in affinity.items():
+        print(key, math.log(value))
 
 
 

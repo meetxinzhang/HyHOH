@@ -38,6 +38,22 @@ def idx_hyhoh_by_RMSF(short_rmsf_xvg, num_hyHOH, thr=0.3):
     return x
 
 
+def get_pro_most_rmsf(short_rmsf_xvg, num_hyHOH, thr=0.3):
+    xy_lines = []
+    for line in open(short_rmsf_xvg, 'r', encoding='utf-8'):
+        if (not line.strip().startswith("#")) and (not line.strip().startswith("@")):
+            xy_lines.append([int(line.split()[0]), float(line.split()[1])])
+
+    xy_interest = [xy for xy in xy_lines if xy[1] <= thr]
+    xy_interest.sort(key=lambda xy: xy[1])  # sorted by rmsf value
+    if len(xy_interest) <= 1:
+        raise ExceptionPassing('!!! WARNING IN HYHOH IDXING: len(xy_interest) < 1')
+    # x = [xy[0] for xy in xy_lines[:50]]
+    x = np.array(xy_interest[:num_hyHOH], dtype=int)[:, :1].squeeze().tolist()
+    x.sort()  # if not then gmx make_ndx raise error: One of your groups is not ascending
+    return x
+
+
 def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.07):
     RHOHs = []
     LHOHs = []
@@ -153,6 +169,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
+        short_pro_rmsf_xvg = str(start) + '_' + str(end) + '_pro_rmsf.xvg'
         # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         # "Determines whether to perform this window"
@@ -178,6 +195,7 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         cs.log('Generate temp files ...', style=f'blue')
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
+        gmx.rmsf(s=tpr, f=xtc, o=short_pro_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='Protein')
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
         gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
 

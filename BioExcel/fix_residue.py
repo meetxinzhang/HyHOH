@@ -34,5 +34,6 @@ def fix_backbone(pdb_file, seq_fasta):
 
 if __name__ == '__main__':
     pdb_file = sys.argv[1]
-    seq_fasta = sys.argv[2]
-    fix_backbone(pdb_file, seq_fasta)
+    # seq_fasta = sys.argv[2]
+    # fix_backbone(pdb_file, seq_fasta)
+    fix_side_chain(pdb_file)

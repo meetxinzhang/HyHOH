@@ -13,15 +13,11 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
-from tools.cast import kd2kcal
+from tools.cast import log_list
 # results
-from results import affinity, relax10_200, relax10_200_original, restrain, relax10_hyhoh_10IE, \
-    relax10_hyhoh_10IE_original, for1_10_20, for1_10_20_hy, for5_10_20, for5_10_20hy, for1_5_20, \
-    for1_5_20hy, relax_most, most_restr, most_restr_2, restrain, most_vs_ave
-
-
-def log_list(arr):
-    return [kd2kcal(e) for e in arr]
+from results import affinity, relax10_200, relax10_200_corrected, restrain, relax10_hyhoh_10IE, \
+    relax10_hyhoh_10IE_corrected, relax10_hyhoh_corrected, for1_10_20, for1_10_20_hy, for5_10_20, for5_10_20hy, for1_5_20, \
+    for1_5_20hy, relax_most_corrected, most_restr, most_restr_2, restrain, most_vs_ave
 
 
 def alignment(affinity, free_energy):
@@ -69,7 +65,7 @@ def plot_curve(aff, free):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax10_200_original)
+    aff, free = alignment(affinity, relax10_hyhoh_corrected)
     aff2kcal = log_list(aff)
     print(aff, '\n', free, '\n', aff2kcal)
-    plot_curve(aff, free)
+    plot_curve(aff2kcal, free)
