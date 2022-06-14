@@ -17,9 +17,9 @@ from rich.console import Console
 cs = Console()
 
 
-def read_mmpbsa_dat(file_path):
+def read_hoh_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        # frame = int(float(file_path.split('/')[-2].split('_')[0])) / 1000  # if frame is actually then delete this line.
+        frame = int(float(file_path.split('/')[-2].split('_')[0])) / 1000  # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -30,7 +30,7 @@ def read_mmpbsa_dat(file_path):
 
             for line in lines:
                 if line.startswith('_pid~'):
-                    frame = line.split()[0]
+                    # frame = line.split()[0]
                     binding = float(line.split()[1])  # + entropy
                     binding_DH = float(line.split()[2])  # + entropy
                     new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
@@ -41,8 +41,8 @@ def read_mmpbsa_dat(file_path):
     index = []
     data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
     for i in range(1, len(text)):  # start with 2nd line
-        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
-        # index.append(frame)
+        # index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+        index.append(frame)
         for j in range(1, len(text[i].split())):  # start with 2nd elem
             if text[i].split()[j] == '|':
                 data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
@@ -215,7 +215,7 @@ def plot_heatmap(df, selection='AA'):
     plt.show()
 
 
-def get_dataframe(work_dir):
+def get_hoh_dataframe(work_dir):
     mmpbsa_df = []
     rHOH_num = []
     lHOH_num = []
@@ -225,7 +225,7 @@ def get_dataframe(work_dir):
     for path, dir_list, file_list in os.walk(work_dir, topdown=False):
         for filename in file_list:
             if filename == '_pid~MMPBSA.dat':
-                dat = read_mmpbsa_dat(os.path.join(path, filename))
+                dat = read_hoh_mmpbsa_dat(os.path.join(path, filename))
                 mmpbsa_df.append(dat)
 
             # if filename == 'apply_windows.log':
@@ -254,7 +254,7 @@ def get_dataframe(work_dir):
 
 if __name__ == '__main__':
     work_dir = sys.argv[1]
-    mmpbsa_df = get_dataframe(work_dir)
+    mmpbsa_df = get_hoh_dataframe(work_dir)
 
     "call plot function"
     plot_mmpbsa_curves(mmpbsa_df)

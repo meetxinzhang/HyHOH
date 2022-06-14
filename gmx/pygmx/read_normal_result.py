@@ -3,18 +3,57 @@
 # Date: 2021.03.26
 
 import sys
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 
-from read_hoh_result import get_dataframe, entropy_cal
+from read_hoh_result import entropy_cal
 # matplotlib.rcParams['font.size'] = 15
 # matplotlib.rcParams['font.family'] = 'Times New Roman'
 # plt.style.use('science')
 from rich.console import Console
 cs = Console()
+
+
+def _read_mmpbsa_dat(file_path):
+    with open(file_path) as file:
+        # TODO: control time manually
+        # if frame > 5:
+        #     return
+        if file_path.endswith('_pid~MMPBSA.dat'):
+            lines = file.readlines()
+            entropy = float(lines[-3].split()[2])
+            text = [lines[0].replace('\n', '') + '   |  -TdS \n']
+
+            for line in lines:
+                if line.startswith('_pid~'):
+                    frame = line.split()[0]
+                    binding = float(line.split()[1])  # + entropy
+                    binding_DH = float(line.split()[2])  # + entropy
+                    new_line = str(frame) + ' ' + str(binding) + ' ' + str(binding_DH) + ' | ' + line.split('|', 1)[1]
+                    text.append(new_line.replace('\n', '') + '   |  ' + str(entropy) + '\n')
+        else:
+            text = file.readlines()
+
+    index = []
+    data = np.zeros([len(text) - 1, len(text[0].split()) - 1])  # [columns, rows], a number table
+    for i in range(1, len(text)):  # start with 2nd line
+        index.append(float(text[i].split()[0].replace('_pid~', '').replace('ns', '')))  # L P R
+        for j in range(1, len(text[i].split())):  # start with 2nd elem
+            if text[i].split()[j] == '|':
+                data[i - 1][j - 1] = np.nan  # start at 0 0 for date table
+            else:
+                try:
+                    data[i - 1][j - 1] = float(text[i].split()[j]) / 4.184  # caste to kcal/mol
+                except ValueError:
+                    print(text[i].split()[j])
+                    print(file_path, i, j)
+    column_names = text[0].split()[1:]  # name of columns
+    dataframe = pd.DataFrame(data=data, index=index, columns=column_names).sort_index()
+    return dataframe
 
 
 def organize_in_time(df):
@@ -120,6 +159,43 @@ def plot_heatmap(df, selection='AA'):
     ax.set_title('MM energy decomposition')
     plt.xticks(rotation=70)
     plt.show()
+
+
+def get_dataframe(work_dir):
+    mmpbsa_df = []
+    rHOH_num = []
+    lHOH_num = []
+    res_mm_df = []
+    res_dg_df = []
+
+    for path, dir_list, file_list in os.walk(work_dir, topdown=False):
+        for filename in file_list:
+            if filename == '_pid~MMPBSA.dat':
+                dat = _read_mmpbsa_dat(os.path.join(path, filename))
+                mmpbsa_df.append(dat)
+
+            # if filename == 'apply_windows.log':
+            #     with open(os.path.join(path, filename)) as f:
+            #         for line in f:
+            #             if line.startswith(' '):
+            #                 pass
+            #             else:
+            #                 rHOH_num.append(line.split()[1].replace(',', ''))
+            #                 lHOH_num.append(line.split()[2])
+            #
+            # if filename == '_pid~resMM_DH.dat':
+            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
+            #     res_mm_df.append(dat)
+            #
+            # if filename == '_pid~res_MMPBSA_DH.dat':
+            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
+            #     res_dg_df.append(dat)
+    if len(mmpbsa_df) == 0:
+        print('length=1: ', work_dir)
+    mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
+    # res_mm_df = pd.concat(res_mm_df).sort_index()
+    # res_dg_df = pd.concat(res_dg_df).sort_index()
+    return mmpbsa_df
 
 
 if __name__ == '__main__':

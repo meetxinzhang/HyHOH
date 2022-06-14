@@ -73,22 +73,22 @@ def plot_curve_and_points(line, points):
 
 
 if __name__ == '__main__':
-    # path_xvg = '/media/xin/Raid0/ACS/gmx/interaction/16_7K8M/MD_10ns/analysis_1_10/rmsd_md_0.xvg'
+    path_xvg = '/media/xin/WinData/ACS/Fig/Fig.4/5175_rmsd.xvg'
     # path_main_log = '/media/xin/Raid0/ACS/gmx/interaction/16_7K8M/MD_10ns/1-10-most-final/main.log'
-    path_xvg = '/run/user/1000/gvfs/sftp:host=172.16.10.176/home/wurp/workspace/antibody/SARS-COV-2/' \
-               '8_6YZ5/MD_10ns/analysis_1_10_most/rmsd_md_0.xvg'
-    path_main_log = '/run/user/1000/gvfs/sftp:host=172.16.10.176/home/wurp/workspace/antibody/SARS-COV-2/' \
-                    '8_6YZ5/MD_10ns/1-10-20-most/main.log'
+    # path_xvg = '/run/user/1000/gvfs/sftp:host=172.16.10.176/home/wurp/workspace/antibody/SARS-COV-2/' \
+    #            '8_6YZ5/MD_10ns/analysis_1_10_most/rmsd_md_0.xvg'
+    # path_main_log = '/run/user/1000/gvfs/sftp:host=172.16.10.176/home/wurp/workspace/antibody/SARS-COV-2/' \
+    #                 '8_6YZ5/MD_10ns/1-10-20-most/main.log'
 
     rmsd_df = read_xvg(path_xvg)
 
-    most, _ = read_main_log(path_main_log)
-    y = [rmsd_df.loc[e, 'RMSD(nm)'] for e in most]
-    most_df = pd.DataFrame(data=y, index=most, columns=['Sampling'])
+    # most, _ = read_main_log(path_main_log)
+    # y = [rmsd_df.loc[e, 'RMSD(nm)'] for e in most]
+    # most_df = pd.DataFrame(data=y, index=most, columns=['Sampling'])
 
     # "save to excel"
-    rmsd_df.to_excel('8_6YZ5'+'_rmsd_md_0' + '.xlsx')
-    most_df.to_excel('8_6YZ5'+'_most_sampling'+'.xlsx')
-    print(most_df)
+    rmsd_df.to_excel('5175'+'_rmsd' + '.xlsx')
+    # most_df.to_excel('8_6YZ5'+'_most_sampling'+'.xlsx')
+    # print(most_df)
 
-    plot_curve_and_points(line=rmsd_df, points=most_df)
+    # plot_curve_and_points(line=rmsd_df, points=most_df)

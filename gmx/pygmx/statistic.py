@@ -56,7 +56,8 @@ antibodies_rp = [
 
 def statistic_all():
     results = {}
-    from read_hoh_result import get_dataframe, entropy_cal
+    from read_hoh_result import get_hoh_dataframe, entropy_cal
+    from read_normal_result import get_dataframe
     for ab in antibodies:
         # work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
         #            + ab + '/1-10-200'
@@ -65,10 +66,10 @@ def statistic_all():
         # mmpbsa_df = mmpbsa_df[mmpbsa_df.index >= 1.0]
 
         dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
-                       + ab + '/1-10-200'
-        df = get_dataframe(dir_hoh)
+                       + ab + '/1-10-hyhoh'
+        df = get_hoh_dataframe(dir_hoh)
         df = df[df.index <= 10.0]
-        df = df[df.index >= 5.0]
+        df = df[df.index >= 1.0]
         print(ab, df)
 
         y = np.squeeze(df[['Binding_DH']].values.tolist())
@@ -76,7 +77,7 @@ def statistic_all():
         # inner = len(mm)/2
         if len(mm) == 0:
             print(ab)
-        entropy = entropy_cal(mm)[-1]
+        entropy = entropy_cal(mm[-10:])[-1]
         dE = y.mean()
         dG = dE + entropy
 
@@ -107,14 +108,14 @@ def statistic_all():
 
 def statistic_multi_MD():
     results = []
-    from read_hoh_result import read_mmpbsa_dat, entropy_cal
+    from read_hoh_result import read_hoh_mmpbsa_dat, entropy_cal
     for ab in antibodies:
         result = []
         work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' + ab + '/MD/'
         for path, dir_list, file_list in os.walk(work_dir, topdown=False):
             for filename in file_list:
                 if filename == '_pid~MMPBSA.dat' and 'hyhoh' in path:
-                    mmpbsa_df = read_mmpbsa_dat(os.path.join(path, filename))
+                    mmpbsa_df = read_hoh_mmpbsa_dat(os.path.join(path, filename))
                     y = np.squeeze(mmpbsa_df[['Binding_DH']].values.tolist())
                     mm = np.squeeze(mmpbsa_df[['MM_DH']].values.tolist())
                     entropy = entropy_cal(mm)[-1]
@@ -127,7 +128,7 @@ def statistic_multi_MD():
 
 def statistic_in_sec():
     data = []
-    from read_hoh_result import organize_in_time_hoh, get_dataframe
+    from read_hoh_result import organize_in_time_hoh, get_hoh_dataframe
     from read_normal_result import organize_in_time
     for ab in antibodies:
         # work_dir = '/media/xin/Raid0/ACS/gmx/interaction/' \
@@ -137,7 +138,7 @@ def statistic_in_sec():
 
         work_dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
                        + ab + '/1-10-20-hy/'
-        mmpbsa_df_hoh = get_dataframe(work_dir_hoh)
+        mmpbsa_df_hoh = get_hoh_dataframe(work_dir_hoh)
         result_hoh = organize_in_time_hoh(mmpbsa_df_hoh)
 
         line = []
