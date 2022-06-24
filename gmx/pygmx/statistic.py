@@ -8,6 +8,7 @@
 import numpy as np
 import pandas as pd
 import os
+import math
 from scipy.stats import pearsonr
 from results import affinity
 from statistic_plot import plot_curve, alignment
@@ -68,20 +69,20 @@ def statistic_all():
         dir_hoh = '/media/xin/Raid0/ACS/gmx/interaction/' \
                        + ab + '/1-10-hyhoh'
         df = get_hoh_dataframe(dir_hoh)
-        df = df[df.index <= 10.0]
-        df = df[df.index >= 1.0]
-        print(ab, df)
+        df = df[df.index <= 2.0]
+        df = df[df.index >= 1.4]
 
         y = np.squeeze(df[['Binding_DH']].values.tolist())
         mm = df[['MM_DH_Pro']].values.tolist()
         # inner = len(mm)/2
         if len(mm) == 0:
-            print(ab)
-        entropy = entropy_cal(mm[-10:])[-1]
+            print(ab, ': len(mm) == 0')
+            entropy = 0
+        else:
+            entropy = entropy_cal(mm)[-1]
         dE = y.mean()
         dG = dE + entropy
-
-        # results.append(dG)
+        print(ab, '\t', entropy, '\t', dE, '\t', dG, '\t', math.log(affinity[ab.split('_')[1]]))
         results[ab.split('_')[1]] = dG
 
     # for ab in antibodies_rp:
@@ -169,7 +170,6 @@ if __name__ == '__main__':
     # print(calc_pearson(np.squeeze(df[1].values.tolist())))
     results_dict = statistic_all()
     # results_list = statistic_multi_MD()
-    print(results_dict)
 
     aff, free = alignment(affinity, results_dict)
     aff_log = log_list(aff)

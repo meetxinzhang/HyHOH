@@ -96,7 +96,7 @@ def plot_mmpbsa_curves(df):
     pb = np.squeeze(df[['PB']].values.tolist())
     sa = np.squeeze(df[['SA']].values.tolist())
     # entropy = np.squeeze(df[['-TdS']].values.tolist())
-    entropy = entropy_cal(mm)
+    entropy = entropy_cal(list(mm)[-10:])
     # y = mm + pb + sa
     mm_small = [e/10 for e in mm]
     pb_small = [e/10 for e in pb]
@@ -107,7 +107,7 @@ def plot_mmpbsa_curves(df):
     ax.plot(x, mm_small, label='MM/10', color='tab:cyan')
     ax.plot(x, pb_small, label='PB/10', color='tab:green')
     ax.plot(x, sa, label='SA', color='tab:pink')
-    ax.plot(x, entropy, label='-TdS')
+    # ax.plot(x, entropy, label='-TdS')
     ax.set_xlabel('Time (ps)')
     ax.set_ylabel('Energy (kcal/mol)')
     ax.set_title('Normally MMPBSA')

@@ -65,7 +65,7 @@ def plot_curve(aff, free):
 
 
 if __name__ == '__main__':
-    aff, free = alignment(affinity, relax10_hyhoh_corrected)
+    aff, free = alignment(affinity, relax_most_corrected)
     aff2kcal = log_list(aff)
     print(aff, '\n', free, '\n', aff2kcal)
     plot_curve(aff2kcal, free)

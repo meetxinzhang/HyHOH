@@ -73,7 +73,7 @@ def plot_curve_and_points(line, points):
 
 
 if __name__ == '__main__':
-    path_xvg = '/media/xin/WinData/ACS/Fig/Fig.4/5175_rmsd.xvg'
+    path_xvg = '/media/xin/Raid0/ACS/gmx/interaction/1_7KFY/analysis/rmsd.xvg'
     # path_main_log = '/media/xin/Raid0/ACS/gmx/interaction/16_7K8M/MD_10ns/1-10-most-final/main.log'
     # path_xvg = '/run/user/1000/gvfs/sftp:host=172.16.10.176/home/wurp/workspace/antibody/SARS-COV-2/' \
     #            '8_6YZ5/MD_10ns/analysis_1_10_most/rmsd_md_0.xvg'
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     # most_df = pd.DataFrame(data=y, index=most, columns=['Sampling'])
 
     # "save to excel"
-    rmsd_df.to_excel('5175'+'_rmsd' + '.xlsx')
+    rmsd_df.to_excel('7kfy'+'md_0_rmsd' + '.xlsx')
     # most_df.to_excel('8_6YZ5'+'_most_sampling'+'.xlsx')
     # print(most_df)
 

@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
-matplotlib.rcParams['font.size'] = 10
+# matplotlib.rcParams['font.size'] = 22
 matplotlib.rcParams['font.family'] = 'Times New Roman'
 # plt.style.use('nature')
 from rich.console import Console
@@ -190,28 +190,36 @@ def plot_heatmap(df, selection='AA'):
         for name, columns in df_plot.iteritems():
             df_plot.rename(columns={name: int(name.replace('L~', '').replace('SOL', ''))}, inplace=True)
 
+    df_plot = df_plot.fillna(0)  # fill all NAN values with 0
     df_plot = df_plot.sort_index(axis=1)
-    # with pd.option_context('display.max_rows', 5, 'display.max_columns', None):
+
+    # with pd.option_context('display.max_rows', 9, 'display.max_columns', 100):
     #     print(df_plot.T)
-    #     print(df_plot.T.min(axis=1)
+    #     print(df_plot.T.min(axis=1))
+    # print(df_plot)
 
-    # df_plot.T.to_excel('6zer_hoh_res' + '.xlsx')
+    df_plot = df_plot.iloc[:-1, :]
+    # xticks = df_plot.index.tolist()
+    yticks = df_plot.columns.tolist()
+    # print(xticks, '\n', yticks)
 
-    fig, ax = plt.subplots(figsize=(6, 3))
+    fig, ax = plt.subplots()
     fig.set_tight_layout(True)
-    plot = sns.heatmap(df_plot, linewidth=0.5, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
-                       center=0, square=True)
-    for ind, label in enumerate(plot.get_yticklabels()):
-        if ind % 2 == 0:
-            label.set_visible(True)
-        else:
-            label.set_visible(False)
-
-    ax.set_xlabel('Time (ns)')
-    ax.set_ylabel('Water index')
-    ax.set_title('MM energy of Ligand waters')
+    plot = sns.heatmap(df_plot.T, linewidth=1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
+                       center=0, square=False, yticklabels=yticks)
+    # for ind, label in enumerate(plot.get_xticklabels()):
+    #     if ind % 2 == 0:
+    #         label.set_visible(True)
+    #     else:
+    #         label.set_visible(False)
+    cbar = plot.collections[0].colorbar
+    cbar.ax.tick_params(labelsize=33)
+    ax.set_xlabel('Time (ns)', size=44)
+    ax.set_ylabel('Water index', size=44)
+    ax.set_title('MM energy of RBD waters', size=44)
     # ax.spines['left'].set_visible(True)
-    plt.xticks(rotation=70)
+    plt.xticks(rotation=0, size=33)
+    plt.yticks(rotation=0, size=33)
     plt.show()
 
 
@@ -237,31 +245,30 @@ def get_hoh_dataframe(work_dir):
             #                 rHOH_num.append(line.split()[1].replace(',', ''))
             #                 lHOH_num.append(line.split()[2])
             #
-            # if filename == '_pid~resMM_DH.dat':
-            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
-            #     res_mm_df.append(dat)
+            if filename == '_pid~resMM_DH.dat':
+                dat = read_hoh_mmpbsa_dat(os.path.join(path, filename))
+                res_mm_df.append(dat)
             #
             # if filename == '_pid~res_MMPBSA_DH.dat':
-            #     dat = read_mmpbsa_dat(os.path.join(path, filename))
+            #     dat = read_hoh_mmpbsa_dat(os.path.join(path, filename))
             #     res_dg_df.append(dat)
     if len(mmpbsa_df) == 0:
         print('length=1: ', work_dir)
     mmpbsa_df = pd.concat(mmpbsa_df).sort_index()
-    # res_mm_df = pd.concat(res_mm_df).sort_index()
+    res_mm_df = pd.concat(res_mm_df).sort_index()
     # res_dg_df = pd.concat(res_dg_df).sort_index()
-    return mmpbsa_df
+    return mmpbsa_df, res_mm_df
 
 
 if __name__ == '__main__':
     work_dir = sys.argv[1]
-    mmpbsa_df = get_hoh_dataframe(work_dir)
+    mmpbsa_df, res_mm_df = get_hoh_dataframe(work_dir)
 
     "call plot function"
-    plot_mmpbsa_curves(mmpbsa_df)
-    # plot_heatmap(res_mm_df, selection='LHOH')
+    # plot_mmpbsa_curves(mmpbsa_df)
+    plot_heatmap(res_mm_df, selection='RHOH')
 
     "save to excel"
-    # res_mm_df.to_excel('6zer_hoh_res' + '.xlsx')
-
+    res_mm_df.to_excel('res_mm_df' + '.xlsx')
     # organize_in_time_hoh(mmpbsa_df)
 
