@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns
 # matplotlib.rcParams['font.size'] = 22
-matplotlib.rcParams['font.family'] = 'Times New Roman'
-# plt.style.use('nature')
+matplotlib.rcParams['font.family'] = 'Arial'  # font
+matplotlib.rcParams['font.weight'] = 10  # weight
+
 from rich.console import Console
 
 cs = Console()
@@ -19,7 +20,7 @@ cs = Console()
 
 def read_hoh_mmpbsa_dat(file_path):
     with open(file_path) as file:
-        frame = int(float(file_path.split('/')[-2].split('_')[0])) / 1000  # if frame is actually then delete this line.
+        frame = int(float(file_path.split('/')[-2].split('_')[0]))   # if frame is actually then delete this line.
         # TODO: control time manually
         # if frame > 5:
         #     return
@@ -189,37 +190,45 @@ def plot_heatmap(df, selection='AA'):
         df_plot = HOH_df.loc[:, r_exist_inHOH ^ True]
         for name, columns in df_plot.iteritems():
             df_plot.rename(columns={name: int(name.replace('L~', '').replace('SOL', ''))}, inplace=True)
+    elif selection == 'HOH':
+        df_L = HOH_df.loc[:, r_exist_inHOH ^ True]
+        for name, columns in df_L.iteritems():
+            df_L.rename(columns={name: int(name.replace('L~', '').replace('SOL', ''))}, inplace=True)
+        df_R = HOH_df.loc[:, r_exist_inHOH]
+        for name, columns in df_R.iteritems():
+            df_R.rename(columns={name: int(name.replace('R~', '').replace('SOL', ''))}, inplace=True)
+        df_plot = df_R.fillna(0) + df_L.fillna(0)
 
     df_plot = df_plot.fillna(0)  # fill all NAN values with 0
     df_plot = df_plot.sort_index(axis=1)
+    df_plot = df_plot[[671, 811]]
+    df_plot = df_plot.iloc[:-7, :]
+    print(df_plot)
 
     # with pd.option_context('display.max_rows', 9, 'display.max_columns', 100):
     #     print(df_plot.T)
     #     print(df_plot.T.min(axis=1))
     # print(df_plot)
 
-    df_plot = df_plot.iloc[:-1, :]
     # xticks = df_plot.index.tolist()
     yticks = df_plot.columns.tolist()
     # print(xticks, '\n', yticks)
 
-    fig, ax = plt.subplots()
-    fig.set_tight_layout(True)
     plot = sns.heatmap(df_plot.T, linewidth=1, cmap='coolwarm', annot=False, cbar=True, cbar_kws={'shrink': 0.5},
-                       center=0, square=False, yticklabels=yticks)
+                       center=0, square=True, yticklabels=yticks, xticklabels=5)
     # for ind, label in enumerate(plot.get_xticklabels()):
-    #     if ind % 2 == 0:
+    #     if ind % 5 == 0:
     #         label.set_visible(True)
     #     else:
     #         label.set_visible(False)
     cbar = plot.collections[0].colorbar
-    cbar.ax.tick_params(labelsize=33)
-    ax.set_xlabel('Time (ns)', size=44)
-    ax.set_ylabel('Water index', size=44)
-    ax.set_title('MM energy of RBD waters', size=44)
+    cbar.ax.tick_params(labelsize=22)
+    plt.xlabel('Time(ps)', size=33, fontweight=10)
+    plt.ylabel('Water index', size=33, fontweight=10)
+    plt.title('MM energy of RBD waters', size=33, pad=20, fontweight=10)
     # ax.spines['left'].set_visible(True)
-    plt.xticks(rotation=0, size=33)
-    plt.yticks(rotation=0, size=33)
+    plt.xticks(rotation=0, size=22)
+    plt.yticks(rotation=0, size=22)
     plt.show()
 
 
@@ -266,9 +275,9 @@ if __name__ == '__main__':
 
     "call plot function"
     # plot_mmpbsa_curves(mmpbsa_df)
-    plot_heatmap(res_mm_df, selection='RHOH')
+    plot_heatmap(res_mm_df, selection='HOH')
 
     "save to excel"
-    res_mm_df.to_excel('res_mm_df' + '.xlsx')
+    # res_mm_df.to_excel('res_mm_df' + '.xlsx')
     # organize_in_time_hoh(mmpbsa_df)
 
