@@ -10,8 +10,8 @@ mdp_dir="/media/xin/WinData/ACS/github/BioUtil/gmx/mdp"
 #从第一个参数获取抗体所在目录
 thispath=$1
 cd $thispath
-mkdir -p MD_10ns_1st
-cd MD_10ns_1st
+mkdir -p MD_10ns_3st
+cd MD_10ns_3st
 
 
 ################### Pre Process ##################

@@ -201,9 +201,10 @@ def plot_heatmap(df, selection='AA'):
 
     df_plot = df_plot.fillna(0)  # fill all NAN values with 0
     df_plot = df_plot.sort_index(axis=1)
-    df_plot = df_plot[[671, 811]]
-    df_plot = df_plot.iloc[:-7, :]
+    df_plot = df_plot[[37084]]
+    df_plot = df_plot.iloc[:-3, :]
     print(df_plot)
+    # df_plot.drop(columns=[26840, 58293, 8639, 18787, 26680, 27204], inplace=True)
 
     # with pd.option_context('display.max_rows', 9, 'display.max_columns', 100):
     #     print(df_plot.T)
@@ -222,13 +223,13 @@ def plot_heatmap(df, selection='AA'):
     #     else:
     #         label.set_visible(False)
     cbar = plot.collections[0].colorbar
-    cbar.ax.tick_params(labelsize=22)
-    plt.xlabel('Time(ps)', size=33, fontweight=10)
-    plt.ylabel('Water index', size=33, fontweight=10)
-    plt.title('MM energy of RBD waters', size=33, pad=20, fontweight=10)
+    cbar.ax.tick_params(labelsize=30)
+    plt.xlabel('Time(ps)', size=40, fontweight=10)
+    plt.ylabel('Water index', size=40, fontweight=10)
+    plt.title('MM energy of RBD waters', size=40, pad=20, fontweight=10)
     # ax.spines['left'].set_visible(True)
-    plt.xticks(rotation=0, size=22)
-    plt.yticks(rotation=0, size=22)
+    plt.xticks(rotation=0, size=30)
+    plt.yticks(rotation=0, size=30)
     plt.show()
 
 
@@ -275,7 +276,7 @@ if __name__ == '__main__':
 
     "call plot function"
     # plot_mmpbsa_curves(mmpbsa_df)
-    plot_heatmap(res_mm_df, selection='HOH')
+    plot_heatmap(res_mm_df, selection='RHOH')
 
     "save to excel"
     # res_mm_df.to_excel('res_mm_df' + '.xlsx')

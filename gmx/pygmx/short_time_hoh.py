@@ -142,7 +142,7 @@ def assign_hyhoh(protein_atoms, waters, R_idx, L_idx, bond_d=2.07):
     return RHOHs, LHOHs
 
 
-def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, thr=0.4, bond_d=2.07):
+def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_per_ps=1, threshold=0.4, bond_d=2.07):
     [begin, final, win_len, win_stride] = win_params
 
     # 20220527 windows expending at frame_idx
@@ -157,6 +157,12 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
     # for start in range(begin, final, win_stride):
     #     end = start + win_len
 
+        # 20220606 find the threshold of SOL RMSF
+        # short_pro_rmsf_xvg = str(idx) + '_pro_rmsf.xvg'
+        # gmx.rmsf(s=tpr, f=xtc, o=short_pro_rmsf_xvg, b=start, e=end, input='Protein')
+        thr = threshold + (np.maximum(idx-3000, 0) / (final - begin))*0.5
+        cs.print('RMSF threshold: ', thr, style=f"red")
+
         cs.rule('Processing window: '+str(start)+'-'+str(end)+' ps, '+str(start*fr_per_ps)+'-'+str(end*fr_per_ps)+' f')
         # TODO: rerun control
         # if start <= 8000:
@@ -169,7 +175,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         short_tpr = str(start) + '_' + str(end) + '.tpr'
         short_frame_idx = str(start) + '_' + str(end) + '_frame_idx.ndx'
         short_rmsf_xvg = str(start) + '_' + str(end) + '_rmsf.xvg'
-        short_pro_rmsf_xvg = str(start) + '_' + str(end) + '_pro_rmsf.xvg'
         # short_ave_pdb = str(start) + '_' + str(end) + '_ave.pdb'
 
         # "Determines whether to perform this window"
@@ -195,7 +200,6 @@ def apply_windows(xtc, tpr, R_idx, L_idx, frames_idx, win_params, num_hyHOH, fr_
         cs.log('Generate temp files ...', style=f'blue')
         gmx.make_ndx(f=tpr, o=temp_ndx, input='q')
         "run gmx-rmsf on this windows to cal all waters RMSF"
-        gmx.rmsf(s=tpr, f=xtc, o=short_pro_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='Protein')
         gmx.rmsf(s=tpr, f=xtc, o=short_rmsf_xvg, res='true', b=start, e=end, n=temp_ndx, input='SOL')
         gmx.rmsf(s=tpr, f=xtc, ox=temp_ave_pdb, b=start, e=end, n=temp_ndx, input='System')
 
@@ -323,4 +327,4 @@ if __name__ == '__main__':
     L_idx = [int(l_b), int(l_e)]  # RBD
 
     apply_windows(xtc, tpr, R_idx, L_idx, frames_idx,
-                  win_params=[2000, 5000, 50, 50], num_hyHOH=70, thr=0.3, bond_d=2.8)
+                  win_params=[2000, 5000, 50, 50], num_hyHOH=70, threshold=0.3, bond_d=2.8)
