@@ -24,7 +24,7 @@ COLUMNS        DATA  TYPE    FIELD        DEFINITION
 55 - 60        Real(6.2)     occupancy    Occupancy.
 61 - 66        Real(6.2)     tempFactor   Temperature  factor.
 77 - 78        LString(2)    element      Element symbol, right-justified.
-79 - 80        LString(2)    charge       Charge  on the atom.
+79 - 80        LString(2)    charge       Charge on the atom.
 
 For example,
          1         2         3         4         5         6         7         8
@@ -39,6 +39,7 @@ So, line[0:2] == 'AT'
 from collections import defaultdict as ddict
 from PDB.io.atom import Atom
 from PDB.io.residue import Residue
+# import xlsxwriter
 from PDB.io.sol import SOL
 import numpy as np
 
@@ -78,8 +79,10 @@ def structure_serialize(filepath='/media/zhangxin/Raid0/dataset/PP/single_comple
     """
     p_atoms = []
     w_atoms = []
+    # b_factors = []
     res_base = 0
     times_pass_9999 = 0
+    i=0
 
     with open(filepath, 'r') as f:
         for line in f:
@@ -106,6 +109,16 @@ def structure_serialize(filepath='/media/zhangxin/Raid0/dataset/PP/single_comple
                 y = line[38:46].strip()
                 z = line[46:54].strip()
 
+                # if name == 'CA':
+                #     i = i + 1
+                #     b_factor = line[60:66].strip()
+                #
+                #     if i != res_seq:
+                #         i = res_seq
+                #         print(res_seq, ' have 2 CA atom')
+                #     else:
+                #         b_factors.append(b_factor)
+
                 if name[0] in options:
                     atom = Atom(serial=serial, name=name, res_name=res_name, chain_id=chain_id, res_seq=true_res_seq,
                                 x=x, y=y, z=z, element=element)
@@ -120,6 +133,8 @@ def structure_serialize(filepath='/media/zhangxin/Raid0/dataset/PP/single_comple
     #     return p_atoms, waters
     # else:
     #     return p_atoms, w_atoms
+
+    # return p_atoms, water_assemble(w_atoms, options), [float(i) for i in b_factors]
     return p_atoms, water_assemble(w_atoms, options)
 
 
@@ -146,4 +161,11 @@ def amino_acid_assemble(atoms):
 
 
 if __name__ == '__main__':
-    structure_serialize('/media/xin/WinData/ACS/github/BioUtil/PDB/process/_0_100.pdb', ['N', 'C', 'O'])
+    _, _, b_factors = structure_serialize('/media/xin/Raid0/ACS/gmx/interaction/1_7KFY/renum.pdb',
+                                          ['N', 'C', 'O'])
+    print(b_factors, len(b_factors))
+
+    # import pandas
+    # df = pandas.DataFrame(b_factors)
+    # df.to_excel('b_factors_7KFY.xlsx')
+
