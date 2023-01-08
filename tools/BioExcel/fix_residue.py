@@ -8,7 +8,7 @@
     This file gives a more quickly method to perform atom/residue fixing relative modeller
 """
 import sys
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/HyHOH')  # add project path to environment
 from biobb_model.model.fix_side_chain import FixSideChain
 from biobb_structure_checking import structure_checking
 from biobb_model.model.fix_backbone import FixBackbone

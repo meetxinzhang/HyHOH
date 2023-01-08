@@ -1,63 +1,63 @@
 # cd /media/xin/Raid0/ACS/gmx/interaction/7KFV
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 634 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 634 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7KFX
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 634 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 634 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7KFY
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 632 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 632 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7KFW
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 631 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 631 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7JVA
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 1 227 -li 228 420 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 1 227 -li 228 420 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7KGK
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 314 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 314 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7C8D
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 1 597 -li 598 792 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 1 597 -li 598 792 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7L5B
 # mkdir -p 5-10-20
 # cd 1-10-normal
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 171 599-li 1 170 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 171 599-li 1 170 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/6YZ5
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 322 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 322 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7B27
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 203 327 -li 1 202 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 203 327 -li 1 202 -fm normal -rm normal -t 5000 10000 20
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/6ZBP
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 322 -li 1 195 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 196 322 -li 1 195 -fm normal -rm normal -t 5000 10000 20
 
 
 # cd /media/xin/Raid0/ACS/gmx/interaction/7BWJ
 # mkdir -p 5-10-20
 # cd 5-10-20
-# python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 195 636 -li 1 194 -fm normal -rm normal -t 5000 10000 20
+# python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 195 636 -li 1 194 -fm normal -rm normal -t 5000 10000 20
 
 
 cd /media/xin/Raid0/ACS/gmx/interaction/7CH4

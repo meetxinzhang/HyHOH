@@ -1,5 +1,5 @@
 
-# /media/xin/WinData/ACS/github/BioUtil/gmx/Loop_MD.sh
+# /media/xin/WinData/ACS/github/HyHOH/gmx/Loop_MD.sh
 
 
 # anti_list=("1_7KFY" "2_7KFX" "3_7KFV" "4_7KFW" "5_7JVA" "6_7KGK" "7_6LZG" "8_6YZ5" "9_6ZBP" "10_7B27" "11_7BWJ")

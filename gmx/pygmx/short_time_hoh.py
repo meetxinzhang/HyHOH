@@ -9,7 +9,7 @@ import os
 import sys
 import time
 from rich.console import Console
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/HyHOH')  # add project path to environment
 from run_mmpbsa import run_api
 from PDB.io.reader import structure_serialize
 from exception_message import ExceptionPassing

@@ -7,12 +7,12 @@
 @usage:
 > mkdir -p work_dir
 > cd work_dir
-> python /media/xin/WinData/ACS/github/BioUtil/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc
+> python /media/xin/WinData/ACS/github/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc
   -ri 195 636 -li 1 194 -t 1000 10000 500
 """
 import os
 import sys
-sys.path.append('/media/xin/WinData/ACS/github/BioUtil')  # add project path to environment
+sys.path.append('/media/xin/WinData/ACS/github/HyHOH')  # add project path to environment
 from most_frequency import get_mostfreq_df
 from short_time_hoh import apply_windows
 from distance_hoh import apply_distance
@@ -30,7 +30,7 @@ parser.add_argument('-ri', nargs='+', required=True, type=int, help='receptor in
 parser.add_argument('-li', nargs='+', required=True, type=int, help='ligand index like -li 196 632')  #
 parser.add_argument('-t', nargs='+', default=[0, 10000, 1, 1], type=int,
                     help='sampling frequency controlling: [begin, end, dt, frames_per_ps] in ps, can be ignored if '
-                         'frames indexing list was assigned in code')
+                         'frames indexing list was assigned in source code by manual')
 
 cs = Console()
 flags = gmx.environment.flags

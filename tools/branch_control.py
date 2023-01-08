@@ -8,7 +8,7 @@
 
 # xin
 anti_dir = '/media/xin/Raid0/ACS/gmx/interaction'
-project_path = '/media/xin/WinData/ACS/github/BioUtil'
+project_path = '/media/xin/WinData/ACS/github/HyHOH'
 
 # anti_list=("12_7CH4" "13_7CH5" "14_7E23" "15_7JMO" "16_7K8M" "17_6W41" "18_6YM0" "19_6ZER" "20_7C01" "21_7DEO" "22_7MZF" "23_7DPM")
 # ri_left=(   1          1         195       194       1          1        198       198       196       1         197       1       )
@@ -18,7 +18,7 @@ project_path = '/media/xin/WinData/ACS/github/BioUtil'
 
 # wurp
 # anti_dir = '/home/wurp/workspace/antibody/SARS-COV-2'
-# project_path = '/home/wurp/PycharmProjects/BioUtil'
+# project_path = '/home/wurp/PycharmProjects/HyHOH'
 
 # anti_list=("1_7KFY" "2_7KFX" "3_7KFV" "4_7KFW" "5_7JVA" "6_7KGK" "7_6LZG" "8_6YZ5" "9_6ZBP" "10_7B27" "11_7BWJ")
 # ri_left=(196    196     196     196      1           196       1          196    196    203    195)

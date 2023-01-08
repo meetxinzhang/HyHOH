@@ -1,8 +1,8 @@
 
-# /media/xin/WinData/ACS/github/BioUtil/gmx/MD_batch.sh /media/xin/Raid0/ACS/gmx/interaction/12_7CH4 012
+# /media/xin/WinData/ACS/github/HyHOH/gmx/MD_batch.sh /media/xin/Raid0/ACS/gmx/interaction/12_7CH4 012
 
 
-# /media/xin/WinData/ACS/github/BioUtil/gmx/MD_batch.sh /media/xin/Raid0/ACS/gmx/interaction/13_7CH5 012
+# /media/xin/WinData/ACS/github/HyHOH/gmx/MD_batch.sh /media/xin/Raid0/ACS/gmx/interaction/13_7CH5 012
 
 
 /media/xin/WinData/ACS/github/BioUtil/gmx/MD_batch.sh /media/xin/Raid0/ACS/gmx/interaction/14_7E23 012
