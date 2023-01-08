@@ -31,4 +31,5 @@ python /local_path/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri
 
 -t Four numeric with spaces separate to specify the sampling interval. [begin, end, interval, frames_per_ps] in ps. This option can be ignored if a frames indexing list was assigned in source code by manual'
 
-
+### LICENSE:
+GNU General Public License v3.0
