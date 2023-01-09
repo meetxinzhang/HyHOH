@@ -1,6 +1,5 @@
 import math
 import numpy as np
-from rich import progress
 
 
 def min_max_normalization(arr):

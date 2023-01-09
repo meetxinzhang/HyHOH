@@ -12,7 +12,7 @@ from rich.console import Console
 sys.path.append('/media/xin/WinData/ACS/github/HyHOH')  # add project path to environment
 from run_mmpbsa import run_api
 from PDB.io.reader import structure_serialize
-from exception_message import ExceptionPassing
+from tools.exception_message import ExceptionPassing
 import numpy as np
 import gromacs as gmx
 cs = Console()

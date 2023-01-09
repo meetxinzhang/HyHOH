@@ -1,7 +1,5 @@
 ## Including explicitly treated interfacial water molecules improved the free energy calculation for the binding of SARS-CoV-2 spike RBD and antibodies.
 
-
-
 ### Highlights：
 
 1) Including explicitly treated interfacial water molecules improved the free energy calculation for the binding of SARS-CoV-2 spike RBD and antibodies.
@@ -12,10 +10,12 @@
 
 4) Compromised interaction with interfacial water molecules partly explains the immune escape of the Omicron variant.
 
-5) A standard python API to execute the proposed method with friendly user  interface and documents.
+5) Generalizability that can be extended to all receptor-ligand hydration system.
 
 
 ### Typical usage:
+
+Execute the following command in terminal. Ensure all Python packages meet the runtime requirements.
 
 `
 python /local_path/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri 194 622 -li 1 193 -fm normal -rm hyhoh -t 5000 10000 20
@@ -29,7 +29,9 @@ python /local_path/HyHOH/gmx/pygmx/main.py -tpr ../md_0.tpr -xtc ../md_0.xtc -ri
 
 -rm Methods to run MM/PBSA, can be 'normal', 'hyhoh'(Our method), 'dsthoh'.
 
--t Four numeric with spaces separate to specify the sampling interval. [begin, end, interval, frames_per_ps] in ps. This option can be ignored if a frames indexing list was assigned in source code by manual'
+-t Four numeric with spaces separate to specify the sampling interval. [begin, end, interval, frames_per_ps] in ps. This option can be ignored if a frames indexing list was assigned in source code by manual
+
+IF any question you can contact contributors of this repository, or new open a new issue.
 
 ### LICENSE:
 GNU General Public License v3.0
