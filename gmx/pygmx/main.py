@@ -1,9 +1,8 @@
 # encoding: utf-8
 """
-@author: Xin Zhang
+@author: Xin Zhang, Ruiping Wu.
 @contact: zhangxin@szbl.ac.cn
 @time: 8/25/21 3:44 PM
-@desc:
 @usage:
 > mkdir -p work_dir
 > cd work_dir

@@ -10,7 +10,7 @@
 
 4) Compromised interaction with interfacial water molecules partly explains the immune escape of the Omicron variant.
 
-5) Generalizability that the calculation and analysing can be extended to all receptor-ligand hydration system.
+5) Generalizability that the calculation and analyzing can be extended to all receptor-ligand hydration system.
 
 
 ### Typical usage:
