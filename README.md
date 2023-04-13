@@ -1,7 +1,7 @@
 ## Including explicitly treated interfacial water molecules improved the free energy calculation for the binding of SARS-CoV-2 spike RBD and antibodies.
 
-
-https://www.tandfonline.com/doi/full/10.1080/07391102.2023.2199336
+Published in Journal of Biomolecular Structure and Dynamics.
+https://doi.org/10.1080/07391102.2023.2199336
 
 
 ### Highlights：
