@@ -17,6 +17,9 @@ https://doi.org/10.1080/07391102.2023.2199336
 5) Generalizability that the calculation and analyzing can be extended to all receptor-ligand hydration system.
 
 
+![微信截图_20230421110032](https://user-images.githubusercontent.com/12469551/233530392-0a3c760d-01e2-45aa-aae6-37330c2daa30.png)
+
+
 ### Typical usage:
 
 Execute the following command in terminal. Ensure all Python packages meet the runtime requirements.
